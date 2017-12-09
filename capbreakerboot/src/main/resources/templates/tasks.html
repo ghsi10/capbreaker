@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<link th:replace="fragments/header :: header-css" />
+<link rel="stylesheet" th:href="@{/css/tasks.css}"
+	href="../../static/css/tasks.css" />
+</head>
+<body class="container">
+	<div th:replace="fragments/header :: header"></div>
+
+	<div>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Task ID</th>
+					<th>ESSID</th>
+					<th>Status</th>
+					<th>Result</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="task:${tasks}">
+					<td th:text="${task.id}">taskId</td>
+					<td th:text="${task.essid}">essid</td>
+					<td th:text="${task.status}">status</td>
+					<td th:if="${task.status!=T(com.models.TaskStatus).Completed}">-</td>
+					<td
+						th:if="${task.wifiPassword!=null AND task.status==T(com.models.TaskStatus).Completed}">Found</td>
+					<td
+						th:if="${task.wifiPassword==null AND task.status==T(com.models.TaskStatus).Completed}">Not
+						Found</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</body>
+</html>

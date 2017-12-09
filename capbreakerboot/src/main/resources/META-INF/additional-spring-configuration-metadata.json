@@ -1,0 +1,17 @@
+{"properties": [
+  {
+    "name": "scan.commands",
+    "type": "java.lang.String",
+    "description": "A description for 'scan.commands'"
+  },
+  {
+    "name": "spring.queries.users-query",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.queries.users-query'"
+  },
+  {
+    "name": "spring.queries.roles-query",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.queries.roles-query'"
+  }
+]}
