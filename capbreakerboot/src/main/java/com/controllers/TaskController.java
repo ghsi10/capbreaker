@@ -36,7 +36,7 @@ public class TaskController {
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	public String uploaded(Model model, @RequestParam MultipartFile capFile, @RequestParam String essid,
-			@RequestParam String bssid) throws IOException {
+			@RequestParam String bssid) throws UnsupportedDataTypeException, IOException {
 		model.addAttribute("module", "upload");
 		Task task = taskService.uploadCap(capFile.getBytes(), essid, bssid);
 		model.addAttribute("task", task);
@@ -60,6 +60,13 @@ public class TaskController {
 	public String handleDbError(UnsupportedDataTypeException e, Model model) {
 		model.addAttribute("module", "upload");
 		model.addAttribute("error", e.getMessage());
+		return "uploaded";
+	}
+	
+	@ExceptionHandler(IOException.class)
+	public String handleDbError(IOException e, Model model) {
+		model.addAttribute("module", "upload");
+		model.addAttribute("error", "Unexpected error");
 		return "uploaded";
 	}
 }

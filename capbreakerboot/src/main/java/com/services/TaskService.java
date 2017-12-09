@@ -1,7 +1,8 @@
 package com.services;
 
-import java.io.IOException;
 import java.util.List;
+
+import javax.activation.UnsupportedDataTypeException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class TaskService {
 		return taskDao.findTop50ByOrderByIdDesc();
 	}
 
-	public Task uploadCap(byte[] file, String essid, String bssid) throws IOException {
+	public Task uploadCap(byte[] file, String essid, String bssid) throws UnsupportedDataTypeException {
 		Handshake handshake = hashConvert.convert(file, essid, bssid);
 		Task task = new Task(handshake);
 		taskDao.save(task);

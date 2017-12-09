@@ -25,10 +25,11 @@
 					<td th:text="${task.status}">status</td>
 					<td th:if="${task.status!=T(com.models.TaskStatus).Completed}">-</td>
 					<td
-						th:if="${task.wifiPassword!=null AND task.status==T(com.models.TaskStatus).Completed}">Found</td>
+						th:if="${task.wifiPassword!=null AND task.status==T(com.models.TaskStatus).Completed}"
+						class="ok">Found</td>
 					<td
-						th:if="${task.wifiPassword==null AND task.status==T(com.models.TaskStatus).Completed}">Not
-						Found</td>
+						th:if="${task.wifiPassword==null AND task.status==T(com.models.TaskStatus).Completed}"
+						class="fail">Not Found</td>
 				</tr>
 			</tbody>
 		</table>
