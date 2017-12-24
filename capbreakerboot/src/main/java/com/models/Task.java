@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 @Entity
@@ -20,6 +21,7 @@ public class Task {
 	private TaskStatus status;
 	private String wifiPassword;
 	private String taskPassword;
+	@Lob
 	private Handshake handshake;
 
 	public Task() {
@@ -109,8 +111,7 @@ public class Task {
 	public boolean equals(Object obj) {
 		if (obj instanceof Task) {
 			Task task = (Task) obj;
-			if (task.id.equals(id) && task.essid.equals(essid) && task.bssid.equals(bssid))
-				return true;
+			return task.id.equals(id) && task.essid.equals(essid) && task.bssid.equals(bssid);
 		}
 		return false;
 	}

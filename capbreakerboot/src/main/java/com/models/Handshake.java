@@ -128,11 +128,10 @@ public class Handshake implements Serializable {
 	public boolean equals(Object obj) {
 		if (obj instanceof Handshake) {
 			Handshake handshake = (Handshake) obj;
-			if (handshake.anonce.equals(anonce) && handshake.bssid.equals(bssid) && handshake.eapol.equals(eapol)
+			return handshake.anonce.equals(anonce) && handshake.bssid.equals(bssid) && handshake.eapol.equals(eapol)
 					&& handshake.eapolSize.equals(eapolSize) && handshake.essid.equals(essid)
 					&& handshake.keyMic.equals(keyMic) && handshake.keyVersion.equals(keyVersion)
-					&& handshake.snonce.equals(snonce) && handshake.station.equals(station))
-				return true;
+					&& handshake.snonce.equals(snonce) && handshake.station.equals(station);
 		}
 		return false;
 	}

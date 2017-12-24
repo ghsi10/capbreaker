@@ -10,87 +10,76 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import com.dao.TaskDao;
 import com.models.ChunkData;
 import com.models.Task;
 import com.models.TaskStatus;
+import com.repositories.TaskRepository;
 
 @Service
 public class ScanManager {
 	private static final int CLIENT_TIMED_OUT = 30000;
 	private static final int MAX_KEEP_ALIVE = 3;
 
-	private static final int COMPLETED = 2;
-	private static final int SCANING = 1;
-	private static final int QUEUE = 0;
-
 	private final List<String[]> commands;
 
 	private Task task;
-	private int[] scans;
+	private List<String[]> scans;
 	private List<Client> clients;
+	private int workingScan;
 
-	@Autowired
-	private TaskDao taskDao;
+	private TaskRepository taskRepository;
 
-	@Autowired
 	public ScanManager(@Value("#{'${scan.commands}'.split(',')}") String[] commandsFromProperties) {
 		commands = new ArrayList<String[]>();
 		for (String command : commandsFromProperties)
 			commands.add(command.split(" "));
 		clients = new ArrayList<Client>();
-		scans = new int[commands.size()];
+		scans = new ArrayList<String[]>();
 		task = null;
+		workingScan = 0;
 	}
 
 	public synchronized ChunkData getNextTask(String username) throws EmptyResultDataAccessException {
-		ChunkData userChunkData = isAlreadyHaveJob(username);
-		if (userChunkData != null)
-			return userChunkData;
 		if (task == null)
 			task = getWorkingTask();
-		return startNewScan(username, findTaskNumber());
+		ChunkData chunkData = isAlreadyHaveJob(username);
+		return chunkData != null ? chunkData : startNewScan(username);
 	}
 
 	public synchronized void setResult(String username, String password) throws NameNotFoundException {
-		Client tmpClient = searchForClient(username);
-		tmpClient.interrupt();
-		clients.remove(tmpClient);
-		scans[tmpClient.index] = COMPLETED;
+		Client client = searchForClient(username);
+		client.interrupt();
+		clients.remove(client);
 		reportThePassword(password);
 
 	}
 
 	public void keepAlive(String username) throws NameNotFoundException {
-		for (Client client : clients)
-			if (client.username.equals(username)) {
-				if (client.keepAlive < MAX_KEEP_ALIVE)
-					client.keepAlive++;
-				return;
-			}
-		throw new NameNotFoundException();
+		Client client = searchForClient(username);
+		if (client.keepAlive < MAX_KEEP_ALIVE)
+			client.keepAlive++;
 	}
 
 	private ChunkData isAlreadyHaveJob(String username) {
 		for (Client client : clients)
 			if (client.username.equals(username))
-				return new ChunkData(task.getHandshake(), commands.get(client.index));
+				return new ChunkData(task.getHandshake(), client.command);
 		return null;
 	}
 
-	private int findTaskNumber() throws EmptyResultDataAccessException {
-		for (int i = 0; i < scans.length; i++)
-			if (scans[i] == QUEUE)
-				return i;
-		throw new EmptyResultDataAccessException(1);
+	private ChunkData startNewScan(String username) throws EmptyResultDataAccessException {
+		String[] command = getNextCommand();
+		Client client = new Client(username, command);
+		clients.add(client);
+		workingScan++;
+		client.start();
+		return new ChunkData(task.getHandshake(), command);
 	}
 
-	private ChunkData startNewScan(String username, int scanNumber) {
-		scans[scanNumber] = SCANING;
-		Client tmpClient = new Client(username, scanNumber);
-		clients.add(tmpClient);
-		tmpClient.start();
-		return new ChunkData(task.getHandshake(), commands.get(scanNumber));
+	private String[] getNextCommand() throws EmptyResultDataAccessException {
+		if (scans.isEmpty())
+			throw new EmptyResultDataAccessException(1);
+		return scans.remove(0);
 	}
 
 	private Client searchForClient(String username) throws NameNotFoundException {
@@ -102,40 +91,49 @@ public class ScanManager {
 
 	private void reportThePassword(String password) {
 		if (!password.equals("") || isDone()) {
-			Task tmpTask = new Task(task);
-			clearScanMannager();
-			tmpTask.setStatus(TaskStatus.Completed);
-			tmpTask.setWifiPassword(password);
-			taskDao.save(tmpTask);
-
+			scans.clear();
+			stopClients();
+			task.setStatus(TaskStatus.Completed);
+			task.setWifiPassword(password);
+			taskRepository.save(task);
+			task = null;
 		}
 	}
 
 	private boolean isDone() {
-		for (int scan : scans)
-			if (scan != COMPLETED)
-				return false;
-		return true;
+		return scans.isEmpty() && workingScan == 0;
 	}
 
-	private void clearScanMannager() {
+	private void stopClients() {
 		for (Client client : clients)
 			client.interrupt();
 		clients.clear();
-		task = null;
-		for (int i = 0; i < scans.length; i++)
-			scans[i] = QUEUE;
+	}
+
+	private Task getWorkingTask() throws EmptyResultDataAccessException {
+		Task task = taskRepository.findOneByStatus(TaskStatus.Working);
+		if (task == null) {
+			List<Task> taskList = taskRepository.findAllByStatusOrderByIdAsc(TaskStatus.Queued);
+			if (taskList == null || taskList.isEmpty())
+				throw new EmptyResultDataAccessException(1);
+			task = taskRepository.findAllByStatusOrderByIdAsc(TaskStatus.Queued).get(0);
+			task.setStatus(TaskStatus.Working);
+			taskRepository.save(task);
+		}
+		for (String[] command : commands)
+			scans.add(command);
+		return task;
 	}
 
 	private class Client extends Thread {
 
 		private final String username;
-		private final int index;
+		private final String[] command;
 		private int keepAlive;
 
-		private Client(String username, int index) {
+		private Client(String username, String[] command) {
 			keepAlive = MAX_KEEP_ALIVE;
-			this.index = index;
+			this.command = command;
 			this.username = username;
 		}
 
@@ -143,29 +141,22 @@ public class ScanManager {
 		public void run() {
 			try {
 				while (true) {
-					Client.sleep(CLIENT_TIMED_OUT);
+					Thread.sleep(CLIENT_TIMED_OUT);
 					keepAlive--;
 					if (keepAlive < 0) {
 						clients.remove(this);
-						scans[index] = QUEUE;
+						scans.add(0, command);
 						break;
 					}
 				}
 			} catch (InterruptedException e) {
 			}
+			workingScan--;
 		}
 	}
 
-	private Task getWorkingTask() throws EmptyResultDataAccessException {
-		Task task = taskDao.findOneByStatus(TaskStatus.Working);
-		if (task != null)
-			return task;
-		List<Task> taskList = taskDao.findAllByStatusOrderByIdAsc(TaskStatus.Queued);
-		if (taskList == null || taskList.isEmpty())
-			throw new EmptyResultDataAccessException(1);
-		task = taskDao.findAllByStatusOrderByIdAsc(TaskStatus.Queued).get(0);
-		task.setStatus(TaskStatus.Working);
-		taskDao.save(task);
-		return task;
+	@Autowired
+	public void setTaskRepository(TaskRepository taskRepository) {
+		this.taskRepository = taskRepository;
 	}
 }

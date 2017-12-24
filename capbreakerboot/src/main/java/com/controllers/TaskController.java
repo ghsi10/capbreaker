@@ -18,9 +18,9 @@ import com.services.TaskService;
 
 @Controller
 public class TaskController {
-	@Autowired
+	
 	private TaskService taskService;
-
+	
 	@RequestMapping(value = { "/", "/tasks" }, method = RequestMethod.GET)
 	public String getTable(Model model) {
 		model.addAttribute("module", "tasks");
@@ -62,11 +62,23 @@ public class TaskController {
 		model.addAttribute("error", e.getMessage());
 		return "uploaded";
 	}
-	
+
 	@ExceptionHandler(IOException.class)
 	public String handleDbError(IOException e, Model model) {
 		model.addAttribute("module", "upload");
 		model.addAttribute("error", "Unexpected error");
 		return "uploaded";
+	}
+
+	@ExceptionHandler(NumberFormatException.class)
+	public String handleDbError(NumberFormatException e, Model model) {
+		model.addAttribute("module", "result");
+		model.addAttribute("task", null);
+		return "resultof";
+	}
+
+	@Autowired
+	public void setTaskService(TaskService taskService) {
+		this.taskService = taskService;
 	}
 }

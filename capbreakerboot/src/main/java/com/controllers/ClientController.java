@@ -19,7 +19,7 @@ import com.services.ScanManager;
 
 @RestController
 public class ClientController {
-	@Autowired
+
 	private ScanManager scanManager;
 
 	@RequestMapping(value = "/client/login", method = RequestMethod.POST)
@@ -29,7 +29,7 @@ public class ClientController {
 
 	@RequestMapping(value = "/client/getNextTask", method = RequestMethod.POST)
 	public ResponseEntity<ChunkData> getNextTask(@AuthenticationPrincipal User user)
-			throws  EmptyResultDataAccessException {
+			throws EmptyResultDataAccessException {
 		return new ResponseEntity<>(scanManager.getNextTask(user.getUsername()), HttpStatus.OK);
 	}
 
@@ -52,5 +52,10 @@ public class ClientController {
 	@ExceptionHandler(NameNotFoundException.class)
 	public ResponseEntity<?> handleDbError(NameNotFoundException e) {
 		return new ResponseEntity<>(HttpStatus.ACCEPTED);
+	}
+
+	@Autowired
+	public void setScanManager(ScanManager scanManager) {
+		this.scanManager = scanManager;
 	}
 }

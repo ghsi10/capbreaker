@@ -35,8 +35,7 @@ public class ChunkData {
 	public boolean equals(Object obj) {
 		if (obj instanceof ChunkData) {
 			ChunkData chunkData = (ChunkData) obj;
-			if (chunkData.handshake.equals(handshake) && chunkData.commands.equals(commands))
-				return true;
+			return chunkData.handshake.equals(handshake) && chunkData.commands.equals(commands);
 		}
 		return false;
 	}

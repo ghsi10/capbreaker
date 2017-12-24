@@ -7,39 +7,41 @@ import javax.activation.UnsupportedDataTypeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.dao.TaskDao;
 import com.models.Handshake;
 import com.models.Task;
+import com.repositories.TaskRepository;
 
 @Service
 public class TaskService {
 
-	@Autowired
-	private TaskDao taskDao;
-	@Autowired
+	private TaskRepository taskRepository;
 	private HashConvert hashConvert;
 
 	public List<Task> getTable() {
-		return taskDao.findTop50ByOrderByIdDesc();
+		return taskRepository.findTop50ByOrderByIdDesc();
 	}
 
 	public Task uploadCap(byte[] file, String essid, String bssid) throws UnsupportedDataTypeException {
 		Handshake handshake = hashConvert.convert(file, essid, bssid);
 		Task task = new Task(handshake);
-		taskDao.save(task);
+		taskRepository.save(task);
 		return task;
 	}
 
-	public Task getResult(String taskId, String taskPassword) {
-		int taskid = -1;
-		try {
-			taskid = Integer.parseInt(taskId);
-		} catch (NumberFormatException e) {
-			return null;
-		}
-		Task task = taskDao.findOne(taskid);
+	public Task getResult(String taskId, String taskPassword) throws NumberFormatException {
+		Task task = taskRepository.findOne(Integer.parseInt(taskId));
 		if (task != null && task.getTaskPassword().equals(taskPassword))
 			return task;
 		return null;
+	}
+
+	@Autowired
+	public void setTaskRepository(TaskRepository taskRepository) {
+		this.taskRepository = taskRepository;
+	}
+
+	@Autowired
+	public void setHashConvert(HashConvert hashConvert) {
+		this.hashConvert = hashConvert;
 	}
 }
