@@ -25,7 +25,6 @@ public class ScanManager {
 	private Task task;
 	private List<String[]> scans;
 	private List<Client> clients;
-	private int workingScan;
 
 	private TaskRepository taskRepository;
 
@@ -36,7 +35,6 @@ public class ScanManager {
 		clients = new ArrayList<Client>();
 		scans = new ArrayList<String[]>();
 		task = null;
-		workingScan = 0;
 	}
 
 	public synchronized ChunkData getNextTask(String username) throws EmptyResultDataAccessException {
@@ -69,10 +67,11 @@ public class ScanManager {
 
 	private ChunkData startNewScan(String username) throws EmptyResultDataAccessException {
 		String[] command = getNextCommand();
-		Client client = new Client(username, command);
-		clients.add(client);
-		workingScan++;
-		client.start();
+		synchronized (clients) {
+			Client client = new Client(username, command);
+			clients.add(client);
+			client.start();
+		}
 		return new ChunkData(task.getHandshake(), command);
 	}
 
@@ -101,7 +100,9 @@ public class ScanManager {
 	}
 
 	private boolean isDone() {
-		return scans.isEmpty() && workingScan == 0;
+		synchronized (clients) {
+			return scans.isEmpty() && clients.isEmpty();
+		}
 	}
 
 	private void stopClients() {
@@ -151,7 +152,6 @@ public class ScanManager {
 				}
 			} catch (InterruptedException e) {
 			}
-			workingScan--;
 		}
 	}
 
