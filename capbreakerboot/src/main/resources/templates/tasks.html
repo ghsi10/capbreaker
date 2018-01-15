@@ -18,7 +18,7 @@
 					<th>Status</th>
 					<th>Result</th>
 					<th
-						th:if="${ #authorization.expression('isAuthenticated()') and #strings.contains(#authentication.principal.authorities,'USER')}">
+						th:if="${ #authorization.expression('isAuthenticated()') and #strings.contains(#authentication.principal.authorities,'ADMIN')}">
 						Admin action</th>
 				</tr>
 			</thead>

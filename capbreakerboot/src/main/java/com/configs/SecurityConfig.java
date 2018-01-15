@@ -18,9 +18,9 @@ public class SecurityConfig {
 	private String usersQuery;
 	@Value("${spring.queries.roles-query}")
 	private String rolesQuery;
-	@Value("$spring.login.username")
+	@Value("${spring.login.username}")
 	private String masterUsername;
-	@Value("$spring.login.password")
+	@Value("${spring.login.password}")
 	private String masterPassword;
 
 	@Autowired
@@ -46,7 +46,7 @@ public class SecurityConfig {
 
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
-			http.authorizeRequests().antMatchers("/admin/**").hasRole("USER").and().formLogin().and().logout();
+			http.authorizeRequests().antMatchers("/admin/**").hasRole("ADMIN").and().formLogin().and().logout();
 		}
 	}
 }
