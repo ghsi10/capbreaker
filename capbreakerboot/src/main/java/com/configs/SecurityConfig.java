@@ -18,11 +18,16 @@ public class SecurityConfig {
 	private String usersQuery;
 	@Value("${spring.queries.roles-query}")
 	private String rolesQuery;
+	@Value("$spring.login.username")
+	private String masterUsername;
+	@Value("$spring.login.password")
+	private String masterPassword;
 
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth, DataSource dataSource) throws Exception {
 		auth.jdbcAuthentication().dataSource(dataSource).usersByUsernameQuery(usersQuery)
-				.authoritiesByUsernameQuery(rolesQuery);
+				.authoritiesByUsernameQuery(rolesQuery).and().inMemoryAuthentication().withUser(masterUsername)
+				.password(masterPassword).roles("ADMIN");
 	}
 
 	@Configuration
@@ -31,7 +36,8 @@ public class SecurityConfig {
 
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
-			http.antMatcher("/client/**").authorizeRequests().anyRequest().hasAnyRole("ADMIN", "USER").and().httpBasic();
+			http.antMatcher("/client/**").authorizeRequests().anyRequest().hasAnyRole("ADMIN", "USER").and()
+					.httpBasic();
 		}
 	}
 
