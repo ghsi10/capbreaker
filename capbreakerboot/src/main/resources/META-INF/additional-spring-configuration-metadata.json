@@ -1,27 +1,29 @@
-{"properties": [
-  {
-    "name": "scan.commands",
-    "type": "java.lang.String",
-    "description": "A description for 'scan.commands'"
-  },
-  {
-    "name": "spring.queries.users-query",
-    "type": "java.lang.String",
-    "description": "A description for 'spring.queries.users-query'"
-  },
-  {
-    "name": "spring.queries.roles-query",
-    "type": "java.lang.String",
-    "description": "A description for 'spring.queries.roles-query'"
-  },
-  {
-    "name": "spring.login.username",
-    "type": "java.lang.String",
-    "description": "A description for 'spring.login.username'"
-  },
-  {
-    "name": "spring.login.password",
-    "type": "java.lang.String",
-    "description": "A description for 'spring.login.password'"
-  }
-]}
+{
+	"properties": [
+		{
+			"name": "scan.commands",
+			"type": "java.lang.String",
+			"description": "scans list"
+		},
+		{
+			"name": "spring.queries.users-query",
+			"type": "java.lang.String",
+			"description": "query for get username and password'"
+		},
+		{
+			"name": "spring.queries.roles-query",
+			"type": "java.lang.String",
+			"description": "query for get role of user"
+		},
+		{
+			"name": "spring.login.username",
+			"type": "java.lang.String",
+			"description": "master username"
+		},
+		{
+			"name": "spring.login.password",
+			"type": "java.lang.String",
+			"description": "master password"
+		}
+	]
+}
