@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<link th:replace="fragments/header :: header-css" />
+<link rel="stylesheet" href="/css/tasks.css" />
+</head>
+<body class="container">
+	<div th:replace="fragments/header :: header"></div>
+
+	<div>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Task ID</th>
+					<th>ESSID</th>
+					<th>Status</th>
+					<th>Result</th>
+					<th
+						th:if="${ #authorization.expression('isAuthenticated()') and #strings.contains(#authentication.principal.authorities,'ADMIN')}">
+						Admin action</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="task:${tasks}">
+					<td th:text="${task.id}">taskId</td>
+					<td th:text="${task.essid}">essid</td>
+					<td th:text="${task.status}">status</td>
+					<td th:if="${task.status!=T(com.models.TaskStatus).Completed}">-</td>
+					<td
+						th:if="${task.wifiPassword!=null AND task.status==T(com.models.TaskStatus).Completed}"
+						class="ok">Found</td>
+					<td
+						th:if="${task.wifiPassword==null AND task.status==T(com.models.TaskStatus).Completed}"
+						class="fail">Not Found</td>
+
+					<td
+						th:if="${ #authorization.expression('isAuthenticated()') and #strings.contains(#authentication.principal.authorities,'ADMIN')}">
+						<a th:href="@{/somelink}" class="btn btn-primary btn-xs">Result
+					</a> <a th:href="@{/somelink}" class="btn btn-danger btn-xs">Delete
+					</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</body>
+</html>
