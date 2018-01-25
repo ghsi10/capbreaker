@@ -1,7 +1,8 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:fragment="header-css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
 <link rel="stylesheet" href="/css/main.css" />
 <title>Cap Breaker</title>
 </head>
@@ -19,6 +20,12 @@
 				th:href="@{/upload}">Add task</a></li>
 			<li th:class="${module=='result'?'active':''}"><a
 				th:href="@{/result}">Get result</a></li>
+			<li class="pull-right"
+				th:if="${#authorization.expression('isAuthenticated()')}"><a
+				th:href="@{/logout}">Logout</a></li>
+			<li class="pull-right"
+				th:if="${!#authorization.expression('isAuthenticated()')}"><a
+				th:href="@{/login}">Login</a></li>
 		</ul>
 	</div>
 </body>
