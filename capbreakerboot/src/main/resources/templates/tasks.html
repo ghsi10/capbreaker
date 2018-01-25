@@ -35,7 +35,7 @@
 						class="fail">Not Found</td>
 
 					<td
-						th:if="${ #authorization.expression('isAuthenticated()') and #strings.contains(#authentication.principal.authorities,'USER')}">
+						th:if="${ #authorization.expression('isAuthenticated()') and #strings.contains(#authentication.principal.authorities,'ADMIN')}">
 						<a th:href="@{/somelink}" class="btn btn-primary btn-xs">Result
 					</a> <a th:href="@{/somelink}" class="btn btn-danger btn-xs">Delete
 					</a>
