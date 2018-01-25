@@ -1,0 +1,105 @@
+html, body, div, span, h1, h2, h3, h4, h5, h6, p, blockquote, a, img,
+	small, sub, b, dl, dd, dt, ul, li, label, article, details, footer,
+	header, menu, nav, input, textarea, select {
+	background: transparent;
+	border: 0;
+	outline: 0;
+	padding: 0;
+	margin: 0;
+}
+
+html, body {
+	font-family: 'Helvetica', sans-serif;
+	font-size: 12px;
+	width: 100%;
+	color: #ddd;
+}
+
+body {
+	background-image: url("/images/background.jpg");
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+h1 {
+	font-family: 'Helvetica', sans-serif;
+	font-size: 42px;
+	font-weight: 800;
+	letter-spacing: 1px;
+	color: #ccc;
+	margin-bottom: 15px;
+}
+
+p {
+	font-size: 16px;
+	font-family: 'Helvetica-light', sans-serif;
+	color: #ccc;
+}
+
+a:hover, a:active, a:focus {
+	text-decoration: none;
+	color: #f5f5f5;
+	outline: 0;
+}
+
+a {
+	color: #ccc;
+	font-family: 'Helvetica', sans-serif;
+	text-decoration: none;
+	-webkit-transition: background-color .3s ease, border .3s ease, color
+		.3s ease, opacity .3s ease-in-out, outline .3s ease;
+	-moz-transition: background-color .3s ease, border .3s ease, color .3s
+		ease, opacity .3s ease-in-out, outline .3s ease;
+	-ms-transition: background-color .3s ease, border .3s ease, color .3s
+		ease, opacity .3s ease-in-out, outline .3s ease;
+	-o-transition: background-color .3s ease, border .3s ease, color .3s
+		ease, opacity .3s ease-in-out, outline .3s ease;
+	transition: background-color .3s ease, border .3s ease, color .3s ease,
+		opacity .3s ease-in-out, outline .3s ease;
+}
+
+ul#menu {
+	margin-bottom: 20px;
+}
+
+.nav-pills>li>a {
+	font-size: 15px;
+}
+
+.nav-pills>li>a:hover {
+	color: #000;
+}
+
+#add-task-captcha, #contact-captcha, #get-result-captcha {
+	width: 304px;
+	margin: 0px auto;
+}
+
+input[placeholder], input::-moz-placeholder, input:-moz-placeholder,
+	input:-ms-input-placeholder {
+	text-overflow: ellipsis;
+}
+
+@media ( max-width : 480px) {
+	.nav-pills>li {
+		float: none;
+	}
+}
+
+.row {
+	margin-bottom: 10px;
+}
+
+.ng-valid[required], .ng-valid.required {
+	border: 2px solid #42A948;
+	border-left: 5px solid #42A948;
+}
+
+.ng-invalid:not(form) {
+	border: 2px solid #a94442;
+	border-left: 5px solid #a94442;
+}
