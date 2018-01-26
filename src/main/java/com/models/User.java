@@ -1,6 +1,8 @@
 package com.models;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,15 +17,18 @@ public class User {
 	private Integer id;
 	private String username;
 	private String password;
+	@Enumerated(EnumType.STRING)
+	private UserRole role;
 	private boolean enable;
 
 	public User() {
 		this.enable = false;
 	}
 
-	public User(String username, String password, boolean enable) {
+	public User(String username, String password, UserRole role, boolean enable) {
 		this.username = username;
 		this.password = password;
+		this.role = role;
 		this.enable = enable;
 	}
 
@@ -51,6 +56,14 @@ public class User {
 		this.password = password;
 	}
 
+	public UserRole getRole() {
+		return role;
+	}
+
+	public void setRole(UserRole role) {
+		this.role = role;
+	}
+
 	public boolean isEnable() {
 		return enable;
 	}
@@ -70,6 +83,8 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [username=" + username + ", password=" + password + "]";
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", role=" + role + ", enable="
+				+ enable + "]";
 	}
+
 }
