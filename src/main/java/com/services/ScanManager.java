@@ -66,8 +66,9 @@ public class ScanManager {
 	}
 
 	private ChunkData startNewScan(String username) throws EmptyResultDataAccessException {
-		String[] command = getNextCommand();
+		String[] command;
 		synchronized (clients) {
+			command = getNextCommand();
 			Client client = new Client(username, command);
 			clients.add(client);
 			client.start();
