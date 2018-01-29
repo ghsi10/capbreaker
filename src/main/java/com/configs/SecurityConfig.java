@@ -37,7 +37,7 @@ public class SecurityConfig {
 
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
-			http.csrf().disable().antMatcher("/client/**").authorizeRequests().anyRequest().hasAnyRole("ADMIN", "USER")
+			http.csrf().disable().antMatcher("/agent/**").authorizeRequests().anyRequest().hasAnyRole("ADMIN", "USER")
 					.and().httpBasic();
 		}
 	}
