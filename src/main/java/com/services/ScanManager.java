@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import com.models.ChunkData;
+import com.models.Chunk;
 import com.models.Task;
 import com.models.TaskStatus;
 import com.repositories.TaskRepository;
@@ -24,7 +24,7 @@ public class ScanManager {
 
 	private Task task;
 	private List<String[]> scans;
-	private List<Client> clients;
+	private List<Agent> agents;
 
 	private TaskRepository taskRepository;
 
@@ -32,48 +32,47 @@ public class ScanManager {
 		commands = new ArrayList<String[]>();
 		for (String command : commandsFromProperties)
 			commands.add(command.split(" "));
-		clients = new ArrayList<Client>();
+		agents = new ArrayList<Agent>();
 		scans = new ArrayList<String[]>();
 		task = null;
 	}
 
-	public synchronized ChunkData getNextTask(String username) throws EmptyResultDataAccessException {
+	public synchronized Chunk getNextTask(String username) throws EmptyResultDataAccessException {
 		if (task == null)
 			task = getWorkingTask();
-		ChunkData chunkData = isAlreadyHaveJob(username);
-		return chunkData != null ? chunkData : startNewScan(username);
+		try {
+			Agent agent = searchForAgent(username);
+			return new Chunk(task.getHandshake(), agent.command);
+		} catch (NameNotFoundException e) {
+			return startNewScan(username);
+		}
 	}
 
 	public synchronized void setResult(String username, String password) throws NameNotFoundException {
-		Client client = searchForClient(username);
-		client.interrupt();
-		clients.remove(client);
+		Agent agent = searchForAgent(username);
+		agent.interrupt();
+		agents.remove(agent);
 		reportThePassword(password);
 
 	}
 
 	public void keepAlive(String username) throws NameNotFoundException {
-		Client client = searchForClient(username);
-		if (client.keepAlive < MAX_KEEP_ALIVE)
-			client.keepAlive++;
+		Agent agent = searchForAgent(username);
+		if (agent.keepAlive < MAX_KEEP_ALIVE)
+			agent.keepAlive++;
 	}
 
-	private ChunkData isAlreadyHaveJob(String username) {
-		for (Client client : clients)
-			if (client.username.equals(username))
-				return new ChunkData(task.getHandshake(), client.command);
-		return null;
-	}
-
-	private ChunkData startNewScan(String username) throws EmptyResultDataAccessException {
+	private Chunk startNewScan(String username) throws EmptyResultDataAccessException {
 		String[] command;
-		synchronized (clients) {
+		Agent agent;
+		synchronized (agents) {
 			command = getNextCommand();
-			Client client = new Client(username, command);
-			clients.add(client);
-			client.start();
+			agent = new Agent(username, command);
+			agents.add(agent);
+
 		}
-		return new ChunkData(task.getHandshake(), command);
+		agent.start();
+		return new Chunk(task.getHandshake(), command);
 	}
 
 	private String[] getNextCommand() throws EmptyResultDataAccessException {
@@ -82,17 +81,19 @@ public class ScanManager {
 		return scans.remove(0);
 	}
 
-	private Client searchForClient(String username) throws NameNotFoundException {
-		for (Client client : clients)
-			if (client.username.equals(username))
-				return client;
+	private Agent searchForAgent(String username) throws NameNotFoundException {
+		for (Agent agent : agents)
+			if (agent.username.equals(username))
+				return agent;
 		throw new NameNotFoundException();
 	}
 
 	private void reportThePassword(String password) {
 		if (!password.equals("") || isDone()) {
-			scans.clear();
-			stopClients();
+			synchronized (agents) {
+				stopClients();
+				scans.clear();
+			}
 			task.setStatus(TaskStatus.Completed);
 			task.setWifiPassword(password);
 			taskRepository.save(task);
@@ -101,15 +102,15 @@ public class ScanManager {
 	}
 
 	private boolean isDone() {
-		synchronized (clients) {
-			return scans.isEmpty() && clients.isEmpty();
+		synchronized (agents) {
+			return scans.isEmpty() && agents.isEmpty();
 		}
 	}
 
 	private void stopClients() {
-		for (Client client : clients)
-			client.interrupt();
-		clients.clear();
+		for (Agent agent : agents)
+			agent.interrupt();
+		agents.clear();
 	}
 
 	private Task getWorkingTask() throws EmptyResultDataAccessException {
@@ -127,13 +128,13 @@ public class ScanManager {
 		return task;
 	}
 
-	private class Client extends Thread {
+	private class Agent extends Thread {
 
 		private final String username;
 		private final String[] command;
 		private int keepAlive;
 
-		private Client(String username, String[] command) {
+		private Agent(String username, String[] command) {
 			keepAlive = MAX_KEEP_ALIVE;
 			this.command = command;
 			this.username = username;
@@ -146,8 +147,8 @@ public class ScanManager {
 					Thread.sleep(CLIENT_TIMED_OUT);
 					keepAlive--;
 					if (keepAlive < 0) {
-						clients.remove(this);
 						scans.add(0, command);
+						agents.remove(this);
 						break;
 					}
 				}

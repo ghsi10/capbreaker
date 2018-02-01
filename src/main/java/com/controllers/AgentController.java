@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.models.ChunkData;
+import com.models.Chunk;
 import com.services.ScanManager;
 
 @RestController
@@ -28,7 +28,7 @@ public class AgentController {
 	}
 
 	@RequestMapping(value = "/agent/getNextTask", method = RequestMethod.POST)
-	public ResponseEntity<ChunkData> getNextTask(@AuthenticationPrincipal User user)
+	public ResponseEntity<Chunk> getNextTask(@AuthenticationPrincipal User user)
 			throws EmptyResultDataAccessException {
 		return new ResponseEntity<>(scanManager.getNextTask(user.getUsername()), HttpStatus.OK);
 	}

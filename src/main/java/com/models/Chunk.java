@@ -2,15 +2,15 @@ package com.models;
 
 import java.util.Arrays;
 
-public class ChunkData {
+public class Chunk {
 
 	private Handshake handshake;
 	private String[] commands;
 
-	public ChunkData() {
+	public Chunk() {
 	}
 
-	public ChunkData(Handshake hs, String[] commands) {
+	public Chunk(Handshake hs, String[] commands) {
 		this.handshake = hs;
 		this.commands = commands;
 	}
@@ -33,8 +33,8 @@ public class ChunkData {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof ChunkData) {
-			ChunkData chunkData = (ChunkData) obj;
+		if (obj instanceof Chunk) {
+			Chunk chunkData = (Chunk) obj;
 			return chunkData.handshake.equals(handshake) && chunkData.commands.equals(commands);
 		}
 		return false;
