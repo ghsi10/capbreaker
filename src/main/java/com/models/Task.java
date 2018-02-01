@@ -27,6 +27,7 @@ public class Task {
 	public Task() {
 		this.status = TaskStatus.Queued;
 		this.taskPassword = randomPassword();
+		this.wifiPassword = "";
 	}
 
 	public Task(Task t) {
@@ -44,6 +45,7 @@ public class Task {
 		this.essid = hs.getEssid();
 		this.status = TaskStatus.Queued;
 		this.handshake = hs;
+		this.wifiPassword = "";
 		this.taskPassword = randomPassword();
 	}
 
