@@ -1,5 +1,6 @@
 package com.services;
 
+import java.rmi.NotBoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +8,6 @@ import javax.naming.NameNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.models.Chunk;
@@ -37,7 +37,7 @@ public class ScanManager {
 		task = null;
 	}
 
-	public synchronized Chunk getNextTask(String username) throws EmptyResultDataAccessException {
+	public synchronized Chunk getNextTask(String username) throws NotBoundException {
 		if (task == null)
 			task = getWorkingTask();
 		try {
@@ -62,7 +62,7 @@ public class ScanManager {
 			agent.keepAlive++;
 	}
 
-	private Chunk startNewScan(String username) throws EmptyResultDataAccessException {
+	private Chunk startNewScan(String username) throws NotBoundException {
 		String[] command;
 		Agent agent;
 		synchronized (agents) {
@@ -75,9 +75,9 @@ public class ScanManager {
 		return new Chunk(task.getHandshake(), command);
 	}
 
-	private String[] getNextCommand() throws EmptyResultDataAccessException {
+	private String[] getNextCommand() throws NotBoundException {
 		if (scans.isEmpty())
-			throw new EmptyResultDataAccessException(1);
+			throw new NotBoundException();
 		return scans.remove(0);
 	}
 
@@ -113,12 +113,12 @@ public class ScanManager {
 		agents.clear();
 	}
 
-	private Task getWorkingTask() throws EmptyResultDataAccessException {
+	private Task getWorkingTask() throws NotBoundException {
 		Task task = taskRepository.findOneByStatus(TaskStatus.Working);
 		if (task == null) {
 			List<Task> taskList = taskRepository.findAllByStatusOrderByIdAsc(TaskStatus.Queued);
 			if (taskList == null || taskList.isEmpty())
-				throw new EmptyResultDataAccessException(1);
+				throw new NotBoundException();
 			task = taskRepository.findAllByStatusOrderByIdAsc(TaskStatus.Queued).get(0);
 			task.setStatus(TaskStatus.Working);
 			taskRepository.save(task);

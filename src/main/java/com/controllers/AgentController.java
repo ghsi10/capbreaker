@@ -1,9 +1,10 @@
 package com.controllers;
 
+import java.rmi.NotBoundException;
+
 import javax.naming.NameNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -28,8 +29,7 @@ public class AgentController {
 	}
 
 	@RequestMapping(value = "/agent/getNextTask", method = RequestMethod.POST)
-	public ResponseEntity<Chunk> getNextTask(@AuthenticationPrincipal User user)
-			throws EmptyResultDataAccessException {
+	public ResponseEntity<Chunk> getNextTask(@AuthenticationPrincipal User user) throws NotBoundException {
 		return new ResponseEntity<>(scanManager.getNextTask(user.getUsername()), HttpStatus.OK);
 	}
 
@@ -44,8 +44,8 @@ public class AgentController {
 		scanManager.keepAlive(user.getUsername());
 	}
 
-	@ExceptionHandler(EmptyResultDataAccessException.class)
-	public ResponseEntity<?> handleDbError(EmptyResultDataAccessException e) {
+	@ExceptionHandler(NotBoundException.class)
+	public ResponseEntity<?> handleDbError(NotBoundException e) {
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
