@@ -7,43 +7,35 @@
 </head>
 <body class="container">
 	<div th:replace="fragments/header :: header"></div>
-
-	<div>
-		<table class="table table-striped">
-			<thead>
-				<tr>
-					<th>Task ID</th>
-					<th>ESSID</th>
-					<th>Status</th>
-					<th>Result</th>
-					<th
-						th:if="${ #authorization.expression('isAuthenticated()') and #strings.contains(#authentication.principal.authorities,'ADMIN')}">
-						Admin action</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="task:${tasks}">
-					<td th:text="${task.id}">taskId</td>
-					<td th:text="${task.essid}">essid</td>
-					<td th:text="${task.status}">status</td>
-					<td th:if="${task.status!=T(com.models.TaskStatus).Completed}">-</td>
-					<td
-						th:if="${task.wifiPassword!='' AND task.status==T(com.models.TaskStatus).Completed}"
-						class="ok">Found</td>
-					<td
-						th:if="${task.wifiPassword=='' AND task.status==T(com.models.TaskStatus).Completed}"
-						class="fail">Not Found</td>
-
-					<td
-						th:if="${ #authorization.expression('isAuthenticated()') and #strings.contains(#authentication.principal.authorities,'ADMIN')}">
-						<a th:href="@{/somelink}" class="btn btn-primary btn-xs">Result
-					</a> <a th:href="@{/somelink}" class="btn btn-danger btn-xs">Delete
-					</a>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>Task ID</th>
+				<th>ESSID</th>
+				<th>Status</th>
+				<th>Result</th>
+				<th sec:authorize="hasRole('ROLE_ADMIN')">Admin action</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="task:${tasks}">
+				<td th:text="${task.id}">taskId</td>
+				<td th:text="${task.essid}">essid</td>
+				<td th:text="${task.status}">status</td>
+				<td th:if="${task.status!=T(com.models.TaskStatus).Completed}">-</td>
+				<td th:if="${task.status==T(com.models.TaskStatus).Completed}">
+					<div th:if="${task.wifiPassword!=''}" class="ok">Found</div>
+					<div th:if="${task.wifiPassword==''}" class="fail">Not Found</div>
+				</td>
+				<td sec:authorize="hasRole('ROLE_ADMIN')"><a
+					th:href="${'/admin/result?id=' + {task.id}}"
+					class="btn btn-primary btn-xs">Result</a> <a
+					onclick="return confirm('Are you sure you want to delete this task?');"
+					th:href="${'/admin/delete?id=' + {task.id}}"
+					class="btn btn-danger btn-xs">Delete</a></td>
+			</tr>
+		</tbody>
+	</table>
 	<div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>

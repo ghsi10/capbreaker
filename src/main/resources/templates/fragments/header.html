@@ -1,17 +1,15 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:fragment="header-css">
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<link rel="stylesheet" href="/css/bootstrap.css" />
 <link rel="stylesheet" href="/css/main.css" />
 <title>Cap Breaker</title>
 </head>
 <body th:fragment="header">
-	<div>
-		<h1 class="text-center">
-			<a href="/">CAP Breaker</a>
-		</h1>
-	</div>
+	<h1 class="text-center">
+		<a href="/">CAP Breaker</a>
+	</h1>
 	<div class="container">
 		<ul class="nav nav-pills" id="menu">
 			<li th:class="${module=='tasks'?'active':''}"><a
@@ -20,12 +18,10 @@
 				th:href="@{/upload}">Add task</a></li>
 			<li th:class="${module=='result'?'active':''}"><a
 				th:href="@{/result}">Get result</a></li>
-			<li class="pull-right"
-				th:if="${#authorization.expression('isAuthenticated()')}"><a
-				th:href="@{/logout}">Logout</a></li>
-			<li class="pull-right"
-				th:if="${!#authorization.expression('isAuthenticated()')}"><a
+			<li class="pull-right" sec:authorize="isAnonymous()"><a
 				th:href="@{/login}">Login</a></li>
+			<li class="pull-right" sec:authorize="isAuthenticated()"><a
+				th:href="@{/logout}">Logout</a></li>
 		</ul>
 	</div>
 </body>
