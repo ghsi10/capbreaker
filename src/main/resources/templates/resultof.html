@@ -6,7 +6,6 @@
 </head>
 <body class="container">
 	<div th:replace="fragments/header :: header"></div>
-
 	<form id="get-resultof-form" class="form-signin form-horizontal"
 		role="form" th:if="${task}==null" th:action="@{/result}"
 		data-toggle="validator">
@@ -16,7 +15,6 @@
 			<button id="finish-upload-btn" class="btn btn-primary" type="submit">Back</button>
 		</div>
 	</form>
-
 	<form id="get-resultof-form" class="form-signin form-horizontal"
 		role="form" th:if="${task}!=null" th:action="@{/tasks}"
 		data-toggle="validator">
