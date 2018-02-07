@@ -10,6 +10,7 @@ public class UserController {
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String login(Model model) {
+		model.addAttribute("module", "login");
 		return "login";
 	}
 
