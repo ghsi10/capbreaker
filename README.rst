@@ -16,7 +16,6 @@ Prerequisites
 =============
 * JDK 1.8
 
-
 Deployment
 ==========
 *TBD*
