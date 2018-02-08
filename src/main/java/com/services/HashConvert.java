@@ -1,6 +1,7 @@
 package com.services;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.activation.UnsupportedDataTypeException;
 
@@ -12,7 +13,7 @@ import com.models.Handshake;
 public class HashConvert {
 
 	public Handshake convert(byte[] cap, String bssid, String essid) throws UnsupportedDataTypeException {
-		ArrayList<Handshake> handshakes = readCap(cap);
+		List<Handshake> handshakes = readCap(cap);
 		if (handshakes.size() == 0)
 			throw new UnsupportedDataTypeException("No handshake found!");
 		if (!essid.equals("") || !bssid.equals(""))
@@ -22,9 +23,9 @@ public class HashConvert {
 		return handshakes.get(0);
 	}
 
-	private ArrayList<Handshake> readCap(byte[] cap) throws UnsupportedDataTypeException {
+	private List<Handshake> readCap(byte[] cap) throws UnsupportedDataTypeException {
 		ArrayList<Handshake> handshakes = new ArrayList<Handshake>();
-		int recordIndex = 0;
+		Handshake recordHandshake;
 		boolean useLittleEndian;
 		int totalBytes;
 		int packetLength;
@@ -147,12 +148,7 @@ public class HashConvert {
 							+ dec2hex(cap[(currentByte + (15 + 5))] & 0xff) + ":"
 							+ dec2hex(cap[(currentByte + (15 + 6))] & 0xff);
 					// find this BSSIDs index in the list
-					for (int i = 0; i < handshakes.size(); i++) {
-						if (handshakes.get(i).getBssid().equals(tmpBssid)) {
-							recordIndex = i;
-							break;
-						}
-					}
+					recordHandshake = foundHsInList(handshakes, tmpBssid);
 					// grab SSID
 					if (((cap[(currentByte + 37)] & 0xff) > 0) && ((cap[(currentByte + 37)] & 0xff) <= 36)) {
 						ssidIsBlank = true;
@@ -163,11 +159,11 @@ public class HashConvert {
 							}
 						}
 						if (!ssidIsBlank) {
-							if (handshakes.get(recordIndex).getEssid().equals("")) {
+							if (recordHandshake.getEssid().equals("")) {
 								tmpEssid = "";
 								for (int i = 1; i <= (cap[(currentByte + 37)] & 0xff); i++)
 									tmpEssid += (char) (cap[currentByte + (37 + i)] & 0xff);
-								handshakes.get(recordIndex).setEssid(tmpEssid);
+								recordHandshake.setEssid(tmpEssid);
 							}
 						}
 					}
@@ -183,19 +179,14 @@ public class HashConvert {
 						+ dec2hex(cap[(currentByte + (15 + 5))] & 0xff) + ":"
 						+ dec2hex(cap[(currentByte + (15 + 6))] & 0xff);
 				// find this BSSIDs index in the array
-				for (int i = 0; i < handshakes.size(); i++) {
-					if (handshakes.get(i).getBssid().equals(tmpBssid)) {
-						recordIndex = i;
-						break;
-					}
-				}
+				recordHandshake = foundHsInList(handshakes, tmpBssid);
 				// grab SSID
 				if (((cap[(currentByte + 37)] & 0xff) > 0) && ((cap[(currentByte + 37)] & 0xff) <= 36)) {
-					if (handshakes.get(recordIndex).getEssid().equals("")) {
+					if (recordHandshake.getEssid().equals("")) {
 						tmpEssid = "";
 						for (int i = 1; i <= (cap[(currentByte + 37)] & 0xff); i++)
 							tmpEssid += (char) (cap[currentByte + (37 + i)] & 0xff);
-						handshakes.get(recordIndex).setEssid(tmpEssid);
+						recordHandshake.setEssid(tmpEssid);
 					}
 				}
 			}
@@ -219,25 +210,20 @@ public class HashConvert {
 						+ dec2hex(cap[(currentByte + (9 + 5))] & 0xff) + ":"
 						+ dec2hex(cap[(currentByte + (9 + 6))] & 0xff);
 				// find this BSSIDs index in the array
-				for (int i = 0; i < handshakes.size(); i++)
-					if (handshakes.get(i).getBssid().equals(tmpBssid)) {
-						recordIndex = i;
-						break;
-					}
+				recordHandshake = foundHsInList(handshakes, tmpBssid);
 				// Station Address
 				// Receiver Address (bytes 5 to 10)
-				if (handshakes.get(recordIndex).getSnonce().equals("")) {
-					handshakes.get(recordIndex).setStation("");
-					handshakes.get(recordIndex).setAnonce("");
+				if (recordHandshake.getSnonce().equals("")) {
+					recordHandshake.setStation("");
+					recordHandshake.setAnonce("");
 					if (Integer.valueOf(dec2hex(cap[currentByte + (36 - nonQosOffset)] & 0xff)
 							+ dec2hex(cap[currentByte + 37 - nonQosOffset] & 0xff), 16) < 118) {
-						handshakes.get(recordIndex)
-								.setStation(dec2hex(cap[(currentByte + (3 + 1))] & 0xff) + ":"
-										+ dec2hex(cap[(currentByte + (3 + 2))] & 0xff) + ":"
-										+ dec2hex(cap[(currentByte + (3 + 3))] & 0xff) + ":"
-										+ dec2hex(cap[(currentByte + (3 + 4))] & 0xff) + ":"
-										+ dec2hex(cap[(currentByte + (3 + 5))] & 0xff) + ":"
-										+ dec2hex(cap[(currentByte + (3 + 6))] & 0xff));
+						recordHandshake.setStation(dec2hex(cap[(currentByte + (3 + 1))] & 0xff) + ":"
+								+ dec2hex(cap[(currentByte + (3 + 2))] & 0xff) + ":"
+								+ dec2hex(cap[(currentByte + (3 + 3))] & 0xff) + ":"
+								+ dec2hex(cap[(currentByte + (3 + 4))] & 0xff) + ":"
+								+ dec2hex(cap[(currentByte + (3 + 5))] & 0xff) + ":"
+								+ dec2hex(cap[(currentByte + (3 + 6))] & 0xff));
 
 						// ANONCE
 						if (!(((cap[(currentByte + 51)] & 0xff) == 0) && ((cap[(currentByte + 52)] & 0xff) == 0)
@@ -259,11 +245,10 @@ public class HashConvert {
 
 							for (int i = 1; i < 33; i++) {
 								// ANONCE (bytes 52 to 83)
-								handshakes.get(recordIndex).setAnonce(handshakes.get(recordIndex).getAnonce()
+								recordHandshake.setAnonce(recordHandshake.getAnonce()
 										+ dec2hex(cap[currentByte + ((50 - nonQosOffset) + i)] & 0xff));
 								if (i < 32)
-									handshakes.get(recordIndex)
-											.setAnonce(handshakes.get(recordIndex).getAnonce() + " ");
+									recordHandshake.setAnonce(recordHandshake.getAnonce() + " ");
 							}
 					}
 				}
@@ -284,12 +269,7 @@ public class HashConvert {
 						+ dec2hex(cap[(currentByte + 6)] & 0xff) + ":" + dec2hex(cap[(currentByte + 7)] & 0xff) + ":"
 						+ dec2hex(cap[(currentByte + 8)] & 0xff) + ":" + dec2hex(cap[(currentByte + (3 + 6))] & 0xff);
 				// find this BSSIDs index in the array
-				for (int i = 0; i < handshakes.size(); i++) {
-					if (handshakes.get(i).getBssid().equals(tmpBssid)) {
-						recordIndex = i;
-						break;
-					}
-				}
+				recordHandshake = foundHsInList(handshakes, tmpBssid);
 				if (!(((cap[(currentByte + (51 - nonQosOffset))] & 0xff) == 0)
 						&& ((cap[(currentByte + (52 - nonQosOffset))] & 0xff) == 0)
 						&& ((cap[(currentByte + (53 - nonQosOffset))] & 0xff) == 0)
@@ -325,30 +305,28 @@ public class HashConvert {
 					// EAPOL
 					if (packetLength > (34 - nonQosOffset)) {
 						// SNONCE
-						if (!handshakes.get(recordIndex).getAnonce().equals("")
-								&& !handshakes.get(recordIndex).getStation().equals("")
-								&& handshakes.get(recordIndex).getSnonce().equals("")) {
+						if (!recordHandshake.getAnonce().equals("") && !recordHandshake.getStation().equals("")
+								&& recordHandshake.getSnonce().equals("")) {
 							for (int i = 1; i <= 32; i++) {
 								// SNONCE (bytes 52 to 83)
-								handshakes.get(recordIndex).setSnonce(handshakes.get(recordIndex).getSnonce()
+								recordHandshake.setSnonce(recordHandshake.getSnonce()
 										+ dec2hex(cap[(currentByte + ((50 - nonQosOffset) + i))] & 0xff));
 								if (i < 32)
-									handshakes.get(recordIndex)
-											.setSnonce(handshakes.get(recordIndex).getSnonce() + " ");
+									recordHandshake.setSnonce(recordHandshake.getSnonce() + " ");
 							}
-							handshakes.get(recordIndex)
+							recordHandshake
 									.setEapolSize(Integer
 											.valueOf(dec2hex(cap[currentByte + (36 - nonQosOffset)] & 0xff)
 													+ dec2hex(cap[currentByte + 37 - nonQosOffset] & 0xff), 16)
 											+ 4 + "");
-							if (Integer.valueOf(handshakes.get(recordIndex).getEapolSize()) > 0)
-								eapolLengthToUse = Integer.valueOf(handshakes.get(recordIndex).getEapolSize());
+							if (Integer.valueOf(recordHandshake.getEapolSize()) > 0)
+								eapolLengthToUse = Integer.valueOf(recordHandshake.getEapolSize());
 							else
 								eapolLengthToUse = packetLength - (34 - nonQosOffset);
 							for (int i = 1; i <= eapolLengthToUse; i++) {
 								// Key Version
 								if (i == 7)
-									handshakes.get(recordIndex)
+									recordHandshake
 											.setKeyVersion(
 													"" + (Integer
 															.valueOf(dec2hex(
@@ -361,17 +339,16 @@ public class HashConvert {
 															& 7));
 								// Key MIC
 								if ((i > 81) && (i < 98)) {
-									handshakes.get(recordIndex).setEapol(handshakes.get(recordIndex).getEapol() + "00");
-									handshakes.get(recordIndex).setKeyMic(handshakes.get(recordIndex).getKeyMic()
+									recordHandshake.setEapol(recordHandshake.getEapol() + "00");
+									recordHandshake.setKeyMic(recordHandshake.getKeyMic()
 											+ dec2hex(cap[(currentByte + ((33 - nonQosOffset) + i))] & 0xff));
 									if ((i < 97))
-										handshakes.get(recordIndex)
-												.setKeyMic(handshakes.get(recordIndex).getKeyMic() + " ");
+										recordHandshake.setKeyMic(recordHandshake.getKeyMic() + " ");
 								} else
-									handshakes.get(recordIndex).setEapol(handshakes.get(recordIndex).getEapol()
+									recordHandshake.setEapol(recordHandshake.getEapol()
 											+ dec2hex(cap[(currentByte + ((33 - nonQosOffset) + i))] & 0xff));
 								if ((i < eapolLengthToUse))
-									handshakes.get(recordIndex).setEapol(handshakes.get(recordIndex).getEapol() + " ");
+									recordHandshake.setEapol(recordHandshake.getEapol() + " ");
 							}
 						}
 					}
@@ -391,6 +368,15 @@ public class HashConvert {
 		}
 		return returnValue;
 
+	}
+
+	private Handshake foundHsInList(List<Handshake> handshakes, String bssid) throws UnsupportedDataTypeException {
+		for (Handshake handshake : handshakes) {
+			if (handshake.getBssid().equals(bssid)) {
+				return handshake;
+			}
+		}
+		throw new UnsupportedDataTypeException("Unexpected error");
 	}
 
 	private int bytes2num(byte loByte, byte hiByte) {

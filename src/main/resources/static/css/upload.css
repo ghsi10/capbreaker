@@ -13,8 +13,7 @@
 	border: 2px solid #0B85A1;
 }
 
-#add-task-form { //
-	display: table-cell;
+#add-task-form {
 	vertical-align: middle;
 	border: none;
 	-moz-border-radius: 16px;

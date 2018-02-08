@@ -1,4 +1,4 @@
-**capbreakerdev**
+**capbreaker**
 
 -----
 
@@ -25,6 +25,7 @@ Authors
 =======
 * `ghsi10 <https://github.com/ghsi10>`_ - Lead developer
 * `yevegnykuz <https://github.com/yevegnykuz>`_
+* `TamirGit <https://github.com/TamirGit>`_
 
 License
 =======

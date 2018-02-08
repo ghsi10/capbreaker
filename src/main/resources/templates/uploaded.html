@@ -4,10 +4,8 @@
 <link th:replace="fragments/header :: header-css" />
 <link rel="stylesheet" href="/css/upload.css" />
 </head>
-
 <body class="container">
 	<div th:replace="fragments/header :: header"></div>
-
 	<form th:if="${error}!=null" id="upload-file-error"
 		class="new-task-message-container panel-body text-center"
 		th:action="@{/upload}">
@@ -17,7 +15,6 @@
 			<button id="finish-upload-btn" class="btn btn-primary" type="submit">Back</button>
 		</div>
 	</form>
-
 	<form th:if="${error}==null" id="new-task-info-div"
 		class="panel-body text-center" th:action="@{/}">
 		<div class="row">
@@ -41,6 +38,5 @@
 			<button id="finish-upload-btn" class="btn btn-primary" type="submit">Finish</button>
 		</div>
 	</form>
-
 </body>
 </html>

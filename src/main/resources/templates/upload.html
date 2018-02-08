@@ -3,30 +3,25 @@
 <head>
 <link th:replace="fragments/header :: header-css" />
 <link rel="stylesheet" href="/css/upload.css" />
-<script type="text/javascript"
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript" src="/scripts/jquery.js"></script>
 <script type="text/javascript" src="/scripts/upload.js"></script>
 </head>
-
 <body class="container">
 	<div th:replace="fragments/header :: header"></div>
-
-	<form id="add-task-form" class="container" role="form"
-		th:action="@{/upload}" method="POST" enctype="multipart/form-data">
+	<form id="add-task-form" class="container" th:action="@{/upload}"
+		method="POST" enctype="multipart/form-data">
 		<div class="form-group">
-			<label class="btn btn-default btn-file file-label"
-				id="cap-file-label" for="cap-file"> <span id="fname">Click
-					to browse .cap file</span> <input id="cap-file" name="capFile" type="file"
-				accept=".cap" />
-			</label>
+			<label class="btn btn-default btn-file file-label" for="cap-file"><span
+				id="fname">Click to browse .cap file</span><input id="cap-file"
+				name="capFile" type="file" accept=".cap" /></label>
 		</div>
 		<div class="form-group">
-			<input class="form-control v-spacing" type="text" title="ESSID"
+			<input class="form-control v-spacing" type="text"
 				placeholder="ESSID (Optional, case sensitive, leave blank for autodetect)"
-				id="essid" name="essid" maxlength="36" size="32" /> <input
-				class="form-control v-spacing" type="text" title="BSSID"
+				name="essid" maxlength="36" size="32" /> <input
+				class="form-control v-spacing" type="text"
 				placeholder="BSSID (Optional, hexadecimal, leave blank for autodetect)"
-				id="bssid" name="bssid" maxlength="17" size="32" />
+				name="bssid" maxlength="17" size="32" />
 		</div>
 		<div class="form-group">
 			<div id="wpa-terms-div"
@@ -39,7 +34,7 @@
 				responsibility for that!
 
 				<div class="checkbox" id="checkbox-terms">
-					<label> <input type="checkbox" id="terms" /> I agree with
+					<label> <input type="checkbox" id="terms" />I agree with
 						CAP Breaker terms and conditions
 					</label>
 				</div>

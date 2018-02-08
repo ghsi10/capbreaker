@@ -37,7 +37,7 @@ public class SecurityConfig {
 
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
-			http.csrf().disable().antMatcher("/client/**").authorizeRequests().anyRequest().hasAnyRole("ADMIN", "USER")
+			http.csrf().disable().antMatcher("/agent/**").authorizeRequests().anyRequest().hasAnyRole("ADMIN", "USER")
 					.and().httpBasic();
 		}
 	}
@@ -47,8 +47,9 @@ public class SecurityConfig {
 
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
-			http.headers().frameOptions().disable().and().csrf().disable().authorizeRequests().antMatchers("/admin/**").hasRole("ADMIN").and().formLogin().loginPage("/login").and()
-					.logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/");
+			http.headers().frameOptions().disable().and().csrf().disable().authorizeRequests().antMatchers("/admin/**")
+					.hasRole("ADMIN").and().formLogin().loginPage("/login").and().logout()
+					.logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
 		}
 	}
 }
