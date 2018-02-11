@@ -16,18 +16,25 @@ import java.util.*;
 /**
  * The scan manager manages gives scan tasks to scanning agents.
  */
-@Service
-public class ScanManager {
+@Service public class ScanManager {
 	private static final int AGENT_TIMED_OUT = 30000;
 	private static final int MAX_KEEP_ALIVE = 3;
 
-	/** The raw commands that will be used to scan during a task. */
+	/**
+	 * The raw commands that will be used to scan during a task.
+	 */
 	private final List<String[]> commands;
-	/** The list of tasks that will be given to scanning agents. */
+	/**
+	 * The list of tasks that will be given to scanning agents.
+	 */
 	private final LinkedList<ScanTask> tasks;
-	/** The scanning agents. An agent can scan a command for a given scan task. */
+	/**
+	 * The scanning agents. An agent can scan a command for a given scan task.
+	 */
 	private final Set<ScanningAgent> agents;
-	/** The task repository from which scan tasks are created. */
+	/**
+	 * The task repository from which scan tasks are created.
+	 */
 	private TaskRepository taskRepository;
 
 	public ScanManager(@Value("#{'${scan.commands}'.split(',')}") String[] commandsFromProperties) {
@@ -42,18 +49,16 @@ public class ScanManager {
 	 * An client side application calls this method to get a scanning task.<br>
 	 * A client is registered as a scanning agent and the given a scanning task.<br>
 	 *
-	 * @param username
-	 *            the username of the agent
+	 * @param username the username of the agent
 	 * @return a Chunk for the agent to scan
-	 * @throws NotBoundException
-	 *             if taskRepository wasn't reachable
+	 * @throws NotBoundException if taskRepository wasn't reachable
 	 */
 	public Chunk getNextTask(String username) throws NotBoundException {
 		ScanTask scanTask;
 		String[] scanCommand;
 		synchronized (tasks) {
 			if (tasks.isEmpty()) {
-				tasks.add(new ScanTask(getWorkingTask(), new LinkedList<>(commands)));
+				updateTasks();
 			}
 
 			// get a scan task and a scan command for it
@@ -82,12 +87,9 @@ public class ScanManager {
 	 * An agent reports scanning results via this method.<br>
 	 * The reporting agent is removed from the agents list.<br>
 	 *
-	 * @param username
-	 *            the username of the agent
-	 * @param password
-	 *            the password of the agent
-	 * @throws NameNotFoundException
-	 *             if the agent wasn't found in the agents list
+	 * @param username the username of the agent
+	 * @param password the password of the agent
+	 * @throws NameNotFoundException if the agent wasn't found in the agents list
 	 */
 	public synchronized void setResult(String username, String password) throws NameNotFoundException {
 		ScanningAgent agent = searchForAgent(username);
@@ -104,10 +106,8 @@ public class ScanManager {
 	 * If an agent stop reporting, its keep alive value will reach to 0 and the
 	 * agent will be deleted.<br>
 	 *
-	 * @param username
-	 *            the username of the agent
-	 * @throws NameNotFoundException
-	 *             if the agent wasn't found in the agents list
+	 * @param username the username of the agent
+	 * @throws NameNotFoundException if the agent wasn't found in the agents list
 	 */
 	public void keepAlive(String username) throws NameNotFoundException {
 		ScanningAgent agent = searchForAgent(username);
@@ -116,8 +116,7 @@ public class ScanManager {
 		}
 	}
 
-	@Autowired
-	public void setTaskRepository(TaskRepository taskRepository) {
+	@Autowired public void setTaskRepository(TaskRepository taskRepository) {
 		this.taskRepository = taskRepository;
 	}
 
@@ -125,12 +124,9 @@ public class ScanManager {
 	 * Create a new scanning agent with a scan task and a scan command to perform,
 	 * and add it to the agents list.<br>
 	 *
-	 * @param username
-	 *            the username of the agent
-	 * @param scanTask
-	 *            the scan task that this agent will scan for
-	 * @param scanCommand
-	 *            the current scan command the agent will perform
+	 * @param username    the username of the agent
+	 * @param scanTask    the scan task that this agent will scan for
+	 * @param scanCommand the current scan command the agent will perform
 	 */
 	private void initNewScanningAgent(String username, ScanTask scanTask, String[] scanCommand) {
 		ScanningAgent agent;
@@ -144,11 +140,9 @@ public class ScanManager {
 	/**
 	 * Find an agent in the agents list.<br>
 	 *
-	 * @param username
-	 *            the username of the agent
+	 * @param username the username of the agent
 	 * @return the scanning agent from the agents list
-	 * @throws NameNotFoundException
-	 *             if the agent wasn't found in the agents list
+	 * @throws NameNotFoundException if the agent wasn't found in the agents list
 	 */
 	private ScanningAgent searchForAgent(String username) throws NameNotFoundException {
 		synchronized (agents) {
@@ -165,10 +159,8 @@ public class ScanManager {
 	 * Update the task status in the task table (index page) if password was found
 	 * or all scan commands were used.<br>
 	 *
-	 * @param password
-	 *            the password that the agent discovered
-	 * @param finishedScanTask
-	 *            the task that the agent was working on
+	 * @param password         the password that the agent discovered
+	 * @param finishedScanTask the task that the agent was working on
 	 */
 	private void reportThePassword(String password, ScanTask finishedScanTask) {
 		// password found or task is not in the task list anymore:
@@ -194,24 +186,26 @@ public class ScanManager {
 	}
 
 	/**
-	 * Get a task from the task table with a "working" task status.<br>
+	 * Update the local task list by accessing the task table from the database. <br>
 	 *
-	 * @return a working task
-	 * @throws NotBoundException
-	 *             if taskRepository wasn't reachable
+	 * @throws NotBoundException if taskRepository wasn't reachable
 	 */
-	private Task getWorkingTask() throws NotBoundException {
-		Task task = taskRepository.findOneByStatus(TaskStatus.Working);
-		if (task == null) {
-			List<Task> taskList = taskRepository.findAllByStatusOrderByIdAsc(TaskStatus.Queued);
+	private void updateTasks() throws NotBoundException {
+		List<Task> taskList = taskRepository.findAllByStatusOrderByIdAsc(TaskStatus.Working);
+		if (taskList == null || taskList.isEmpty()) { // no previous working tasks, get a new one
+			taskList = taskRepository.findAllByStatusOrderByIdAsc(TaskStatus.Queued);
 			if (taskList == null || taskList.isEmpty()) {
 				throw new NotBoundException();
 			}
-			task = taskList.get(0);
+			Task task = taskList.get(0);
 			task.setStatus(TaskStatus.Working);
 			taskRepository.save(task);
+			tasks.add(new ScanTask(task, new LinkedList<>(commands)));
+		} else { // add all tasks with "Working" state
+			for (Task task : taskList) {
+				tasks.add(new ScanTask(task, new LinkedList<>(commands)));
+			}
 		}
-		return task;
 	}
 
 	/**
@@ -221,13 +215,21 @@ public class ScanManager {
 	 */
 	private class ScanningAgent extends Thread {
 
-		/** The agents username. */
+		/**
+		 * The agents username.
+		 */
 		private final String username;
-		/** The scan task the agents was assigned. */
+		/**
+		 * The scan task the agents was assigned.
+		 */
 		private ScanTask scanTask;
-		/** The current scan command the agent is running. */
+		/**
+		 * The current scan command the agent is running.
+		 */
 		private String[] activeScanCommand;
-		/** The agents keep alive. 0 means dead. */
+		/**
+		 * The agents keep alive. 0 means dead.
+		 */
 		private int keepAlive;
 
 		private ScanningAgent(String username, ScanTask scanTask, String[] activeScanCommand) {
@@ -237,8 +239,7 @@ public class ScanManager {
 			this.keepAlive = MAX_KEEP_ALIVE;
 		}
 
-		@Override
-		public void run() {
+		@Override public void run() {
 			try {
 				while (true) {
 					Thread.sleep(AGENT_TIMED_OUT);
