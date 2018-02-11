@@ -24,8 +24,8 @@ public class AgentController {
 	private ScanManager scanManager;
 
 	@RequestMapping(value = "/agent/login", method = RequestMethod.POST)
-	public ResponseEntity<?> getNextTask() {
-		return new ResponseEntity<>(HttpStatus.OK);
+	public ResponseEntity<String> getNextTask() {
+		return new ResponseEntity<>("login success", HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/agent/getNextTask", method = RequestMethod.POST)
