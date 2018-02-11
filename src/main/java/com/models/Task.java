@@ -1,28 +1,20 @@
 package com.models;
 
+import javax.persistence.*;
 import java.security.SecureRandom;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.Table;
+// TODO: Add an binary array with the same length as the number of commands from the properties file.
+// TODO: This array will be used to create a list of commands when adding a task to the scanTask list.
+// TODO: This array will be updated when a user finished a task.
+@Entity @Table(name = "tasks") public class Task {
 
-@Entity
-@Table(name = "tasks")
-public class Task {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Integer id;
 	private String bssid;
 	private String essid;
 	private TaskStatus status;
 	private String wifiPassword;
 	private String taskPassword;
-	@Lob
-	private Handshake handshake;
+	@Lob private Handshake handshake;
 
 	public Task() {
 		this.status = TaskStatus.Queued;
@@ -109,8 +101,7 @@ public class Task {
 		this.handshake = handshake;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
+	@Override public boolean equals(Object obj) {
 		if (obj instanceof Task) {
 			Task task = (Task) obj;
 			return task.id.equals(id) && task.essid.equals(essid) && task.bssid.equals(bssid);
@@ -118,8 +109,7 @@ public class Task {
 		return false;
 	}
 
-	@Override
-	public String toString() {
+	@Override public String toString() {
 		return "Task [id=" + id + ", bssid=" + bssid + ", essid=" + essid + ", status=" + status + ", wifiPassword="
 				+ wifiPassword + ", taskPassword=" + taskPassword + ", handshake=" + handshake + "]";
 	}
