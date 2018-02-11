@@ -1,17 +1,23 @@
 package com.services;
 
+import java.rmi.NotBoundException;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
+import javax.naming.NameNotFoundException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import com.models.Chunk;
 import com.models.ScanTask;
 import com.models.Task;
 import com.models.TaskStatus;
 import com.repositories.TaskRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import javax.naming.NameNotFoundException;
-import java.rmi.NotBoundException;
-import java.util.*;
 
 /**
  * The scan manager manages gives scan tasks to scanning agents.
