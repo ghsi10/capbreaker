@@ -16,7 +16,8 @@ import java.util.*;
 /**
  * The scan manager manages gives scan tasks to scanning agents.
  */
-@Service public class ScanManager {
+@Service
+public class ScanManager {
 	private static final int AGENT_TIMED_OUT = 30000;
 	private static final int MAX_KEEP_ALIVE = 3;
 
@@ -115,7 +116,8 @@ import java.util.*;
 		}
 	}
 
-	@Autowired public void setTaskRepository(TaskRepository taskRepository) {
+	@Autowired
+	public void setTaskRepository(TaskRepository taskRepository) {
 		this.taskRepository = taskRepository;
 	}
 
@@ -239,7 +241,8 @@ import java.util.*;
 			this.keepAlive = MAX_KEEP_ALIVE;
 		}
 
-		@Override public void run() {
+		@Override
+		public void run() {
 			try {
 				while (true) {
 					Thread.sleep(AGENT_TIMED_OUT);
