@@ -1,14 +1,11 @@
 package com.models;
 
+import javax.persistence.*;
 import java.security.SecureRandom;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.Table;
-
+// TODO: Add an binary array with the same length as the number of commands from the properties file.
+// TODO: This array will be used to create a list of commands when adding a task to the scanTask list.
+// TODO: This array will be updated when a user finished a task.
 @Entity
 @Table(name = "tasks")
 public class Task {
