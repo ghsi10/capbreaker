@@ -40,86 +40,69 @@ public class HashConvert {
 			throw new UnsupportedDataTypeException("Invalid File");
 		// GLOBAL HEADER (24 bytes)
 		if (!((cap[0] & 0xff) == 212 && (cap[1] & 0xff) == 195 && (cap[2] & 0xff) == 178 && (cap[3] & 0xff) == 161)
-				|| ((cap[0] & 0xff) == 77 && (cap[1] & 0xff) == 60 && (cap[2] & 0xff) == 178 && (cap[3] & 0xff) == 161)
-				|| ((cap[0] & 0xff) == 161 && (cap[1] & 0xff) == 178 && (cap[2] & 0xff) == 195
-						&& (cap[3] & 0xff) == 212)
-				|| ((cap[0] & 0xff) == 161 && (cap[1] & 0xff) == 178 && (cap[2] & 0xff) == 60 && (cap[3] & 0xff) == 77)
-				|| ((cap[0] & 0xff) == 52 && (cap[1] & 0xff) == 205 && (cap[2] & 0xff) == 178 && (cap[3] & 0xff) == 161)
-				|| ((cap[0] & 0xff) == 161 && (cap[1] & 0xff) == 178 && (cap[2] & 0xff) == 205
-						&& (cap[3] & 0xff) == 52))
+				|| (cap[0] & 0xff) == 77 && (cap[1] & 0xff) == 60 && (cap[2] & 0xff) == 178 && (cap[3] & 0xff) == 161
+				|| (cap[0] & 0xff) == 161 && (cap[1] & 0xff) == 178 && (cap[2] & 0xff) == 195 && (cap[3] & 0xff) == 212
+				|| (cap[0] & 0xff) == 161 && (cap[1] & 0xff) == 178 && (cap[2] & 0xff) == 60 && (cap[3] & 0xff) == 77
+				|| (cap[0] & 0xff) == 52 && (cap[1] & 0xff) == 205 && (cap[2] & 0xff) == 178 && (cap[3] & 0xff) == 161
+				|| (cap[0] & 0xff) == 161 && (cap[1] & 0xff) == 178 && (cap[2] & 0xff) == 205 && (cap[3] & 0xff) == 52)
 			throw new UnsupportedDataTypeException("Invalid file signature");
 
-		useLittleEndian = ((cap[0] & 0xff) == 212 && (cap[1] & 0xff) == 195 && (cap[2] & 0xff) == 178
-				&& (cap[3] & 0xff) == 161)
+		useLittleEndian = (cap[0] & 0xff) == 212 && (cap[1] & 0xff) == 195 && (cap[2] & 0xff) == 178
+				&& (cap[3] & 0xff) == 161
 				|| (cap[0] & 0xff) == 77 && (cap[1] & 0xff) == 60 && (cap[2] & 0xff) == 178 && (cap[3] & 0xff) == 161;
 
-		if (!(((useLittleEndian && (cap[20] & 0xff) == 105) || (!useLittleEndian && (cap[23] & 0xff) == 105))
-				|| (useLittleEndian && (cap[20] & 0xff) == 119) || (!useLittleEndian && (cap[23] & 0xff) == 119)
-				|| (useLittleEndian && (cap[20] & 0xff) == 127) || (!useLittleEndian && (cap[23] & 0xff) == 127)
-				|| (useLittleEndian && (cap[20] & 0xff) == 163) || (!useLittleEndian && (cap[23] & 0xff) == 163)))
+		if (!(useLittleEndian && (cap[20] & 0xff) == 105 || !useLittleEndian && (cap[23] & 0xff) == 105
+				|| useLittleEndian && (cap[20] & 0xff) == 119 || !useLittleEndian && (cap[23] & 0xff) == 119
+				|| useLittleEndian && (cap[20] & 0xff) == 127 || !useLittleEndian && (cap[23] & 0xff) == 127
+				|| useLittleEndian && (cap[20] & 0xff) == 163 || !useLittleEndian && (cap[23] & 0xff) == 163))
 			throw new UnsupportedDataTypeException("Invalid Link Layer");
 		// COUNT UNIQUE BSSIDS
 		currentByte = 24;
 		while (currentByte < totalBytes) {
 			if (useLittleEndian)
-				packetLength = bytes2num(cap[(currentByte + 8)], cap[(currentByte + 9)]);
+				packetLength = bytes2num(cap[currentByte + 8], cap[currentByte + 9]);
 			else
-				packetLength = bytes2num(cap[(currentByte + 10)], cap[(currentByte + 11)]);
+				packetLength = bytes2num(cap[currentByte + 10], cap[currentByte + 11]);
 			currentByte = currentByte + 16;
 			if (packetLength > 0) {
 				// BEACON FRAME
 				if ((cap[currentByte] & 0xff) == 128) {
-					tmpBssid = dec2hex((cap[(currentByte + 16)] & 0xff)) + ":"
-							+ dec2hex((cap[(currentByte + 17)] & 0xff)) + ":"
-							+ dec2hex((cap[(currentByte + 18)] & 0xff)) + ":"
-							+ dec2hex((cap[(currentByte + 19)] & 0xff)) + ":"
-							+ dec2hex((cap[(currentByte + 20)] & 0xff)) + ":"
-							+ dec2hex((cap[(currentByte + 21)] & 0xff));
+					tmpBssid = dec2hex(cap[currentByte + 16] & 0xff) + ":" + dec2hex(cap[currentByte + 17] & 0xff) + ":"
+							+ dec2hex(cap[currentByte + 18] & 0xff) + ":" + dec2hex(cap[currentByte + 19] & 0xff) + ":"
+							+ dec2hex(cap[currentByte + 20] & 0xff) + ":" + dec2hex(cap[currentByte + 21] & 0xff);
 					if (!findBssid(handshakes, tmpBssid))
 						handshakes.add(new Handshake(tmpBssid));
 				}
 				// PROBE RESPONSE
 				if ((cap[currentByte] & 0xff) == 80) {
-					tmpBssid = dec2hex((cap[(currentByte + 16)] & 0xff)) + ":"
-							+ dec2hex((cap[(currentByte + 17)] & 0xff)) + ":"
-							+ dec2hex((cap[(currentByte + 18)] & 0xff)) + ":"
-							+ dec2hex((cap[(currentByte + 19)] & 0xff)) + ":"
-							+ dec2hex((cap[(currentByte + 20)] & 0xff)) + ":"
-							+ dec2hex((cap[(currentByte + 21)] & 0xff));
+					tmpBssid = dec2hex(cap[currentByte + 16] & 0xff) + ":" + dec2hex(cap[currentByte + 17] & 0xff) + ":"
+							+ dec2hex(cap[currentByte + 18] & 0xff) + ":" + dec2hex(cap[currentByte + 19] & 0xff) + ":"
+							+ dec2hex(cap[currentByte + 20] & 0xff) + ":" + dec2hex(cap[currentByte + 21] & 0xff);
 					if (!findBssid(handshakes, tmpBssid))
 						handshakes.add(new Handshake(tmpBssid));
 				}
-
 				// MESSAGE 1 of 4
-				if ((((cap[currentByte] & 0xff) == 136) && ((((cap[(currentByte + 1)] & 0xff) == 2)
-						|| ((cap[(currentByte + 1)] & 0xff) == 10))
-						&& (((cap[(currentByte + 32)] & 0xff) == 136) && ((cap[(currentByte + 33)] & 0xff) == 142))))
-						|| (((cap[currentByte] & 0xff) == 8)
-								&& ((((cap[(currentByte + 1)] & 0xff) == 2) || ((cap[(currentByte + 1)] & 0xff) == 10))
-										&& (((cap[(currentByte + 30)] & 0xff) == 136)
-												&& ((cap[(currentByte + 31)] & 0xff) == 142))))) {
-					tmpBssid = dec2hex(cap[(currentByte + (9 + 1))] & 0xff) + ":"
-							+ dec2hex(cap[(currentByte + (9 + 2))] & 0xff) + ":"
-							+ dec2hex(cap[(currentByte + (9 + 3))] & 0xff) + ":"
-							+ dec2hex(cap[(currentByte + (9 + 4))] & 0xff) + ":"
-							+ dec2hex(cap[(currentByte + (9 + 5))] & 0xff) + ":"
-							+ dec2hex(cap[(currentByte + (9 + 6))] & 0xff);
+				if ((cap[currentByte] & 0xff) == 136
+						&& ((cap[currentByte + 1] & 0xff) == 2 || (cap[currentByte + 1] & 0xff) == 10)
+						&& (cap[currentByte + 32] & 0xff) == 136 && (cap[currentByte + 33] & 0xff) == 142
+						|| (cap[currentByte] & 0xff) == 8
+								&& ((cap[currentByte + 1] & 0xff) == 2 || (cap[currentByte + 1] & 0xff) == 10)
+								&& (cap[currentByte + 30] & 0xff) == 136 && (cap[currentByte + 31] & 0xff) == 142) {
+					tmpBssid = dec2hex(cap[currentByte + 10] & 0xff) + ":" + dec2hex(cap[currentByte + 11] & 0xff) + ":"
+							+ dec2hex(cap[currentByte + 12] & 0xff) + ":" + dec2hex(cap[currentByte + 13] & 0xff) + ":"
+							+ dec2hex(cap[currentByte + 14] & 0xff) + ":" + dec2hex(cap[currentByte + 15] & 0xff);
 					if (!findBssid(handshakes, tmpBssid))
 						handshakes.add(new Handshake(tmpBssid));
 					// Message 2 of 4
-				} else if ((((cap[currentByte] & 0xff) == 136) && ((((cap[(currentByte + 1)] & 0xff) == 1)
-						|| ((cap[(currentByte + 1)] & 0xff) == 9))
-						&& (((cap[(currentByte + 32)] & 0xff) == 136) && ((cap[(currentByte + 33)] & 0xff) == 142))))
-						|| (((cap[currentByte] & 0xff) == 8)
-								&& ((((cap[(currentByte + 1)] & 0xff) == 1) || ((cap[(currentByte + 1)] & 0xff) == 9))
-										&& (((cap[(currentByte + 30)] & 0xff) == 136)
-												&& ((cap[(currentByte + 31)] & 0xff) == 142))))) {
-					tmpBssid = dec2hex(cap[(currentByte + (3 + 1))] & 0xff) + ":"
-							+ dec2hex(cap[(currentByte + (3 + 2))] & 0xff) + ":"
-							+ dec2hex(cap[(currentByte + (3 + 3))] & 0xff) + ":"
-							+ dec2hex(cap[(currentByte + (3 + 4))] & 0xff) + ":"
-							+ dec2hex(cap[(currentByte + (3 + 5))] & 0xff) + ":"
-							+ dec2hex(cap[(currentByte + (3 + 6))] & 0xff);
+				} else if ((cap[currentByte] & 0xff) == 136
+						&& ((cap[currentByte + 1] & 0xff) == 1 || (cap[currentByte + 1] & 0xff) == 9)
+						&& (cap[currentByte + 32] & 0xff) == 136 && (cap[currentByte + 33] & 0xff) == 142
+						|| (cap[currentByte] & 0xff) == 8
+								&& ((cap[currentByte + 1] & 0xff) == 1 || (cap[currentByte + 1] & 0xff) == 9)
+								&& (cap[currentByte + 30] & 0xff) == 136 && (cap[currentByte + 31] & 0xff) == 142) {
+					tmpBssid = dec2hex(cap[currentByte + 4] & 0xff) + ":" + dec2hex(cap[currentByte + 5] & 0xff) + ":"
+							+ dec2hex(cap[currentByte + 6] & 0xff) + ":" + dec2hex(cap[currentByte + 7] & 0xff) + ":"
+							+ dec2hex(cap[currentByte + 8] & 0xff) + ":" + dec2hex(cap[currentByte + 9] & 0xff);
 					if (!findBssid(handshakes, tmpBssid))
 						handshakes.add(new Handshake(tmpBssid));
 				}
@@ -130,85 +113,71 @@ public class HashConvert {
 		if (handshakes.size() == 0)
 			throw new UnsupportedDataTypeException("No BSSIDs found!");
 		currentByte = 24;
-		while ((currentByte < totalBytes)) {
+		while (currentByte < totalBytes) {
 			if (useLittleEndian)
-				packetLength = bytes2num(cap[(currentByte + 8)], cap[(currentByte + 9)]);
+				packetLength = bytes2num(cap[currentByte + 8], cap[currentByte + 9]);
 			else
-				packetLength = bytes2num(cap[(currentByte + 10)], cap[(currentByte + 11)]);
+				packetLength = bytes2num(cap[currentByte + 10], cap[currentByte + 11]);
 			currentByte += 16;
 			// PACKET DATA (variable length)
-			if (packetLength > 0) {
+			if (packetLength > 0)
 				// beacon frame
-				if (((cap[currentByte] & 0xff) == 128)) {
+				if ((cap[currentByte] & 0xff) == 128) {
 					// grab BSSID
-					tmpBssid = dec2hex(cap[(currentByte + (15 + 1))] & 0xff) + ":"
-							+ dec2hex(cap[(currentByte + (15 + 2))] & 0xff) + ":"
-							+ dec2hex(cap[(currentByte + (15 + 3))] & 0xff) + ":"
-							+ dec2hex(cap[(currentByte + (15 + 4))] & 0xff) + ":"
-							+ dec2hex(cap[(currentByte + (15 + 5))] & 0xff) + ":"
-							+ dec2hex(cap[(currentByte + (15 + 6))] & 0xff);
+					tmpBssid = dec2hex(cap[currentByte + 16] & 0xff) + ":" + dec2hex(cap[currentByte + 17] & 0xff) + ":"
+							+ dec2hex(cap[currentByte + 18] & 0xff) + ":" + dec2hex(cap[currentByte + 19] & 0xff) + ":"
+							+ dec2hex(cap[currentByte + 20] & 0xff) + ":" + dec2hex(cap[currentByte + 21] & 0xff);
 					// find this BSSIDs index in the list
 					recordHandshake = foundHsInList(handshakes, tmpBssid);
 					// grab SSID
-					if (((cap[(currentByte + 37)] & 0xff) > 0) && ((cap[(currentByte + 37)] & 0xff) <= 36)) {
+					if ((cap[currentByte + 37] & 0xff) > 0 && (cap[currentByte + 37] & 0xff) <= 36) {
 						ssidIsBlank = true;
-						for (int i = 1; i <= (cap[(currentByte + 37)] & 0xff); i++) {
-							if ((cap[(currentByte + (37 + i))] & 0xff) != 0) {
+						for (int i = 1; i <= (cap[currentByte + 37] & 0xff); i++)
+							if ((cap[currentByte + 37 + i] & 0xff) != 0) {
 								ssidIsBlank = false;
 								break;
 							}
-						}
-						if (!ssidIsBlank) {
+						if (!ssidIsBlank)
 							if (recordHandshake.getEssid().equals("")) {
 								tmpEssid = "";
-								for (int i = 1; i <= (cap[(currentByte + 37)] & 0xff); i++)
-									tmpEssid += (char) (cap[currentByte + (37 + i)] & 0xff);
+								for (int i = 1; i <= (cap[currentByte + 37] & 0xff); i++)
+									tmpEssid += (char) (cap[currentByte + 37 + i] & 0xff);
 								recordHandshake.setEssid(tmpEssid);
 							}
-						}
 					}
 				}
-			}
 			// PROBE RESPONSE
 			if ((cap[currentByte] & 0xff) == 80) {
 				// grab BSSID
-				tmpBssid = dec2hex(cap[(currentByte + (15 + 1))] & 0xff) + ":"
-						+ dec2hex(cap[(currentByte + (15 + 2))] & 0xff) + ":"
-						+ dec2hex(cap[(currentByte + (15 + 3))] & 0xff) + ":"
-						+ dec2hex(cap[(currentByte + (15 + 4))] & 0xff) + ":"
-						+ dec2hex(cap[(currentByte + (15 + 5))] & 0xff) + ":"
-						+ dec2hex(cap[(currentByte + (15 + 6))] & 0xff);
+				tmpBssid = dec2hex(cap[currentByte + 16] & 0xff) + ":" + dec2hex(cap[currentByte + 17] & 0xff) + ":"
+						+ dec2hex(cap[currentByte + 18] & 0xff) + ":" + dec2hex(cap[currentByte + 19] & 0xff) + ":"
+						+ dec2hex(cap[currentByte + 20] & 0xff) + ":" + dec2hex(cap[currentByte + 21] & 0xff);
 				// find this BSSIDs index in the array
 				recordHandshake = foundHsInList(handshakes, tmpBssid);
 				// grab SSID
-				if (((cap[(currentByte + 37)] & 0xff) > 0) && ((cap[(currentByte + 37)] & 0xff) <= 36)) {
+				if ((cap[currentByte + 37] & 0xff) > 0 && (cap[currentByte + 37] & 0xff) <= 36)
 					if (recordHandshake.getEssid().equals("")) {
 						tmpEssid = "";
-						for (int i = 1; i <= (cap[(currentByte + 37)] & 0xff); i++)
-							tmpEssid += (char) (cap[currentByte + (37 + i)] & 0xff);
+						for (int i = 1; i <= (cap[currentByte + 37] & 0xff); i++)
+							tmpEssid += (char) (cap[currentByte + 37 + i] & 0xff);
 						recordHandshake.setEssid(tmpEssid);
 					}
-				}
 			}
 			// Message 1 of 4
-			if ((((cap[currentByte] & 0xff) == 136) && ((((cap[(currentByte + 1)] & 0xff) == 2)
-					|| ((cap[(currentByte + 1)] & 0xff) == 10))
-					&& (((cap[(currentByte + 32)] & 0xff) == 136) && ((cap[(currentByte + 33)] & 0xff) == 142))))
-					|| (((cap[currentByte] & 0xff) == 8)
-							&& ((((cap[(currentByte + 1)] & 0xff) == 2) || ((cap[(currentByte + 1)] & 0xff) == 10))
-									&& (((cap[(currentByte + 30)] & 0xff) == 136)
-											&& ((cap[(currentByte + 31)] & 0xff) == 142))))) {
+			if ((cap[currentByte] & 0xff) == 136
+					&& ((cap[currentByte + 1] & 0xff) == 2 || (cap[currentByte + 1] & 0xff) == 10)
+					&& (cap[currentByte + 32] & 0xff) == 136 && (cap[currentByte + 33] & 0xff) == 142
+					|| (cap[currentByte] & 0xff) == 8
+							&& ((cap[currentByte + 1] & 0xff) == 2 || (cap[currentByte + 1] & 0xff) == 10)
+							&& (cap[currentByte + 30] & 0xff) == 136 && (cap[currentByte + 31] & 0xff) == 142) {
 				if ((cap[currentByte] & 0xff) == 8)
 					nonQosOffset = 2;
 				else
 					nonQosOffset = 0;
 				// BSSID (bytes 11 to 16)
-				tmpBssid = dec2hex(cap[(currentByte + (9 + 1))] & 0xff) + ":"
-						+ dec2hex(cap[(currentByte + (9 + 2))] & 0xff) + ":"
-						+ dec2hex(cap[(currentByte + (9 + 3))] & 0xff) + ":"
-						+ dec2hex(cap[(currentByte + (9 + 4))] & 0xff) + ":"
-						+ dec2hex(cap[(currentByte + (9 + 5))] & 0xff) + ":"
-						+ dec2hex(cap[(currentByte + (9 + 6))] & 0xff);
+				tmpBssid = dec2hex(cap[currentByte + 10] & 0xff) + ":" + dec2hex(cap[currentByte + 11] & 0xff) + ":"
+						+ dec2hex(cap[currentByte + 12] & 0xff) + ":" + dec2hex(cap[currentByte + 13] & 0xff) + ":"
+						+ dec2hex(cap[currentByte + 14] & 0xff) + ":" + dec2hex(cap[currentByte + 15] & 0xff);
 				// find this BSSIDs index in the array
 				recordHandshake = foundHsInList(handshakes, tmpBssid);
 				// Station Address
@@ -216,107 +185,102 @@ public class HashConvert {
 				if (recordHandshake.getSnonce().equals("")) {
 					recordHandshake.setStation("");
 					recordHandshake.setAnonce("");
-					if (Integer.valueOf(dec2hex(cap[currentByte + (36 - nonQosOffset)] & 0xff)
+					if (Integer.valueOf(dec2hex(cap[currentByte + 36 - nonQosOffset] & 0xff)
 							+ dec2hex(cap[currentByte + 37 - nonQosOffset] & 0xff), 16) < 118) {
-						recordHandshake.setStation(dec2hex(cap[(currentByte + (3 + 1))] & 0xff) + ":"
-								+ dec2hex(cap[(currentByte + (3 + 2))] & 0xff) + ":"
-								+ dec2hex(cap[(currentByte + (3 + 3))] & 0xff) + ":"
-								+ dec2hex(cap[(currentByte + (3 + 4))] & 0xff) + ":"
-								+ dec2hex(cap[(currentByte + (3 + 5))] & 0xff) + ":"
-								+ dec2hex(cap[(currentByte + (3 + 6))] & 0xff));
-
+						recordHandshake.setStation(dec2hex(cap[currentByte + 3 + 1] & 0xff) + ":"
+								+ dec2hex(cap[currentByte + 5] & 0xff) + ":" + dec2hex(cap[currentByte + 6] & 0xff)
+								+ ":" + dec2hex(cap[currentByte + 7] & 0xff) + ":"
+								+ dec2hex(cap[currentByte + 8] & 0xff) + ":" + dec2hex(cap[currentByte + 9] & 0xff));
 						// ANONCE
-						if (!(((cap[(currentByte + 51)] & 0xff) == 0) && ((cap[(currentByte + 52)] & 0xff) == 0)
-								&& ((cap[(currentByte + 53)] & 0xff) == 0) && ((cap[(currentByte + 54)] & 0xff) == 0)
-								&& ((cap[(currentByte + 55)] & 0xff) == 0) && ((cap[(currentByte + 56)] & 0xff) == 0)
-								&& ((cap[(currentByte + 57)] & 0xff) == 0) && ((cap[(currentByte + 58)] & 0xff) == 0)
-								&& ((cap[(currentByte + 59)] & 0xff) == 0) && ((cap[(currentByte + 60)] & 0xff) == 0)
-								&& ((cap[(currentByte + 61)] & 0xff) == 0) && ((cap[(currentByte + 62)] & 0xff) == 0)
-								&& ((cap[(currentByte + 63)] & 0xff) == 0) && ((cap[(currentByte + 64)] & 0xff) == 0)
-								&& ((cap[(currentByte + 65)] & 0xff) == 0) && ((cap[(currentByte + 66)] & 0xff) == 0)
-								&& ((cap[(currentByte + 67)] & 0xff) == 0) && ((cap[(currentByte + 68)] & 0xff) == 0)
-								&& ((cap[(currentByte + 69)] & 0xff) == 0) && ((cap[(currentByte + 70)] & 0xff) == 0)
-								&& ((cap[(currentByte + 71)] & 0xff) == 0) && ((cap[(currentByte + 72)] & 0xff) == 0)
-								&& ((cap[(currentByte + 73)] & 0xff) == 0) && ((cap[(currentByte + 74)] & 0xff) == 0)
-								&& ((cap[(currentByte + 75)] & 0xff) == 0) && ((cap[(currentByte + 76)] & 0xff) == 0)
-								&& ((cap[(currentByte + 77)] & 0xff) == 0) && ((cap[(currentByte + 78)] & 0xff) == 0)
-								&& ((cap[(currentByte + 79)] & 0xff) == 0) && ((cap[(currentByte + 80)] & 0xff) == 0)
-								&& ((cap[(currentByte + 81)] & 0xff) == 0) && ((cap[(currentByte + 82)] & 0xff) == 0)))
-
+						if (!((cap[currentByte + 51] & 0xff) == 0 && (cap[currentByte + 52] & 0xff) == 0
+								&& (cap[currentByte + 53] & 0xff) == 0 && (cap[currentByte + 54] & 0xff) == 0
+								&& (cap[currentByte + 55] & 0xff) == 0 && (cap[currentByte + 56] & 0xff) == 0
+								&& (cap[currentByte + 57] & 0xff) == 0 && (cap[currentByte + 58] & 0xff) == 0
+								&& (cap[currentByte + 59] & 0xff) == 0 && (cap[currentByte + 60] & 0xff) == 0
+								&& (cap[currentByte + 61] & 0xff) == 0 && (cap[currentByte + 62] & 0xff) == 0
+								&& (cap[currentByte + 63] & 0xff) == 0 && (cap[currentByte + 64] & 0xff) == 0
+								&& (cap[currentByte + 65] & 0xff) == 0 && (cap[currentByte + 66] & 0xff) == 0
+								&& (cap[currentByte + 67] & 0xff) == 0 && (cap[currentByte + 68] & 0xff) == 0
+								&& (cap[currentByte + 69] & 0xff) == 0 && (cap[currentByte + 70] & 0xff) == 0
+								&& (cap[currentByte + 71] & 0xff) == 0 && (cap[currentByte + 72] & 0xff) == 0
+								&& (cap[currentByte + 73] & 0xff) == 0 && (cap[currentByte + 74] & 0xff) == 0
+								&& (cap[currentByte + 75] & 0xff) == 0 && (cap[currentByte + 76] & 0xff) == 0
+								&& (cap[currentByte + 77] & 0xff) == 0 && (cap[currentByte + 78] & 0xff) == 0
+								&& (cap[currentByte + 79] & 0xff) == 0 && (cap[currentByte + 80] & 0xff) == 0
+								&& (cap[currentByte + 81] & 0xff) == 0 && (cap[currentByte + 82] & 0xff) == 0))
 							for (int i = 1; i < 33; i++) {
 								// ANONCE (bytes 52 to 83)
 								recordHandshake.setAnonce(recordHandshake.getAnonce()
-										+ dec2hex(cap[currentByte + ((50 - nonQosOffset) + i)] & 0xff));
+										+ dec2hex(cap[currentByte + 50 - nonQosOffset + i] & 0xff));
 								if (i < 32)
 									recordHandshake.setAnonce(recordHandshake.getAnonce() + " ");
 							}
 					}
 				}
 				// Message 2 of 4
-			} else if ((((cap[currentByte] & 0xff) == 136) && ((((cap[(currentByte + 1)] & 0xff) == 1)
-					|| ((cap[(currentByte + 1)] & 0xff) == 9))
-					&& (((cap[(currentByte + 32)] & 0xff) == 136) && ((cap[(currentByte + 33)] & 0xff) == 142))))
-					|| (((cap[currentByte] & 0xff) == 8)
-							&& ((((cap[(currentByte + 1)] & 0xff) == 1) || ((cap[(currentByte + 1)] & 0xff) == 9))
-									&& (((cap[(currentByte + 30)] & 0xff) == 136)
-											&& ((cap[(currentByte + 31)] & 0xff) == 142))))) {
+			} else if ((cap[currentByte] & 0xff) == 136
+					&& ((cap[currentByte + 1] & 0xff) == 1 || (cap[currentByte + 1] & 0xff) == 9)
+					&& (cap[currentByte + 32] & 0xff) == 136 && (cap[currentByte + 33] & 0xff) == 142
+					|| (cap[currentByte] & 0xff) == 8
+							&& ((cap[currentByte + 1] & 0xff) == 1 || (cap[currentByte + 1] & 0xff) == 9)
+							&& (cap[currentByte + 30] & 0xff) == 136 && (cap[currentByte + 31] & 0xff) == 142) {
 				if ((cap[currentByte] & 0xff) == 8)
 					nonQosOffset = 2;
 				else
 					nonQosOffset = 0;
 				// BSSID (bytes 5 to 10)
-				tmpBssid = dec2hex(cap[(currentByte + 4)] & 0xff) + ":" + dec2hex(cap[(currentByte + 5)] & 0xff) + ":"
-						+ dec2hex(cap[(currentByte + 6)] & 0xff) + ":" + dec2hex(cap[(currentByte + 7)] & 0xff) + ":"
-						+ dec2hex(cap[(currentByte + 8)] & 0xff) + ":" + dec2hex(cap[(currentByte + (3 + 6))] & 0xff);
+				tmpBssid = dec2hex(cap[currentByte + 4] & 0xff) + ":" + dec2hex(cap[currentByte + 5] & 0xff) + ":"
+						+ dec2hex(cap[currentByte + 6] & 0xff) + ":" + dec2hex(cap[currentByte + 7] & 0xff) + ":"
+						+ dec2hex(cap[currentByte + 8] & 0xff) + ":" + dec2hex(cap[currentByte + 9] & 0xff);
 				// find this BSSIDs index in the array
 				recordHandshake = foundHsInList(handshakes, tmpBssid);
-				if (!(((cap[(currentByte + (51 - nonQosOffset))] & 0xff) == 0)
-						&& ((cap[(currentByte + (52 - nonQosOffset))] & 0xff) == 0)
-						&& ((cap[(currentByte + (53 - nonQosOffset))] & 0xff) == 0)
-						&& ((cap[(currentByte + (54 - nonQosOffset))] & 0xff) == 0)
-						&& ((cap[(currentByte + (55 - nonQosOffset))] & 0xff) == 0)
-						&& ((cap[(currentByte + (56 - nonQosOffset))] & 0xff) == 0)
-						&& ((cap[(currentByte + (57 - nonQosOffset))] & 0xff) == 0)
-						&& ((cap[(currentByte + (58 - nonQosOffset))] & 0xff) == 0)
-						&& ((cap[(currentByte + (59 - nonQosOffset))] & 0xff) == 0)
-						&& ((cap[(currentByte + (60 - nonQosOffset))] & 0xff) == 0)
-						&& ((cap[(currentByte + (61 - nonQosOffset))] & 0xff) == 0)
-						&& ((cap[(currentByte + (62 - nonQosOffset))] & 0xff) == 0)
-						&& ((cap[(currentByte + (63 - nonQosOffset))] & 0xff) == 0)
-						&& ((cap[(currentByte + (64 - nonQosOffset))] & 0xff) == 0)
-						&& ((cap[(currentByte + (65 - nonQosOffset))] & 0xff) == 0)
-						&& ((cap[(currentByte + (66 - nonQosOffset))] & 0xff) == 0)
-						&& ((cap[(currentByte + (67 - nonQosOffset))] & 0xff) == 0)
-						&& ((cap[(currentByte + (68 - nonQosOffset))] & 0xff) == 0)
-						&& ((cap[(currentByte + (69 - nonQosOffset))] & 0xff) == 0)
-						&& ((cap[(currentByte + (70 - nonQosOffset))] & 0xff) == 0)
-						&& ((cap[(currentByte + (71 - nonQosOffset))] & 0xff) == 0)
-						&& ((cap[(currentByte + (72 - nonQosOffset))] & 0xff) == 0)
-						&& ((cap[(currentByte + (73 - nonQosOffset))] & 0xff) == 0)
-						&& ((cap[(currentByte + (74 - nonQosOffset))] & 0xff) == 0)
-						&& ((cap[(currentByte + (75 - nonQosOffset))] & 0xff) == 0)
-						&& ((cap[(currentByte + (76 - nonQosOffset))] & 0xff) == 0)
-						&& ((cap[(currentByte + (77 - nonQosOffset))] & 0xff) == 0)
-						&& ((cap[(currentByte + (78 - nonQosOffset))] & 0xff) == 0)
-						&& ((cap[(currentByte + (79 - nonQosOffset))] & 0xff) == 0)
-						&& ((cap[(currentByte + (80 - nonQosOffset))] & 0xff) == 0)
-						&& ((cap[(currentByte + (81 - nonQosOffset))] & 0xff) == 0)
-						&& ((cap[(currentByte + (82 - nonQosOffset))] & 0xff) == 0))) {
+				if (!((cap[currentByte + 51 - nonQosOffset] & 0xff) == 0
+						&& (cap[currentByte + 52 - nonQosOffset] & 0xff) == 0
+						&& (cap[currentByte + 53 - nonQosOffset] & 0xff) == 0
+						&& (cap[currentByte + 54 - nonQosOffset] & 0xff) == 0
+						&& (cap[currentByte + 55 - nonQosOffset] & 0xff) == 0
+						&& (cap[currentByte + 56 - nonQosOffset] & 0xff) == 0
+						&& (cap[currentByte + 57 - nonQosOffset] & 0xff) == 0
+						&& (cap[currentByte + 58 - nonQosOffset] & 0xff) == 0
+						&& (cap[currentByte + 59 - nonQosOffset] & 0xff) == 0
+						&& (cap[currentByte + 60 - nonQosOffset] & 0xff) == 0
+						&& (cap[currentByte + 61 - nonQosOffset] & 0xff) == 0
+						&& (cap[currentByte + 62 - nonQosOffset] & 0xff) == 0
+						&& (cap[currentByte + 63 - nonQosOffset] & 0xff) == 0
+						&& (cap[currentByte + 64 - nonQosOffset] & 0xff) == 0
+						&& (cap[currentByte + 65 - nonQosOffset] & 0xff) == 0
+						&& (cap[currentByte + 66 - nonQosOffset] & 0xff) == 0
+						&& (cap[currentByte + 67 - nonQosOffset] & 0xff) == 0
+						&& (cap[currentByte + 68 - nonQosOffset] & 0xff) == 0
+						&& (cap[currentByte + 69 - nonQosOffset] & 0xff) == 0
+						&& (cap[currentByte + 70 - nonQosOffset] & 0xff) == 0
+						&& (cap[currentByte + 71 - nonQosOffset] & 0xff) == 0
+						&& (cap[currentByte + 72 - nonQosOffset] & 0xff) == 0
+						&& (cap[currentByte + 73 - nonQosOffset] & 0xff) == 0
+						&& (cap[currentByte + 74 - nonQosOffset] & 0xff) == 0
+						&& (cap[currentByte + 75 - nonQosOffset] & 0xff) == 0
+						&& (cap[currentByte + 76 - nonQosOffset] & 0xff) == 0
+						&& (cap[currentByte + 77 - nonQosOffset] & 0xff) == 0
+						&& (cap[currentByte + 78 - nonQosOffset] & 0xff) == 0
+						&& (cap[currentByte + 79 - nonQosOffset] & 0xff) == 0
+						&& (cap[currentByte + 80 - nonQosOffset] & 0xff) == 0
+						&& (cap[currentByte + 81 - nonQosOffset] & 0xff) == 0
+						&& (cap[currentByte + 82 - nonQosOffset] & 0xff) == 0))
 					// EAPOL
-					if (packetLength > (34 - nonQosOffset)) {
+					if (packetLength > 34 - nonQosOffset)
 						// SNONCE
 						if (!recordHandshake.getAnonce().equals("") && !recordHandshake.getStation().equals("")
 								&& recordHandshake.getSnonce().equals("")) {
 							for (int i = 1; i <= 32; i++) {
 								// SNONCE (bytes 52 to 83)
 								recordHandshake.setSnonce(recordHandshake.getSnonce()
-										+ dec2hex(cap[(currentByte + ((50 - nonQosOffset) + i))] & 0xff));
+										+ dec2hex(cap[currentByte + 50 - nonQosOffset + i] & 0xff));
 								if (i < 32)
 									recordHandshake.setSnonce(recordHandshake.getSnonce() + " ");
 							}
 							recordHandshake
 									.setEapolSize(Integer
-											.valueOf(dec2hex(cap[currentByte + (36 - nonQosOffset)] & 0xff)
+											.valueOf(dec2hex(cap[currentByte + 36 - nonQosOffset] & 0xff)
 													+ dec2hex(cap[currentByte + 37 - nonQosOffset] & 0xff), 16)
 											+ 4 + "");
 							if (Integer.valueOf(recordHandshake.getEapolSize()) > 0)
@@ -327,62 +291,50 @@ public class HashConvert {
 								// Key Version
 								if (i == 7)
 									recordHandshake
-											.setKeyVersion(
-													"" + (Integer
-															.valueOf(dec2hex(
-																	cap[(currentByte + ((33 - nonQosOffset) + (i - 1)))]
-																			& 0xff)
-																	+ ""
-																	+ dec2hex(cap[(currentByte
-																			+ ((33 - nonQosOffset) + i))] & 0xff),
-																	16)
-															& 7));
+											.setKeyVersion("" + (Integer.valueOf(
+													dec2hex(cap[currentByte + 33 - nonQosOffset + i - 1] & 0xff) + ""
+															+ dec2hex(cap[currentByte + 33 - nonQosOffset + i] & 0xff),
+													16) & 7));
 								// Key MIC
-								if ((i > 81) && (i < 98)) {
+								if (i > 81 && i < 98) {
 									recordHandshake.setEapol(recordHandshake.getEapol() + "00");
 									recordHandshake.setKeyMic(recordHandshake.getKeyMic()
-											+ dec2hex(cap[(currentByte + ((33 - nonQosOffset) + i))] & 0xff));
-									if ((i < 97))
+											+ dec2hex(cap[currentByte + 33 - nonQosOffset + i] & 0xff));
+									if (i < 97)
 										recordHandshake.setKeyMic(recordHandshake.getKeyMic() + " ");
 								} else
 									recordHandshake.setEapol(recordHandshake.getEapol()
-											+ dec2hex(cap[(currentByte + ((33 - nonQosOffset) + i))] & 0xff));
-								if ((i < eapolLengthToUse))
+											+ dec2hex(cap[currentByte + 33 - nonQosOffset + i] & 0xff));
+								if (i < eapolLengthToUse)
 									recordHandshake.setEapol(recordHandshake.getEapol() + " ");
 							}
 						}
-					}
-				}
 			}
 			currentByte += packetLength;
 			// move to next packet
 		}
 		ArrayList<Handshake> returnValue = new ArrayList<Handshake>();
-		for (Handshake handshake : handshakes) {
+		for (Handshake handshake : handshakes)
 			if (!(handshake.getEssid().equals("") || handshake.getBssid().equals("")
 					|| handshake.getStation().equals("") || handshake.getSnonce().equals("")
 					|| handshake.getAnonce().equals("") || handshake.getEapol().equals("")
 					|| handshake.getEapolSize().equals("") || handshake.getKeyVersion().equals("")
 					|| handshake.getKeyMic().equals("")))
 				returnValue.add(handshake);
-		}
 		return returnValue;
-
 	}
 
 	private Handshake foundHsInList(List<Handshake> handshakes, String bssid) throws UnsupportedDataTypeException {
-		for (Handshake handshake : handshakes) {
-			if (handshake.getBssid().equals(bssid)) {
+		for (Handshake handshake : handshakes)
+			if (handshake.getBssid().equals(bssid))
 				return handshake;
-			}
-		}
 		throw new UnsupportedDataTypeException("Unexpected error");
 	}
 
 	private int bytes2num(byte loByte, byte hiByte) {
-		if ((((hiByte & 0xFF) & 0x80) != 0))
-			return (((hiByte & 0xFF) * 0x100) | (loByte & 0xFF)) | 0xFFFF0000;
-		return ((hiByte & 0xFF) * 0x100) | (loByte & 0xFF);
+		if ((hiByte & 0xFF & 0x80) != 0)
+			return (hiByte & 0xFF) * 0x100 | loByte & 0xFF | 0xFFFF0000;
+		return (hiByte & 0xFF) * 0x100 | loByte & 0xFF;
 	}
 
 	private String dec2hex(int num) {
