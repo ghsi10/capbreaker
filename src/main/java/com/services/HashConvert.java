@@ -34,7 +34,8 @@ public class HashConvert {
 		String tmpEssid;
 		boolean ssidIsBlank;
 		int nonQosOffset;
-		int eapolLengthToUse;
+		int tmpEapolSize;
+		int eapolSize;
 		totalBytes = cap.length;
 		if (totalBytes < 40)
 			throw new UnsupportedDataTypeException("Invalid File");
@@ -278,20 +279,17 @@ public class HashConvert {
 								if (i < 32)
 									recordHandshake.setSnonce(recordHandshake.getSnonce() + " ");
 							}
-							recordHandshake
-									.setEapolSize(Integer
-											.valueOf(dec2hex(cap[currentByte + 36 - nonQosOffset] & 0xff)
-													+ dec2hex(cap[currentByte + 37 - nonQosOffset] & 0xff), 16)
-											+ 4 + "");
-							if (Integer.valueOf(recordHandshake.getEapolSize()) > 0)
-								eapolLengthToUse = Integer.valueOf(recordHandshake.getEapolSize());
+							tmpEapolSize = Integer.valueOf(dec2hex(cap[currentByte + 36 - nonQosOffset] & 0xff)
+									+ dec2hex(cap[currentByte + 37 - nonQosOffset] & 0xff), 16) + 4;
+							if (tmpEapolSize > 0)
+								eapolSize = tmpEapolSize;
 							else
-								eapolLengthToUse = packetLength - (34 - nonQosOffset);
-							for (int i = 1; i <= eapolLengthToUse; i++) {
+								eapolSize = packetLength - (34 - nonQosOffset);
+							for (int i = 1; i <= eapolSize; i++) {
 								// Key Version
 								if (i == 7)
 									recordHandshake
-											.setKeyVersion("" + (Integer.valueOf(
+											.setKeyVersion("0" + (Integer.valueOf(
 													dec2hex(cap[currentByte + 33 - nonQosOffset + i - 1] & 0xff) + ""
 															+ dec2hex(cap[currentByte + 33 - nonQosOffset + i] & 0xff),
 													16) & 7));
@@ -305,7 +303,7 @@ public class HashConvert {
 								} else
 									recordHandshake.setEapol(recordHandshake.getEapol()
 											+ dec2hex(cap[currentByte + 33 - nonQosOffset + i] & 0xff));
-								if (i < eapolLengthToUse)
+								if (i < eapolSize)
 									recordHandshake.setEapol(recordHandshake.getEapol() + " ");
 							}
 						}
@@ -318,8 +316,7 @@ public class HashConvert {
 			if (!(handshake.getEssid().equals("") || handshake.getBssid().equals("")
 					|| handshake.getStation().equals("") || handshake.getSnonce().equals("")
 					|| handshake.getAnonce().equals("") || handshake.getEapol().equals("")
-					|| handshake.getEapolSize().equals("") || handshake.getKeyVersion().equals("")
-					|| handshake.getKeyMic().equals("")))
+					|| handshake.getKeyVersion().equals("") || handshake.getKeyMic().equals("")))
 				returnValue.add(handshake);
 		return returnValue;
 	}

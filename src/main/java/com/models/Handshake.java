@@ -12,7 +12,6 @@ public class Handshake implements Serializable {
 	private String snonce;
 	private String anonce;
 	private String eapol;
-	private String eapolSize;
 	private String keyVersion;
 	private String keyMic;
 
@@ -23,7 +22,6 @@ public class Handshake implements Serializable {
 		this.snonce = "";
 		this.anonce = "";
 		this.eapol = "";
-		this.eapolSize = "";
 		this.keyVersion = "";
 		this.keyMic = "";
 	}
@@ -35,7 +33,6 @@ public class Handshake implements Serializable {
 		this.snonce = "";
 		this.anonce = "";
 		this.eapol = "";
-		this.eapolSize = "";
 		this.keyVersion = "";
 		this.keyMic = "";
 	}
@@ -47,7 +44,6 @@ public class Handshake implements Serializable {
 		this.snonce = hs.snonce;
 		this.anonce = hs.anonce;
 		this.eapol = hs.eapol;
-		this.eapolSize = hs.eapolSize;
 		this.keyVersion = hs.keyVersion;
 		this.keyMic = hs.keyMic;
 	}
@@ -100,14 +96,6 @@ public class Handshake implements Serializable {
 		this.eapol = eapol;
 	}
 
-	public String getEapolSize() {
-		return eapolSize;
-	}
-
-	public void setEapolSize(String eapolSize) {
-		this.eapolSize = eapolSize;
-	}
-
 	public String getKeyVersion() {
 		return keyVersion;
 	}
@@ -129,9 +117,9 @@ public class Handshake implements Serializable {
 		if (obj instanceof Handshake) {
 			Handshake handshake = (Handshake) obj;
 			return handshake.anonce.equals(anonce) && handshake.bssid.equals(bssid) && handshake.eapol.equals(eapol)
-					&& handshake.eapolSize.equals(eapolSize) && handshake.essid.equals(essid)
-					&& handshake.keyMic.equals(keyMic) && handshake.keyVersion.equals(keyVersion)
-					&& handshake.snonce.equals(snonce) && handshake.station.equals(station);
+					&& handshake.essid.equals(essid) && handshake.keyMic.equals(keyMic)
+					&& handshake.keyVersion.equals(keyVersion) && handshake.snonce.equals(snonce)
+					&& handshake.station.equals(station);
 		}
 		return false;
 	}
@@ -139,7 +127,6 @@ public class Handshake implements Serializable {
 	@Override
 	public String toString() {
 		return "Handshake:\n essid=" + essid + "\n bssid=" + bssid + "\n station=" + station + "\n snonce=" + snonce
-				+ "\n anonce=" + anonce + "\n eapol=" + eapol + "\n eapolSize=" + eapolSize + "\n keyVersion="
-				+ keyVersion + "\n keyMic=" + keyMic;
+				+ "\n anonce=" + anonce + "\n eapol=" + eapol + "\n keyVersion=" + keyVersion + "\n keyMic=" + keyMic;
 	}
 }
