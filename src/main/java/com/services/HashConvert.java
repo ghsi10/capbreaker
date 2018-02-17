@@ -209,13 +209,10 @@ public class HashConvert {
 								&& (cap[currentByte + 77] & 0xff) == 0 && (cap[currentByte + 78] & 0xff) == 0
 								&& (cap[currentByte + 79] & 0xff) == 0 && (cap[currentByte + 80] & 0xff) == 0
 								&& (cap[currentByte + 81] & 0xff) == 0 && (cap[currentByte + 82] & 0xff) == 0))
-							for (int i = 1; i < 33; i++) {
-								// ANONCE (bytes 52 to 83)
+							// ANONCE (bytes 52 to 83)
+							for (int i = 1; i < 33; i++)
 								recordHandshake.setAnonce(recordHandshake.getAnonce()
 										+ dec2hex(cap[currentByte + 50 - nonQosOffset + i] & 0xff));
-								if (i < 32)
-									recordHandshake.setAnonce(recordHandshake.getAnonce() + " ");
-							}
 					}
 				}
 				// Message 2 of 4
@@ -272,13 +269,10 @@ public class HashConvert {
 						// SNONCE
 						if (!recordHandshake.getAnonce().equals("") && !recordHandshake.getStation().equals("")
 								&& recordHandshake.getSnonce().equals("")) {
-							for (int i = 1; i <= 32; i++) {
-								// SNONCE (bytes 52 to 83)
+							// SNONCE (bytes 52 to 83)
+							for (int i = 1; i <= 32; i++)
 								recordHandshake.setSnonce(recordHandshake.getSnonce()
 										+ dec2hex(cap[currentByte + 50 - nonQosOffset + i] & 0xff));
-								if (i < 32)
-									recordHandshake.setSnonce(recordHandshake.getSnonce() + " ");
-							}
 							tmpEapolSize = Integer.valueOf(dec2hex(cap[currentByte + 36 - nonQosOffset] & 0xff)
 									+ dec2hex(cap[currentByte + 37 - nonQosOffset] & 0xff), 16) + 4;
 							if (tmpEapolSize > 0)
@@ -298,13 +292,9 @@ public class HashConvert {
 									recordHandshake.setEapol(recordHandshake.getEapol() + "00");
 									recordHandshake.setKeyMic(recordHandshake.getKeyMic()
 											+ dec2hex(cap[currentByte + 33 - nonQosOffset + i] & 0xff));
-									if (i < 97)
-										recordHandshake.setKeyMic(recordHandshake.getKeyMic() + " ");
 								} else
 									recordHandshake.setEapol(recordHandshake.getEapol()
 											+ dec2hex(cap[currentByte + 33 - nonQosOffset + i] & 0xff));
-								if (i < eapolSize)
-									recordHandshake.setEapol(recordHandshake.getEapol() + " ");
 							}
 						}
 			}
