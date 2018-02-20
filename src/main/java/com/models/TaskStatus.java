@@ -10,11 +10,10 @@ public enum TaskStatus {
 	}
 
 	public static TaskStatus fromString(String text) {
-		for (TaskStatus taskStatus : TaskStatus.values()) {
-			if (taskStatus.toString().equalsIgnoreCase(text)) {
-				return taskStatus;
-			}
-		}
+		if (text != null)
+			for (TaskStatus taskStatus : TaskStatus.values())
+				if (taskStatus.toString().equalsIgnoreCase(text))
+					return taskStatus;
 		return null;
 	}
 

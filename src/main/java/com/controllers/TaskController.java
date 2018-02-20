@@ -18,9 +18,9 @@ import com.services.TaskService;
 
 @Controller
 public class TaskController {
-	
+
 	private TaskService taskService;
-	
+
 	@RequestMapping(value = { "/", "/tasks" }, method = RequestMethod.GET)
 	public String getTable(Model model) {
 		model.addAttribute("module", "tasks");

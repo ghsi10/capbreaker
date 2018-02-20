@@ -23,14 +23,9 @@ public class AgentController {
 
 	private ScanManager scanManager;
 
-	@RequestMapping(value = "/agent/login", method = RequestMethod.POST)
-	public ResponseEntity<String> getNextTask() {
-		return new ResponseEntity<>("login success", HttpStatus.OK);
-	}
-
 	@RequestMapping(value = "/agent/getNextTask", method = RequestMethod.POST)
-	public ResponseEntity<Chunk> getNextTask(@AuthenticationPrincipal User user) throws NotBoundException {
-		return new ResponseEntity<>(scanManager.getNextTask(user.getUsername()), HttpStatus.OK);
+	public ResponseEntity<Chunk> getNextTask() throws NotBoundException {
+		return new ResponseEntity<>(scanManager.getNextTask(""), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/agent/setResult", method = RequestMethod.POST)

@@ -34,7 +34,6 @@ public class SecurityConfig {
 	@Configuration
 	@Order(1)
 	public static class ApiWebSecurityConfigurationAdapter extends WebSecurityConfigurerAdapter {
-
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 			http.csrf().disable().antMatcher("/agent/**").authorizeRequests().anyRequest().hasAnyRole("ADMIN", "USER")
@@ -44,12 +43,11 @@ public class SecurityConfig {
 
 	@Configuration
 	public static class FormLoginWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
-
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 			http.headers().frameOptions().disable().and().csrf().disable().authorizeRequests().antMatchers("/admin/**")
-					.hasRole("ADMIN").and().formLogin().loginPage("/login").and().logout()
-					.logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
+					.hasRole("ADMIN").antMatchers("/user/**").hasAnyRole("ADMIN", "USER").and().formLogin()
+					.loginPage("/login").and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
 		}
 	}
 }

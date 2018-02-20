@@ -1,11 +1,14 @@
 package com.models;
 
-import javax.persistence.*;
 import java.security.SecureRandom;
 
-// TODO: Add an binary array with the same length as the number of commands from the properties file.
-// TODO: This array will be used to create a list of commands when adding a task to the scanTask list.
-// TODO: This array will be updated when a user finished a task.
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.Table;
+
 @Entity
 @Table(name = "tasks")
 public class Task {
@@ -22,28 +25,28 @@ public class Task {
 	private Handshake handshake;
 
 	public Task() {
-		this.status = TaskStatus.Queued;
-		this.taskPassword = randomPassword();
-		this.wifiPassword = "";
+		status = TaskStatus.Queued;
+		taskPassword = randomPassword();
+		wifiPassword = "";
 	}
 
 	public Task(Task t) {
-		this.id = t.id;
-		this.bssid = t.bssid;
-		this.essid = t.essid;
-		this.status = t.status;
-		this.taskPassword = t.taskPassword;
-		this.handshake = t.handshake;
-		this.taskPassword = randomPassword();
+		id = t.id;
+		bssid = t.bssid;
+		essid = t.essid;
+		status = t.status;
+		taskPassword = t.taskPassword;
+		handshake = t.handshake;
+		taskPassword = randomPassword();
 	}
 
 	public Task(Handshake hs) {
-		this.bssid = hs.getBssid();
-		this.essid = hs.getEssid();
-		this.status = TaskStatus.Queued;
-		this.handshake = hs;
-		this.wifiPassword = "";
-		this.taskPassword = randomPassword();
+		bssid = hs.getBssid();
+		essid = hs.getEssid();
+		status = TaskStatus.Queued;
+		handshake = hs;
+		wifiPassword = "";
+		taskPassword = randomPassword();
 	}
 
 	private String randomPassword() {

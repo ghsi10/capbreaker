@@ -10,11 +10,10 @@ public enum UserRole {
 	}
 
 	public static UserRole fromString(String text) {
-		for (UserRole userRole : UserRole.values()) {
-			if (userRole.toString().equalsIgnoreCase(text)) {
-				return userRole;
-			}
-		}
+		if (text != null)
+			for (UserRole userRole : UserRole.values())
+				if (userRole.toString().equalsIgnoreCase(text))
+					return userRole;
 		return null;
 	}
 

@@ -1,5 +1,6 @@
 package com.models;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -15,6 +16,7 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	@Column(unique = true)
 	private String username;
 	private String password;
 	@Enumerated(EnumType.STRING)
@@ -22,7 +24,6 @@ public class User {
 	private boolean enable;
 
 	public User() {
-		this.enable = false;
 	}
 
 	public User(String username, String password, UserRole role, boolean enable) {

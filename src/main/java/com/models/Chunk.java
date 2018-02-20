@@ -1,18 +1,28 @@
 package com.models;
 
 import java.util.Arrays;
+import java.util.UUID;
 
 public class Chunk {
-
+	private UUID uuid;
 	private Handshake handshake;
 	private String[] commands;
 
 	public Chunk() {
 	}
 
-	public Chunk(Handshake hs, String[] commands) {
-		this.handshake = hs;
+	public Chunk(UUID uuid, Handshake handshake, String[] commands) {
+
+		this.handshake = handshake;
 		this.commands = commands;
+	}
+
+	public UUID getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(UUID uuid) {
+		this.uuid = uuid;
 	}
 
 	public Handshake getHandshake() {
@@ -33,15 +43,13 @@ public class Chunk {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof Chunk) {
-			Chunk chunkData = (Chunk) obj;
-			return chunkData.handshake.equals(handshake) && chunkData.commands.equals(commands);
-		}
+		if (obj instanceof Chunk)
+			return ((Chunk) obj).uuid.equals(uuid);
 		return false;
 	}
 
 	@Override
 	public String toString() {
-		return "ChunkData [hs=" + handshake + ", commands=" + Arrays.toString(commands) + "]";
+		return "Chunk [uuid=" + uuid + ", handshake=" + handshake + ", commands=" + Arrays.toString(commands) + "]";
 	}
 }

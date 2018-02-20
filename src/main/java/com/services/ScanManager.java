@@ -6,6 +6,7 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.naming.NameNotFoundException;
 
@@ -76,11 +77,11 @@ public class ScanManager {
 			// agent found, send it a new Chunk with an updated scan command
 			agent.scanTask = scanTask;
 			agent.activeScanCommand = scanCommand;
-			return new Chunk(scanTask.getTask().getHandshake(), scanCommand);
+			return new Chunk(UUID.randomUUID(), scanTask.getTask().getHandshake(), scanCommand);
 		} catch (NameNotFoundException e) {
 			// agent not found, create a new one and send it a new Chunk
 			initNewScanningAgent(username, scanTask, scanCommand);
-			return new Chunk(scanTask.getTask().getHandshake(), scanCommand);
+			return new Chunk(UUID.randomUUID(), scanTask.getTask().getHandshake(), scanCommand);
 		}
 	}
 
