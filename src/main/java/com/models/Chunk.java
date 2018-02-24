@@ -1,27 +1,26 @@
 package com.models;
 
 import java.util.Arrays;
-import java.util.UUID;
 
 public class Chunk {
-	private UUID uuid;
+	private String uuid;
 	private Handshake handshake;
 	private String[] commands;
 
 	public Chunk() {
 	}
 
-	public Chunk(UUID uuid, Handshake handshake, String[] commands) {
-
+	public Chunk(String uuid, Handshake handshake, String[] commands) {
+		this.uuid = uuid;
 		this.handshake = handshake;
 		this.commands = commands;
 	}
 
-	public UUID getUuid() {
+	public String getUuid() {
 		return uuid;
 	}
 
-	public void setUuid(UUID uuid) {
+	public void setUuid(String uuid) {
 		this.uuid = uuid;
 	}
 

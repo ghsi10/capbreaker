@@ -26,7 +26,6 @@ public class HashConvert {
 	private List<Handshake> readCap(byte[] cap) throws UnsupportedDataTypeException {
 		ArrayList<Handshake> handshakes = new ArrayList<Handshake>();
 		Handshake recordHandshake;
-		boolean useLittleEndian;
 		int packetLength;
 		int currentByte;
 		int nonQosOffset;
@@ -34,17 +33,17 @@ public class HashConvert {
 		if (totalBytes < 40)
 			throw new UnsupportedDataTypeException("Invalid File");
 		// GLOBAL HEADER (24 bytes)
-		if (!((cap[0] & 0xff) == 212 && (cap[1] & 0xff) == 195 && (cap[2] & 0xff) == 178 && (cap[3] & 0xff) == 161)
-				|| (cap[0] & 0xff) == 77 && (cap[1] & 0xff) == 60 && (cap[2] & 0xff) == 178 && (cap[3] & 0xff) == 161
+
+		boolean useLittleEndian = (cap[0] & 0xff) == 212 && (cap[1] & 0xff) == 195 && (cap[2] & 0xff) == 178
+				&& (cap[3] & 0xff) == 161
+				|| (cap[0] & 0xff) == 77 && (cap[1] & 0xff) == 60 && (cap[2] & 0xff) == 178 && (cap[3] & 0xff) == 161;
+
+		if (!(useLittleEndian
 				|| (cap[0] & 0xff) == 161 && (cap[1] & 0xff) == 178 && (cap[2] & 0xff) == 195 && (cap[3] & 0xff) == 212
 				|| (cap[0] & 0xff) == 161 && (cap[1] & 0xff) == 178 && (cap[2] & 0xff) == 60 && (cap[3] & 0xff) == 77
 				|| (cap[0] & 0xff) == 52 && (cap[1] & 0xff) == 205 && (cap[2] & 0xff) == 178 && (cap[3] & 0xff) == 161
-				|| (cap[0] & 0xff) == 161 && (cap[1] & 0xff) == 178 && (cap[2] & 0xff) == 205 && (cap[3] & 0xff) == 52)
+				|| (cap[0] & 0xff) == 161 && (cap[1] & 0xff) == 178 && (cap[2] & 0xff) == 205 && (cap[3] & 0xff) == 52))
 			throw new UnsupportedDataTypeException("Invalid file signature");
-
-		useLittleEndian = (cap[0] & 0xff) == 212 && (cap[1] & 0xff) == 195 && (cap[2] & 0xff) == 178
-				&& (cap[3] & 0xff) == 161
-				|| (cap[0] & 0xff) == 77 && (cap[1] & 0xff) == 60 && (cap[2] & 0xff) == 178 && (cap[3] & 0xff) == 161;
 
 		if (!(useLittleEndian && (cap[20] & 0xff) == 105 || !useLittleEndian && (cap[23] & 0xff) == 105
 				|| useLittleEndian && (cap[20] & 0xff) == 119 || !useLittleEndian && (cap[23] & 0xff) == 119
@@ -53,12 +52,12 @@ public class HashConvert {
 			throw new UnsupportedDataTypeException("Invalid Link Layer");
 		// COUNT UNIQUE BSSIDS
 		currentByte = 24;
+		int offset = 10;
+		if (useLittleEndian)
+			offset = 8;
 		while (currentByte < totalBytes) {
-			if (useLittleEndian)
-				packetLength = bytes2num(cap[currentByte + 8], cap[currentByte + 9]);
-			else
-				packetLength = bytes2num(cap[currentByte + 10], cap[currentByte + 11]);
-			currentByte = currentByte + 16;
+			packetLength = bytes2num(cap[currentByte + offset], cap[currentByte + offset + 1]);
+			currentByte += 16;
 			if (packetLength > 0) {
 				// BEACON FRAME + PROBE RESPONSE
 				if ((cap[currentByte] & 0xff) == 128 || (cap[currentByte] & 0xff) == 80)
@@ -87,10 +86,7 @@ public class HashConvert {
 			throw new UnsupportedDataTypeException("No BSSIDs found!");
 		currentByte = 24;
 		while (currentByte < totalBytes) {
-			if (useLittleEndian)
-				packetLength = bytes2num(cap[currentByte + 8], cap[currentByte + 9]);
-			else
-				packetLength = bytes2num(cap[currentByte + 10], cap[currentByte + 11]);
+			packetLength = bytes2num(cap[currentByte + offset], cap[currentByte + offset + 1]);
 			currentByte += 16;
 			// PACKET DATA (variable length)
 			if (packetLength > 0)
@@ -135,10 +131,7 @@ public class HashConvert {
 					|| (cap[currentByte] & 0xff) == 8
 							&& ((cap[currentByte + 1] & 0xff) == 2 || (cap[currentByte + 1] & 0xff) == 10)
 							&& (cap[currentByte + 30] & 0xff) == 136 && (cap[currentByte + 31] & 0xff) == 142) {
-				if ((cap[currentByte] & 0xff) == 8)
-					nonQosOffset = 2;
-				else
-					nonQosOffset = 0;
+				nonQosOffset = (cap[currentByte] & 0xff) == 8 ? 2 : 0;
 				// BSSID (bytes 11 to 16) and find this BSSIDs index in the array
 				recordHandshake = foundHsInList(handshakes, readBssid(cap, currentByte, 10));
 				// Station Address
@@ -182,10 +175,7 @@ public class HashConvert {
 					|| (cap[currentByte] & 0xff) == 8
 							&& ((cap[currentByte + 1] & 0xff) == 1 || (cap[currentByte + 1] & 0xff) == 9)
 							&& (cap[currentByte + 30] & 0xff) == 136 && (cap[currentByte + 31] & 0xff) == 142) {
-				if ((cap[currentByte] & 0xff) == 8)
-					nonQosOffset = 2;
-				else
-					nonQosOffset = 0;
+				nonQosOffset = (cap[currentByte] & 0xff) == 8 ? 2 : 0;
 				// BSSID (bytes 5 to 10) and find this BSSIDs index in the array
 				recordHandshake = foundHsInList(handshakes, readBssid(cap, currentByte, 4));
 				if (!((cap[currentByte + 51 - nonQosOffset] & 0xff) == 0

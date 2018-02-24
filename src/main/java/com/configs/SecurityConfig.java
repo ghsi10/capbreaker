@@ -16,19 +16,19 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig {
 
 	@Value("${spring.queries.users-query}")
-	private String usersQuery;
+	private String USERS_QUERY;
 	@Value("${spring.queries.roles-query}")
-	private String rolesQuery;
+	private String ROLES_QUERY;
 	@Value("${spring.login.username}")
-	private String masterUsername;
+	private String MASTER_USERNAME;
 	@Value("${spring.login.password}")
-	private String masterPassword;
+	private String MASTER_PASSWORD;
 
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth, DataSource dataSource) throws Exception {
-		auth.jdbcAuthentication().dataSource(dataSource).usersByUsernameQuery(usersQuery)
-				.authoritiesByUsernameQuery(rolesQuery).and().inMemoryAuthentication().withUser(masterUsername)
-				.password(masterPassword).roles("ADMIN");
+		auth.jdbcAuthentication().dataSource(dataSource).usersByUsernameQuery(USERS_QUERY)
+				.authoritiesByUsernameQuery(ROLES_QUERY).and().inMemoryAuthentication().withUser(MASTER_USERNAME)
+				.password(MASTER_PASSWORD).roles("ADMIN");
 	}
 
 	@Configuration

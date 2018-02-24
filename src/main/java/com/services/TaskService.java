@@ -5,6 +5,8 @@ import java.util.List;
 import javax.activation.UnsupportedDataTypeException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.models.Handshake;
@@ -14,11 +16,14 @@ import com.repositories.TaskRepository;
 @Service
 public class TaskService {
 
+	@Value("${view.page.size}")
+	private int PAGE_SIZE;
+
 	private TaskRepository taskRepository;
 	private HashConvert hashConvert;
 
-	public List<Task> getTable() {
-		return taskRepository.findTop50ByOrderByIdDesc();
+	public List<Task> getTable(int page) {
+		return taskRepository.findAllByOrderByIdDesc(new PageRequest(page, PAGE_SIZE)).getContent();
 	}
 
 	public Task uploadCap(byte[] file, String essid, String bssid) throws UnsupportedDataTypeException {

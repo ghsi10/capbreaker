@@ -1,24 +1,48 @@
 package com.models;
 
-import java.util.LinkedList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
-/**
- * A scan task contains a task from the task table and possible scan
- * commands.<br>
- * The scan commands linked list is created initially from the commands in the
- * properties file, but then gets updated when agents are being assigned with
- * scan tasks (- each agent performs a different scan command).<br>
- */
 public class ScanTask {
 
-	/** The task from the task table. */
 	private Task task;
-	/** The scanning commands - updated as agents receive their tasks */
-	private LinkedList<String[]> scanCommands;
+	private Map<String, String[]> scanCommands;
 
-	public ScanTask(Task task, LinkedList<String[]> scanCommands) {
+	public ScanTask() {
+		this.scanCommands = new HashMap<>();
+	}
+
+	public ScanTask(Task task) {
+		this.task = task;
+		this.scanCommands = new HashMap<>();
+	}
+
+	public ScanTask(Task task, String uuid, String[] command) {
+		this.task = task;
+		this.scanCommands = new HashMap<>();
+		addCommand(uuid, command);
+	}
+
+	public ScanTask(Task task, Map<String, String[]> scanCommands) {
 		this.task = task;
 		this.scanCommands = scanCommands;
+	}
+
+	public void addCommand(String uuid, String[] command) {
+		scanCommands.put(uuid, command);
+	}
+
+	public Entry<String, String[]> pollCommand() {
+		if (scanCommands.isEmpty())
+			return null;
+		Entry<String, String[]> first = scanCommands.entrySet().iterator().next();
+		scanCommands.remove(first.getKey());
+		return first;
+	}
+
+	public boolean isEmpty() {
+		return scanCommands.isEmpty();
 	}
 
 	public Task getTask() {
@@ -29,7 +53,26 @@ public class ScanTask {
 		this.task = task;
 	}
 
-	public LinkedList<String[]> getScanCommands() {
+	public Map<String, String[]> getScanCommands() {
 		return scanCommands;
 	}
+
+	public void setScanCommands(Map<String, String[]> scanCommands) {
+		this.scanCommands = scanCommands;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof ScanTask) {
+			ScanTask scanTask = (ScanTask) obj;
+			return scanTask.task.equals(task) && scanTask.scanCommands.equals(scanCommands);
+		}
+		return false;
+	}
+
+	@Override
+	public String toString() {
+		return "ScanTask [task=" + task + ", scanCommands=" + scanCommands + "]";
+	}
+
 }

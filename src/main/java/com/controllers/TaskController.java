@@ -22,9 +22,9 @@ public class TaskController {
 	private TaskService taskService;
 
 	@RequestMapping(value = { "/", "/tasks" }, method = RequestMethod.GET)
-	public String getTable(Model model) {
+	public String getTable(Model model, @RequestParam(required = false, defaultValue = "0") int page) {
 		model.addAttribute("module", "tasks");
-		model.addAttribute("tasks", taskService.getTable());
+		model.addAttribute("tasks", taskService.getTable(page));
 		return "tasks";
 	}
 

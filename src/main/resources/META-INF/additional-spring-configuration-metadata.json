@@ -33,5 +33,20 @@
     "name": "agent.download",
     "type": "java.lang.String",
     "description": "url for agent download"
+  },
+  {
+    "name": "view.page.size",
+    "type": "java.lang.Integar",
+    "description": "number of tasks in page"
+  },
+  {
+    "name": "agent.keepalive.max",
+    "type": "java.lang.Integar",
+    "description": "number of max keep alive"
+  },
+  {
+    "name": "agent.keepalvie.timer",
+    "type": "java.lang.Integar",
+    "description": "timer for keep alive"
   }
 ]}
