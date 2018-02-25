@@ -63,7 +63,9 @@ public class ScanManager {
 			scanCommand = scanTask.pollCommand();
 			if (scanTask.isEmpty())
 				scanTask = tasks.poll();
-			agents.add(new Agent(scanCommand.getKey(), scanTask.getTask(), scanCommand.getValue()));
+			Agent agent = new Agent(scanCommand.getKey(), scanTask.getTask(), scanCommand.getValue());
+			agents.add(agent);
+			agent.start();
 		}
 		return new Chunk(scanCommand.getKey(), scanTask.getTask().getHandshake(), scanCommand.getValue());
 	}
