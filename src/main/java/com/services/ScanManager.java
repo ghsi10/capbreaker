@@ -2,12 +2,15 @@ package com.services;
 
 import java.rmi.NotBoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -30,8 +33,7 @@ public class ScanManager {
 	@Value("${agent.keepalive.max}")
 	private int MAX_KEEP_ALIVE;
 
-	private final List<String[]> commands;
-
+	private List<String[]> commands;
 	private LinkedList<ScanTask> tasks;
 	private Set<Agent> agents;
 
@@ -106,7 +108,10 @@ public class ScanManager {
 	}
 
 	private void addTaskToScanManager(Task task) {
-		// TODO write the metod
+		Map<String, String[]> scanCommands = new HashMap<>();
+		for (String[] command : commands)
+			scanCommands.put(UUID.randomUUID().toString(), command);
+		tasks.add(new ScanTask(task, scanCommands));
 	}
 
 	private class Agent extends Thread {
