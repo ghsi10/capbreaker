@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,7 +25,7 @@ import com.repositories.TaskRepository;
 @Service
 public class ScanManager {
 
-	@Value("${agent.keepalvie.timer}")
+	@Value("${agent.keepalive.timer}")
 	private int AGENT_TIMER;
 	@Value("${agent.keepalive.max}")
 	private int MAX_KEEP_ALIVE;
@@ -42,12 +45,18 @@ public class ScanManager {
 		agents = new HashSet<>();
 	}
 
+	@PostConstruct
+	private void init() {
+		AGENT_TIMER *= 1000;
+		for (Task task : taskRepository.findAllByStatusOrderByIdAsc(TaskStatus.Working))
+			addTaskToScanManager(task);
+	}
+
 	public Chunk getTask() throws NotBoundException {
 		ScanTask scanTask;
 		Entry<String, String[]> scanCommand;
+		updateTasks();
 		synchronized (tasks) {
-			if (tasks.isEmpty())
-				updateTasks();
 			scanTask = tasks.peek();
 			scanCommand = scanTask.pollCommand();
 			if (scanTask.isEmpty())
@@ -57,51 +66,47 @@ public class ScanManager {
 		return new Chunk(scanCommand.getKey(), scanTask.getTask().getHandshake(), scanCommand.getValue());
 	}
 
-	public synchronized void setResult(String uuid, String password) throws NoSuchElementException {
-		Agent agent = agents.stream().filter(o -> o.uuid.equals(uuid)).findFirst().get();
+	public void setResult(String uuid, String password) throws NoSuchElementException {
 		synchronized (tasks) {
+			Agent agent = agents.stream().filter(o -> o.uuid.equals(uuid)).findFirst().get();
 			agent.interrupt();
 			agents.remove(agent);
-			reportThePassword(agent.task, password);
+			reportTheResult(agent.task, password);
 		}
 	}
 
 	public void keepAlive(String uuid) throws NoSuchElementException {
-		Agent agent = agents.stream().filter(o -> o.uuid.equals(uuid)).findFirst().get();
-		if (agent.keepAlive < MAX_KEEP_ALIVE) {
-			agent.keepAlive++;
-		}
+		agents.stream().filter(o -> o.uuid.equals(uuid)).findFirst().get().keepAlive = MAX_KEEP_ALIVE;
 	}
 
-	private void reportThePassword(Task task, String password) {
-		if (!password.equals("") || !tasks.stream().anyMatch(o -> o.getTask().equals(task))) {
+	private void reportTheResult(Task task, String password) {
+		if (!password.equals("") || !tasks.stream().anyMatch(o -> o.getTask().equals(task))
+				&& !agents.stream().anyMatch(o -> o.task.equals(task))) {
 			task.setStatus(TaskStatus.Completed);
 			task.setWifiPassword(password);
 			taskRepository.save(task);
-			tasks.stream().filter(o -> o.getTask().equals(task)).forEach(tasks::remove);
-			agents.stream().filter(o -> o.task.equals(task)).forEach(o -> o.interrupt());
-			agents.stream().filter(o -> o.task.equals(task)).forEach(agents::remove);
+			tasks.stream().filter(o -> o.getTask().equals(task)).collect(Collectors.toList()).forEach(tasks::remove);
+			agents.stream().filter(o -> o.task.equals(task)).collect(Collectors.toList()).forEach(o -> {
+				o.interrupt();
+				agents.remove(o);
+			});
 		}
 	}
 
-	private void updateTasks() throws NotBoundException {
-		List<Task> taskList = taskRepository.findAllByStatusOrderByIdAsc(TaskStatus.Working);
-		if (taskList == null || taskList.isEmpty()) { // no previous working tasks, get a new one
-			taskList = taskRepository.findAllByStatusOrderByIdAsc(TaskStatus.Queued);
-			if (taskList == null || taskList.isEmpty()) {
-				throw new NotBoundException();
-			}
-			Task task = taskList.get(0);
-			task.setStatus(TaskStatus.Working);
-			taskRepository.save(task);
-			tasks.add(new ScanTask());
-		} else { // add all tasks with "Working" state
-			for (Task task : taskList) {
-				// TODO: Use the commands array from the Task model when creating the second
-				// parameter:
-				tasks.add(new ScanTask());
-			}
-		}
+	private synchronized void updateTasks() throws NotBoundException {
+		if (!tasks.isEmpty())
+			return;
+		List<Task> taskList = taskRepository.findAllByStatusOrderByIdAsc(TaskStatus.Queued);
+		if (taskList.isEmpty())
+			throw new NotBoundException();
+		Task task = taskList.get(0);
+		task.setStatus(TaskStatus.Working);
+		addTaskToScanManager(task);
+		taskRepository.save(task);
+	}
+
+	private void addTaskToScanManager(Task task) {
+		// TODO write the metod
 	}
 
 	private class Agent extends Thread {
@@ -116,7 +121,7 @@ public class ScanManager {
 			this.uuid = uuid;
 			this.task = task;
 			this.command = command;
-			this.keepAlive = MAX_KEEP_ALIVE;
+			keepAlive = MAX_KEEP_ALIVE;
 		}
 
 		@Override
@@ -127,11 +132,12 @@ public class ScanManager {
 					keepAlive--;
 					if (keepAlive < 0) {
 						synchronized (tasks) {
-							if (tasks.stream().anyMatch(o -> o.getTask().equals(task)))
+							try {
 								tasks.stream().filter(o -> o.getTask().equals(task)).findFirst().get().addCommand(uuid,
 										command);
-							else
+							} catch (NoSuchElementException e) {
 								tasks.addFirst(new ScanTask(task, uuid, command));
+							}
 							agents.remove(this);
 						}
 						break;

@@ -10,17 +10,17 @@ public class ScanTask {
 	private Map<String, String[]> scanCommands;
 
 	public ScanTask() {
-		this.scanCommands = new HashMap<>();
+		scanCommands = new HashMap<>();
 	}
 
 	public ScanTask(Task task) {
 		this.task = task;
-		this.scanCommands = new HashMap<>();
+		scanCommands = new HashMap<>();
 	}
 
 	public ScanTask(Task task, String uuid, String[] command) {
 		this.task = task;
-		this.scanCommands = new HashMap<>();
+		scanCommands = new HashMap<>();
 		addCommand(uuid, command);
 	}
 

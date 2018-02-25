@@ -15,8 +15,6 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
 
 	Page<Task> findAllByOrderByIdDesc(Pageable pageable);
 
-	Task findOneByStatus(TaskStatus status);
-
 	List<Task> findAllByStatusOrderByIdAsc(TaskStatus status);
 
 }

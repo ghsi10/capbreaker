@@ -16,36 +16,36 @@ public class Handshake implements Serializable {
 	private String keyMic;
 
 	public Handshake() {
-		this.essid = "";
-		this.bssid = "";
-		this.station = "";
-		this.snonce = "";
-		this.anonce = "";
-		this.eapol = "";
-		this.keyVersion = "";
-		this.keyMic = "";
+		essid = "";
+		bssid = "";
+		station = "";
+		snonce = "";
+		anonce = "";
+		eapol = "";
+		keyVersion = "";
+		keyMic = "";
 	}
 
 	public Handshake(String bssid) {
-		this.essid = "";
 		this.bssid = bssid;
-		this.station = "";
-		this.snonce = "";
-		this.anonce = "";
-		this.eapol = "";
-		this.keyVersion = "";
-		this.keyMic = "";
+		essid = "";
+		station = "";
+		snonce = "";
+		anonce = "";
+		eapol = "";
+		keyVersion = "";
+		keyMic = "";
 	}
 
 	public Handshake(Handshake hs) {
-		this.essid = hs.essid;
-		this.bssid = hs.bssid;
-		this.station = hs.station;
-		this.snonce = hs.snonce;
-		this.anonce = hs.anonce;
-		this.eapol = hs.eapol;
-		this.keyVersion = hs.keyVersion;
-		this.keyMic = hs.keyMic;
+		essid = hs.essid;
+		bssid = hs.bssid;
+		station = hs.station;
+		snonce = hs.snonce;
+		anonce = hs.anonce;
+		eapol = hs.eapol;
+		keyVersion = hs.keyVersion;
+		keyMic = hs.keyMic;
 	}
 
 	public String getEssid() {

@@ -45,7 +45,7 @@
     "description": "number of max keep alive"
   },
   {
-    "name": "agent.keepalvie.timer",
+    "name": "agent.keepalive.timer",
     "type": "java.lang.Integar",
     "description": "timer for keep alive"
   }
