@@ -10,6 +10,12 @@ public class Chunk {
 	public Chunk() {
 	}
 
+	public Chunk(Chunk chunk) {
+		uuid = chunk.uuid;
+		handshake = chunk.handshake;
+		commands = chunk.commands;
+	}
+
 	public Chunk(String uuid, Handshake handshake, String[] commands) {
 		this.uuid = uuid;
 		this.handshake = handshake;

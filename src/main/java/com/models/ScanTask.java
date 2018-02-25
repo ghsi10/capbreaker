@@ -1,44 +1,37 @@
 package com.models;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.springframework.data.util.Pair;
 
 public class ScanTask {
 
 	private Task task;
-	private Map<String, String[]> scanCommands;
-
-	public ScanTask() {
-		scanCommands = new HashMap<>();
-	}
+	private List<Pair<String, String[]>> scanCommands;
 
 	public ScanTask(Task task) {
 		this.task = task;
-		scanCommands = new HashMap<>();
+		scanCommands = new LinkedList<>();
+	}
+
+	public ScanTask(ScanTask scanTask) {
+		task = scanTask.task;
+		scanCommands = scanTask.scanCommands;
 	}
 
 	public ScanTask(Task task, String uuid, String[] command) {
 		this.task = task;
-		scanCommands = new HashMap<>();
-		addCommand(uuid, command);
-	}
-
-	public ScanTask(Task task, Map<String, String[]> scanCommands) {
-		this.task = task;
-		this.scanCommands = scanCommands;
+		scanCommands = new LinkedList<>();
+		scanCommands.add(Pair.of(uuid, command));
 	}
 
 	public void addCommand(String uuid, String[] command) {
-		scanCommands.put(uuid, command);
+		scanCommands.add(Pair.of(uuid, command));
 	}
 
-	public Entry<String, String[]> pollCommand() {
-		if (scanCommands.isEmpty())
-			return null;
-		Entry<String, String[]> first = scanCommands.entrySet().iterator().next();
-		scanCommands.remove(first.getKey());
-		return first;
+	public Pair<String, String[]> pollCommand() {
+		return scanCommands.remove(0);
 	}
 
 	public boolean isEmpty() {
@@ -53,11 +46,11 @@ public class ScanTask {
 		this.task = task;
 	}
 
-	public Map<String, String[]> getScanCommands() {
+	public List<Pair<String, String[]>> getScanCommands() {
 		return scanCommands;
 	}
 
-	public void setScanCommands(Map<String, String[]> scanCommands) {
+	public void setScanCommands(List<Pair<String, String[]>> scanCommands) {
 		this.scanCommands = scanCommands;
 	}
 

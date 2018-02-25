@@ -2,12 +2,9 @@ package com.services;
 
 import java.rmi.NotBoundException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.UUID;
@@ -17,6 +14,7 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 import com.models.Chunk;
@@ -34,7 +32,7 @@ public class ScanManager {
 	private int MAX_KEEP_ALIVE;
 
 	private List<String[]> commands;
-	private LinkedList<ScanTask> tasks;
+	private List<ScanTask> tasks;
 	private Set<Agent> agents;
 
 	private TaskRepository taskRepository;
@@ -56,18 +54,18 @@ public class ScanManager {
 
 	public Chunk getTask() throws NotBoundException {
 		ScanTask scanTask;
-		Entry<String, String[]> scanCommand;
+		Pair<String, String[]> scanCommand;
 		updateTasks();
 		synchronized (tasks) {
-			scanTask = tasks.peek();
+			scanTask = tasks.get(0);
 			scanCommand = scanTask.pollCommand();
 			if (scanTask.isEmpty())
-				scanTask = tasks.poll();
-			Agent agent = new Agent(scanCommand.getKey(), scanTask.getTask(), scanCommand.getValue());
+				scanTask = tasks.remove(0);
+			Agent agent = new Agent(scanCommand.getFirst(), scanTask.getTask(), scanCommand.getSecond());
 			agents.add(agent);
 			agent.start();
 		}
-		return new Chunk(scanCommand.getKey(), scanTask.getTask().getHandshake(), scanCommand.getValue());
+		return new Chunk(scanCommand.getFirst(), scanTask.getTask().getHandshake(), scanCommand.getSecond());
 	}
 
 	public void setResult(String uuid, String password) throws NoSuchElementException {
@@ -110,10 +108,10 @@ public class ScanManager {
 	}
 
 	private void addTaskToScanManager(Task task) {
-		Map<String, String[]> scanCommands = new HashMap<>();
+		ScanTask scanTask = new ScanTask(task);
 		for (String[] command : commands)
-			scanCommands.put(UUID.randomUUID().toString(), command);
-		tasks.add(new ScanTask(task, scanCommands));
+			scanTask.addCommand(UUID.randomUUID().toString(), command);
+		tasks.add(scanTask);
 	}
 
 	private class Agent extends Thread {
@@ -143,7 +141,7 @@ public class ScanManager {
 								tasks.stream().filter(o -> o.getTask().equals(task)).findFirst().get().addCommand(uuid,
 										command);
 							} catch (NoSuchElementException e) {
-								tasks.addFirst(new ScanTask(task, uuid, command));
+								tasks.add(0, new ScanTask(task, uuid, command));
 							}
 							agents.remove(this);
 						}
