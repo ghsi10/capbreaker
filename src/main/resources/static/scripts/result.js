@@ -12,4 +12,11 @@ $(document).ready(function() {
         else
             $("#getResultBtn").attr("disabled", "disabled");
     });
+	
+	$("#adminInputTaskId").on('input', function() {
+		if (this.value.length > 0)
+			$("#getResultBtn").removeAttr("disabled");
+		else
+			$("#getResultBtn").attr("disabled", "disabled");
+	});
 });
