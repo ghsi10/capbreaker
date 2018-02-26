@@ -5,8 +5,11 @@
 }
 
 .form-signin .form-signin-heading, .form-signin .checkbox {
-	margin-bottom: 10px;
-	text-align: center;
+	margin-left: 2px;
+	margin-bottom: 5px;
+	font-size: 12px;
+	text-align: left;
+	font-weight: bold;
 }
 
 .form-signin .checkbox {
@@ -38,5 +41,24 @@
 }
 
 .form-signin input {
-	text-align: center;
+	text-align: left;
+}
+
+.login-failed {
+	margin-top: 10px;
+	margin-bottom: 0px;
+	margin-left: 2px;
+	text-align: left;
+	font-size: 15px;
+	font-weight: bold;
+		color: red;
+}
+
+.login-logout {
+	margin-left: 2px;
+	margin-bottom: 20px;
+	text-align: left;
+	font-size: 15px;
+	font-weight: bold;
+	color: blue;
 }
