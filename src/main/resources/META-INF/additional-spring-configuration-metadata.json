@@ -30,7 +30,7 @@
     "description": "dns inject to agent"
   },
   {
-    "name": "agent.download",
+    "name": "agent.download.url",
     "type": "java.lang.String",
     "description": "url for agent download"
   },

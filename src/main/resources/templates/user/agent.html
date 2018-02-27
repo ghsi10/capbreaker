@@ -10,7 +10,7 @@ username = '[[${username}]]'
 password = '[[${password}]]'
 server = '[[${server}]]'
 hashcatUrl = '[[${url}]]'
-hashcatLocation = './hashcat'
+hashcatLocation = None
 hashcatMode = 3
 
 try:
@@ -23,9 +23,11 @@ except ImportError:
 class Hashcat:
     """ Hashcat class """
 
-    def __init__(self, location='./hashcat', url=None, mode=3):
+    def __init__(self, location=None, url=None, mode=3):
         self.url = url
         self.location = location
+        if self.location is None:
+            self.location = os.getenv('APPDATA') + '\\capbreaker'
         self.mode = mode
         self.password = None
         self.foundPhrase = None
@@ -34,7 +36,7 @@ class Hashcat:
 
     def download(self):
         """ Download hashcat """
-        print('Downloading hashcat.')
+        print('Downloading hashcat...')
         request = requests.get(self.url)
         zipFile = ZipFile(BytesIO(request.content))
         zipFile.extractall(self.location)
