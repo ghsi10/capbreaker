@@ -3,15 +3,15 @@ import pip
 import os
 from io import BytesIO
 from zipfile import ZipFile
-from time import sleep
 import subprocess
+from time import sleep
 
 username = '[[${username}]]'
 password = '[[${password}]]'
-server = '[[${dns}]]'
-hashcatUrl = '[[${url}]]'
-hashcatLocation = None
-hashcatMode = 3
+server = '[[${server}]]'
+hashcat_url = '[[${url}]]'
+hashcat_location = None
+hashcat_mode = 3
 
 try:
     import requests
@@ -30,7 +30,7 @@ class Hashcat:
             self.location = os.getenv('APPDATA') + '\\capbreaker'
         self.mode = mode
         self.password = None
-        self.foundPhrase = None
+        self.found_phrase = None
         if not os.path.isfile(self.location + '/hashcat64.exe'):
             self.download()
 
@@ -38,40 +38,40 @@ class Hashcat:
         """ Download hashcat """
         print('Downloading hashcat...')
         request = requests.get(self.url)
-        zipFile = ZipFile(BytesIO(request.content))
-        zipFile.extractall(self.location)
-        zipFile.close()
+        zip_file = ZipFile(BytesIO(request.content))
+        zip_file.extractall(self.location)
+        zip_file.close()
         print('Download completed.')
 
     def handshake(self, handshake):
-        """ Save Handshake file in hashcatLocation """
-        byteFile = bytearray.fromhex('484350580400000000')
-        byteFile += len(handshake['essid']).to_bytes(1, byteorder='little')
-        byteFile += str.encode(handshake['essid'])
+        """ Save Handshake file in hashcat_location """
+        byte_file = bytearray.fromhex('484350580400000000')
+        byte_file += len(handshake['essid']).to_bytes(1, byteorder='little')
+        byte_file += str.encode(handshake['essid'])
         for i in range(len(handshake['essid']), 32):
-            byteFile += bytearray.fromhex('00')
-        byteFile += bytearray.fromhex(handshake['keyVersion'])
-        byteFile += bytearray.fromhex(handshake['keyMic'])
-        byteFile += bytearray.fromhex(handshake['bssid'].replace(':', ''))
-        byteFile += bytearray.fromhex(handshake['anonce'])
-        byteFile += bytearray.fromhex(handshake['station'].replace(':', ''))
-        byteFile += bytearray.fromhex(handshake['snonce'])
-        eapolLen = int(len(handshake['eapol']) / 2)
-        byteFile += eapolLen.to_bytes(2, byteorder='little')
-        byteFile += bytearray.fromhex(handshake['eapol'])
-        for i in range(eapolLen, 256):
-            byteFile += bytearray.fromhex('00')
-        newFile = open(self.location + '/hs.hccapx', 'wb')
-        newFile.write(byteFile)
-        newFile.close()
+            byte_file += bytearray.fromhex('00')
+        byte_file += bytearray.fromhex(handshake['keyVersion'])
+        byte_file += bytearray.fromhex(handshake['keyMic'])
+        byte_file += bytearray.fromhex(handshake['bssid'].replace(':', ''))
+        byte_file += bytearray.fromhex(handshake['anonce'])
+        byte_file += bytearray.fromhex(handshake['station'].replace(':', ''))
+        byte_file += bytearray.fromhex(handshake['snonce'])
+        eapol_len = int(len(handshake['eapol']) / 2)
+        byte_file += eapol_len.to_bytes(2, byteorder='little')
+        byte_file += bytearray.fromhex(handshake['eapol'])
+        for i in range(eapol_len, 256):
+            byte_file += bytearray.fromhex('00')
+        new_file = open(self.location + '/hs.hccapx', 'wb')
+        new_file.write(byte_file)
+        new_file.close()
 
     def scan(self, chunk):
         """ Start scan with hashcat """
         handshake = chunk['handshake']
         self.handshake(handshake)
-        self.foundPhrase = (handshake['bssid'].replace(':', '') + ':').lower()
-        self.foundPhrase += (handshake['station'].replace(':', '') + ':').lower()
-        self.foundPhrase += handshake['essid']
+        self.found_phrase = (handshake['bssid'].replace(':', '') + ':').lower()
+        self.found_phrase += (handshake['station'].replace(':', '') + ':').lower()
+        self.found_phrase += handshake['essid']
         commands = self.location + '/hashcat64.exe ' + self.location + '/hs.hccapx' + ' -w ' + str(self.mode)
         commands += ' -m 2500 --force --potfile-disable --restore-disable --status --status-timer=20 --logfile-disable'
         for command in chunk['commands']:
@@ -80,39 +80,39 @@ class Hashcat:
         while True:
             output = process.stdout.readline().decode()
             if not output:
-                print("Hashcat exeption.")
+                print("Hashcat exception.")
                 break
             if 'Running' in output:
                 requests.post(server + '/agent/keepAlive', headers={'uuid': chunk['uuid']}, auth=(username, password))
-            elif 'Exhausted' in output or self.foundPhrase in output:
-                if self.foundPhrase in output:
+            elif 'Exhausted' in output or self.found_phrase in output:
+                if self.found_phrase in output:
                     self.password = output.split(':')[4]
                     process.kill()
                 requests.post(server + '/agent/setResult', headers={'uuid': chunk['uuid']},
                               data={'password': hashcat.password}, auth=(username, password))
                 break
+        sleep(5)
 
 
 if __name__ == '__main__':
     print('Cap Breaker Agent.\n')
-    hashcat = Hashcat(hashcatLocation, hashcatUrl, hashcatMode)
+    hashcat = Hashcat(hashcat_location, hashcat_url, hashcat_mode)
     while True:
         print('Looking for task.')
         try:
             response = requests.post(server + '/agent/getTask', auth=(username, password))
-        except:
+        except requests.RequestException:
             print('Unable connect to server. please try again later.')
             break
         if response.status_code == 200:
-            print('Task found, start scan...')
+            print('Task found, starting scan...')
             hashcat.scan(response.json())
             print('Task done')
-            sleep(5)
         elif response.status_code == 204:
-            print('Not found task. Trying again in 60 seconds.')
+            print('Task not found, will try again in 60 seconds.')
             sleep(60)
         else:
             print('Unexpected error occurred.')
             break
-
+            
 </html>
