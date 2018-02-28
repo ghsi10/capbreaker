@@ -73,8 +73,8 @@ public class TaskController {
 	@ExceptionHandler(NumberFormatException.class)
 	public String handleDbError(NumberFormatException e, Model model) {
 		model.addAttribute("module", "result");
-		model.addAttribute("task", null);
-		return "resultof";
+		model.addAttribute("error", "Invalid task id and password.");
+		return "result";
 	}
 
 	@Autowired

@@ -16,8 +16,11 @@
 }
 
 .form-signin .form-signin-heading, .form-signin .checkbox {
-	margin-bottom: 10px;
+	margin-left: 2px;
+	margin-bottom: 5px;
+	font-size: 12px;
 	text-align: center;
+	font-weight: bold;
 }
 
 .form-signin .checkbox {
@@ -86,4 +89,13 @@
 	color: red;
 	font-weight: bold;
 	font-style: italic;
+}
+
+.task-failed {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	text-align: center;
+	font-size: 15px;
+	font-weight: bold;
+	color: red;
 }

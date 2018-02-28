@@ -7,19 +7,9 @@
 <body class="container">
 	<div th:replace="fragments/header :: header"></div>
 	<form id="get-resultof-form" class="form-signin form-horizontal"
-		role="form" th:if="${task}==null" th:action="@{/result}"
-		data-toggle="validator">
-		<div class="alert alert-danger fade in alert-dismissable text-center">Task
-			ID or Password is incorrect</div>
-		<div align="center">
-			<button id="finish-upload-btn" class="btn btn-primary" type="submit">Back</button>
-		</div>
-	</form>
-	<form id="get-resultof-form" class="form-signin form-horizontal"
-		role="form" th:if="${task}!=null" th:action="@{/tasks}"
-		data-toggle="validator">
+		role="form" th:action="@{/tasks}" data-toggle="validator">
 		<div class="report" id="results">
-			Task ID: <span class="results-spans" id="essid-span"
+			Task id: <span class="results-spans" id="essid-span"
 				th:text="${task.id}">id</span><br /> ESSID: <span
 				class="results-spans" id="essid-span" th:text="${task.essid}">essid</span><br />
 			BSSID: <span class="results-spans" id="bssid-span"

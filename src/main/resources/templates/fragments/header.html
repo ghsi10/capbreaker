@@ -18,8 +18,10 @@
 				th:href="@{/upload}">Add task</a></li>
 			<li th:class="${module=='result'?'active':''}"><a
 				th:href="@{/result}">Get result</a></li>
-			<li th:class="${module=='login'?'pull-right active':'pull-right'}" sec:authorize="isAnonymous()"><a
-				th:href="@{/login}">Login</a></li>
+			<li sec:authorize="isAuthenticated()"><a
+				th:href="@{/user/download}">Download agent</a></li>
+			<li th:class="${module=='login'?'pull-right active':'pull-right'}"
+				sec:authorize="isAnonymous()"><a th:href="@{/login}">Login</a></li>
 			<li class="pull-right" sec:authorize="isAuthenticated()"><a
 				th:href="@{/logout}">Logout</a></li>
 		</ul>

@@ -8,7 +8,7 @@
 	margin-left: 2px;
 	margin-bottom: 5px;
 	font-size: 12px;
-	text-align: left;
+	text-align: center;
 	font-weight: bold;
 }
 
@@ -41,24 +41,24 @@
 }
 
 .form-signin input {
-	text-align: left;
+	text-align: center;
 }
 
 .login-failed {
 	margin-top: 10px;
 	margin-bottom: 0px;
 	margin-left: 2px;
-	text-align: left;
+	text-align: center;
 	font-size: 15px;
 	font-weight: bold;
-		color: red;
+	color: red;
 }
 
 .login-logout {
 	margin-left: 2px;
 	margin-bottom: 20px;
-	text-align: left;
+	text-align: center;
 	font-size: 15px;
 	font-weight: bold;
-	color: blue;
+	color: rgb(51, 122, 183);
 }

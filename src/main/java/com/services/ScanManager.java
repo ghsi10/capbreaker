@@ -81,6 +81,14 @@ public class ScanManager {
 		agents.stream().filter(o -> o.uuid.equals(uuid)).findFirst().get().keepAlive = MAX_KEEP_ALIVE;
 	}
 
+	public void stopTask(int taskId) {
+		tasks.stream().filter(o -> o.getTask().getId() == taskId).collect(Collectors.toList()).forEach(tasks::remove);
+		agents.stream().filter(o -> o.task.getId() == taskId).collect(Collectors.toList()).forEach(o -> {
+			o.interrupt();
+			agents.remove(o);
+		});
+	}
+
 	private void reportTheResult(Task task, String password) {
 		if (!password.equals("") || !tasks.stream().anyMatch(o -> o.getTask().equals(task))
 				&& !agents.stream().anyMatch(o -> o.task.equals(task))) {

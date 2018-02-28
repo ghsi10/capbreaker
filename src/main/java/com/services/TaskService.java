@@ -37,7 +37,7 @@ public class TaskService {
 		Task task = taskRepository.findOne(Integer.parseInt(taskId));
 		if (task != null && task.getTaskPassword().equals(taskPassword))
 			return task;
-		return null;
+		throw new NumberFormatException();
 	}
 
 	@Autowired

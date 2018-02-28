@@ -15,18 +15,17 @@
 		</div>
 		<div class="form-group">
 			<div class="col-md-12">
-				<div class="form-signin-heading">Enter your username:</div>
+				<div class="form-signin-heading">Enter your username</div>
 				<label for="username" class="sr-only">UserName</label> <input
 					type="text" name="username" id="username"
 					class="form-control input-lg" placeholder="Username" />
-				<div class="form-signin-heading">Enter your password:</div>
+				<div class="form-signin-heading">Enter your password</div>
 				<label for="password" class="sr-only">Password</label> <input
 					type="password" name="password" id="password"
 					class="form-control input-lg" placeholder="Password"
 					autocomplete="off" />
-				<div th:if="${param.error}">
-					<div class="login-failed">Invalid username and password.</div>
-				</div>
+				<div th:if="${param.error}" class="login-failed">Invalid
+					username and password.</div>
 			</div>
 		</div>
 		<div class="form-group">
