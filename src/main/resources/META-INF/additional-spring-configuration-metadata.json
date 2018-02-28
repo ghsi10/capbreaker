@@ -25,9 +25,9 @@
     "description": "master password"
   },
   {
-    "name": "agent.dns",
+    "name": "agent.server.dns",
     "type": "java.lang.String",
-    "description": "dns inject to agent"
+    "description": "server dns inject to agent"
   },
   {
     "name": "agent.download.url",

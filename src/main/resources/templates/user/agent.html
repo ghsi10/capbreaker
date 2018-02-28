@@ -76,21 +76,23 @@ class Hashcat:
         commands += ' -m 2500 --force --potfile-disable --restore-disable --status --status-timer=20 --logfile-disable'
         for command in chunk['commands']:
             commands += ' ' + command
-        process = subprocess.Popen(commands, stdout=subprocess.PIPE)
+        process = subprocess.Popen(commands, cwd=self.location, stdout=subprocess.PIPE)
         while True:
             output = process.stdout.readline().decode()
             if not output:
                 print("Hashcat exception.")
                 break
             if 'Running' in output:
-                requests.post(server + '/agent/keepAlive', headers={'uuid': chunk['uuid']}, auth=(username, password))
+                if requests.post(server + '/agent/keepAlive', headers={'uuid': chunk['uuid']},
+                                 auth=(username, password)).status_code != 200:
+                    break
             elif 'Exhausted' in output or self.found_phrase in output:
                 if self.found_phrase in output:
                     self.password = output.split(':')[4]
-                    process.kill()
                 requests.post(server + '/agent/setResult', headers={'uuid': chunk['uuid']},
                               data={'password': hashcat.password}, auth=(username, password))
                 break
+        process.terminate()
         sleep(5)
 
 
@@ -114,5 +116,5 @@ if __name__ == '__main__':
         else:
             print('Unexpected error occurred.')
             break
-            
+
 </html>

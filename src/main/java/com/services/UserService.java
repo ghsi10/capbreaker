@@ -1,14 +1,22 @@
 package com.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.models.Task;
 import com.repositories.TaskRepository;
+import com.repositories.UserRepository;
 
 @Service
 public class UserService {
 
+	@Value("${spring.login.username}")
+	private String MASTER_USERNAME;
+	@Value("${spring.login.password}")
+	private String MASTER_PASSWORD;
+
+	private UserRepository userRepository;
 	private TaskRepository taskRepository;
 	private ScanManager scanManager;
 
@@ -22,6 +30,17 @@ public class UserService {
 	public void deletTask(String taskId) {
 		scanManager.stopTask(Integer.parseInt(taskId));
 		taskRepository.delete(Integer.parseInt(taskId));
+	}
+
+	public String getPassword(String username) {
+		if (username.equals(MASTER_USERNAME))
+			return MASTER_PASSWORD;
+		return userRepository.findOneByUsername(username).getPassword();
+	}
+
+	@Autowired
+	public void setUserRepository(UserRepository userRepository) {
+		this.userRepository = userRepository;
 	}
 
 	@Autowired
