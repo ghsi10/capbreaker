@@ -47,6 +47,6 @@
   {
     "name": "agent.keepalive.timer",
     "type": "java.lang.Integar",
-    "description": "timer for keep alive"
+    "description": "timer for keep alive in seconds"
   }
 ]}

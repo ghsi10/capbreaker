@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -47,7 +48,6 @@ public class ScanManager {
 
 	@PostConstruct
 	private void init() {
-		AGENT_TIMER *= 1000;
 		for (Task task : taskRepository.findAllByStatusOrderByIdAsc(TaskStatus.Working))
 			addTaskToScanManager(task);
 	}
@@ -141,7 +141,7 @@ public class ScanManager {
 		public void run() {
 			try {
 				while (true) {
-					Thread.sleep(AGENT_TIMER);
+					TimeUnit.SECONDS.sleep(AGENT_TIMER);
 					keepAlive--;
 					if (keepAlive < 0) {
 						synchronized (tasks) {
