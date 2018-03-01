@@ -1,20 +1,19 @@
 package com.models;
 
 public enum UserRole {
-	ADMIN("ROLE_ADMIN"), USER("ROLE_USER");
+	ROLE_ADMIN("admin"), ROLE_USER("user");
 
-	private String role;
+	private final String role;
 
 	UserRole(String role) {
 		this.role = role;
 	}
 
-	public static UserRole fromString(String text) {
-		if (text != null)
-			for (UserRole userRole : UserRole.values())
-				if (userRole.toString().equalsIgnoreCase(text))
-					return userRole;
-		return null;
+	public static UserRole fromString(String value) {
+		for (UserRole v : values())
+			if (v.toString().equalsIgnoreCase(value))
+				return v;
+		throw new IllegalArgumentException();
 	}
 
 	@Override
