@@ -4,11 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.capbreaker</groupId>
-	<artifactId>capbreaker</artifactId>
+	<artifactId>server</artifactId>
 	<version>1.3.0</version>
 	<packaging>jar</packaging>
 
-	<name>capbreaker</name>
+	<name>Capbreaker</name>
 	<description>break a cap files</description>
 
 	<parent>
@@ -26,43 +26,43 @@
 
 	<dependencies>
 	
-		<!--Spring web -->
+		<!-- Spring web -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		
-		<!--Spring JPA -->
+		<!-- Spring JPA -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 		
-		<!--Spring security -->
+		<!-- Spring security -->
 				<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 		
-		<!--Thymeleaf -->
+		<!-- Thymeleaf -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
 
-		<!--Thymeleaf security -->
+		<!-- Thymeleaf security -->
 		<dependency>
 			<groupId>org.thymeleaf.extras</groupId>
 			<artifactId>thymeleaf-extras-springsecurity4</artifactId>
 		</dependency>
 		
-		<!--Embedded database  -->
+		<!-- Embedded database  -->
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 		</dependency>
 
-		<!--Databases
+		<!-- Databases
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
