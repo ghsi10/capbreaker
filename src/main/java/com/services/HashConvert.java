@@ -22,7 +22,7 @@ public class HashConvert {
     }
 
     private List<Handshake> readCap(byte[] cap) throws UnsupportedDataTypeException {
-        ArrayList<Handshake> handshakes = new ArrayList<Handshake>();
+        List<Handshake> handshakes = new ArrayList<>();
         Handshake recordHandshake;
         int packetLength;
         int currentByte;
@@ -101,12 +101,7 @@ public class HashConvert {
                                 break;
                             }
                         if (!ssidIsBlank)
-                            if (recordHandshake.getEssid().equals("")) {
-                                String tmpEssid = "";
-                                for (int i = 1; i <= (cap[currentByte + 37] & 0xff); i++)
-                                    tmpEssid += (char) (cap[currentByte + 37 + i] & 0xff);
-                                recordHandshake.setEssid(tmpEssid);
-                            }
+                            addEssid(recordHandshake, cap, currentByte);
                     }
                 }
             // PROBE RESPONSE
@@ -115,12 +110,7 @@ public class HashConvert {
                 recordHandshake = foundHsInList(handshakes, readBssid(cap, currentByte, 16));
                 // grab SSID
                 if ((cap[currentByte + 37] & 0xff) > 0 && (cap[currentByte + 37] & 0xff) <= 36)
-                    if (recordHandshake.getEssid().equals("")) {
-                        String tmpEssid = "";
-                        for (int i = 1; i <= (cap[currentByte + 37] & 0xff); i++)
-                            tmpEssid += (char) (cap[currentByte + 37 + i] & 0xff);
-                        recordHandshake.setEssid(tmpEssid);
-                    }
+                    addEssid(recordHandshake, cap, currentByte);
             }
             // Message 1 of 4
             if ((cap[currentByte] & 0xff) == 136
@@ -243,7 +233,7 @@ public class HashConvert {
             currentByte += packetLength;
             // move to next packet
         }
-        ArrayList<Handshake> returnValue = new ArrayList<Handshake>();
+        List<Handshake> returnValue = new ArrayList<>();
         for (Handshake handshake : handshakes)
             if (!(handshake.getEssid().equals("") || handshake.getBssid().equals("")
                     || handshake.getStation().equals("") || handshake.getSnonce().equals("")
@@ -273,18 +263,29 @@ public class HashConvert {
         return Integer.toHexString(num).toUpperCase();
     }
 
-    private void addBssid(ArrayList<Handshake> handshakes, String bssid) {
+    private void addBssid(List<Handshake> handshakes, String bssid) {
         for (Handshake handshake : handshakes)
             if (handshake.getBssid().equals(bssid))
                 return;
         handshakes.add(new Handshake(bssid));
     }
 
+    private void addEssid(Handshake handshake, byte[] cap, int currentByte) {
+        if (handshake.getEssid().equals("")) {
+            StringBuilder essid = new StringBuilder();
+            for (int i = 1; i <= (cap[currentByte + 37] & 0xff); i++)
+                essid.append((char) (cap[currentByte + 37 + i] & 0xff));
+            handshake.setEssid(essid.toString());
+        }
+    }
+
     private String readBssid(byte[] cap, int currentByte, int offset) {
-        String bssid = "";
-        for (int i = offset; i < offset + 5; i++)
-            bssid += dec2hex(cap[currentByte + i] & 0xff) + ":";
-        bssid += dec2hex(cap[currentByte + offset + 5] & 0xff);
-        return bssid;
+        StringBuilder bssid = new StringBuilder();
+        for (int i = offset; i < offset + 5; i++) {
+            bssid.append(dec2hex(cap[currentByte + i] & 0xff));
+            bssid.append(":");
+        }
+        bssid.append(dec2hex(cap[currentByte + offset + 5] & 0xff));
+        return bssid.toString();
     }
 }
