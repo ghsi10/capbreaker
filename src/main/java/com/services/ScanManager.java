@@ -11,6 +11,7 @@ import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import javax.naming.NameNotFoundException;
 import java.rmi.NotBoundException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -24,8 +25,9 @@ public class ScanManager {
     @Value("${agent.keepalive.max}")
     private int MAX_KEEP_ALIVE;
 
-    private List<String[]> commands;
-    private List<ScanTask> tasks;
+    private final List<String[]> commands;
+    private final List<ScanTask> tasks;
+
     private Set<Agent> agents;
 
     private TaskRepository taskRepository;
@@ -60,37 +62,42 @@ public class ScanManager {
         return new Chunk(scanCommand.getFirst(), scanTask.getTask().getHandshake(), scanCommand.getSecond());
     }
 
-    public void setResult(String uuid, String password) throws NoSuchElementException {
+    public void setResult(String uuid, String password) throws NameNotFoundException {
         synchronized (tasks) {
-            Agent agent = agents.stream().filter(o -> o.uuid.equals(uuid)).findFirst().get();
+            Optional<Agent> optAgent = agents.stream().filter(a -> a.uuid.equals(uuid)).findFirst();
+            if (!optAgent.isPresent())
+                throw new NameNotFoundException();
+            Agent agent = optAgent.get();
             agent.interrupt();
             agents.remove(agent);
             reportTheResult(agent.task, password);
         }
     }
 
-    public void keepAlive(String uuid) throws NoSuchElementException {
-        agents.stream().filter(o -> o.uuid.equals(uuid)).findFirst().get().keepAlive = MAX_KEEP_ALIVE;
+    public void keepAlive(String uuid) throws NameNotFoundException {
+        Optional<Agent> optAgent = agents.stream().filter(a -> a.uuid.equals(uuid)).findFirst();
+        optAgent.ifPresent(a -> a.keepAlive = MAX_KEEP_ALIVE);
+        throw new NameNotFoundException();
     }
 
     public void stopTask(int taskId) {
-        tasks.stream().filter(o -> o.getTask().getId() == taskId).collect(Collectors.toList()).forEach(tasks::remove);
-        agents.stream().filter(o -> o.task.getId() == taskId).collect(Collectors.toList()).forEach(o -> {
-            o.interrupt();
-            agents.remove(o);
+        tasks.stream().filter(t -> t.getTask().getId() == taskId).collect(Collectors.toList()).forEach(tasks::remove);
+        agents.stream().filter(a -> a.task.getId() == taskId).collect(Collectors.toList()).forEach(a -> {
+            a.interrupt();
+            agents.remove(a);
         });
     }
 
     private void reportTheResult(Task task, String password) {
-        if (!password.equals("") || !tasks.stream().anyMatch(o -> o.getTask().equals(task))
-                && !agents.stream().anyMatch(o -> o.task.equals(task))) {
+        if (!password.equals("") || tasks.stream().noneMatch(o -> o.getTask().equals(task))
+                && agents.stream().noneMatch(o -> o.task.equals(task))) {
             task.setStatus(TaskStatus.Completed);
             task.setWifiPassword(password);
             taskRepository.save(task);
-            tasks.stream().filter(o -> o.getTask().equals(task)).collect(Collectors.toList()).forEach(tasks::remove);
-            agents.stream().filter(o -> o.task.equals(task)).collect(Collectors.toList()).forEach(o -> {
-                o.interrupt();
-                agents.remove(o);
+            tasks.stream().filter(t -> t.getTask().equals(task)).collect(Collectors.toList()).forEach(tasks::remove);
+            agents.stream().filter(a -> a.task.equals(task)).collect(Collectors.toList()).forEach(a -> {
+                a.interrupt();
+                agents.remove(a);
             });
         }
     }
@@ -136,25 +143,26 @@ public class ScanManager {
 
         @Override
         public void run() {
-            try {
-                while (true) {
+            while (true) {
+                try {
                     TimeUnit.SECONDS.sleep(AGENT_TIMER);
-                    keepAlive--;
-                    if (keepAlive < 0) {
-                        synchronized (tasks) {
-                            try {
-                                tasks.stream().filter(o -> o.getTask().equals(task)).findFirst().get().addCommand(uuid,
-                                        command);
-                            } catch (NoSuchElementException e) {
-                                tasks.add(0, new ScanTask(task, uuid, command));
-                            }
-                            agents.remove(this);
-                        }
-                        break;
-                    }
+                } catch (InterruptedException e) {
+                    break;
                 }
-            } catch (InterruptedException e) {
+                keepAlive--;
+                if (keepAlive < 0) {
+                    synchronized (tasks) {
+                        Optional<ScanTask> optScanTask = tasks.stream().filter(s -> s.getTask().equals(task)).findFirst();
+                        if (optScanTask.isPresent())
+                            optScanTask.get().addCommand(uuid, command);
+                        else
+                            tasks.add(0, new ScanTask(task, uuid, command));
+                        agents.remove(this);
+                    }
+                    break;
+                }
             }
+
         }
     }
 }

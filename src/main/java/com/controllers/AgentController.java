@@ -7,8 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.naming.NameNotFoundException;
 import java.rmi.NotBoundException;
-import java.util.NoSuchElementException;
 
 @RestController
 public class AgentController {
@@ -21,12 +21,12 @@ public class AgentController {
     }
 
     @RequestMapping(value = "/agent/setResult", method = RequestMethod.POST)
-    public void setResult(@RequestHeader String uuid, @RequestParam String password) throws NoSuchElementException {
+    public void setResult(@RequestHeader String uuid, @RequestParam String password) throws NameNotFoundException {
         scanManager.setResult(uuid, password);
     }
 
     @RequestMapping(value = "/agent/keepAlive", method = RequestMethod.POST)
-    public void keepAlive(@RequestHeader String uuid) throws NoSuchElementException {
+    public void keepAlive(@RequestHeader String uuid) throws NameNotFoundException {
         scanManager.keepAlive(uuid);
     }
 
@@ -35,8 +35,8 @@ public class AgentController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<?> handleNoSuchElementException() {
+    @ExceptionHandler(NameNotFoundException.class)
+    public ResponseEntity<?> handleNameNotFoundException() {
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
