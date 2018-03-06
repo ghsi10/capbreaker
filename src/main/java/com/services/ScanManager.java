@@ -64,7 +64,7 @@ public class ScanManager {
 
     public void setResult(String uuid, String password) throws NameNotFoundException {
         synchronized (tasks) {
-            Optional<Agent> optAgent = agents.stream().filter(a -> a.uuid.equals(uuid)).findFirst();
+            Optional<Agent> optAgent = agents.stream().filter(agent -> agent.uuid.equals(uuid)).findFirst();
             if (!optAgent.isPresent())
                 throw new NameNotFoundException();
             Agent agent = optAgent.get();
@@ -75,29 +75,31 @@ public class ScanManager {
     }
 
     public void keepAlive(String uuid) throws NameNotFoundException {
-        Optional<Agent> optAgent = agents.stream().filter(a -> a.uuid.equals(uuid)).findFirst();
-        optAgent.ifPresent(a -> a.keepAlive = MAX_KEEP_ALIVE);
+        Optional<Agent> optAgent = agents.stream().filter(agent -> agent.uuid.equals(uuid)).findFirst();
+        optAgent.ifPresent(agent -> agent.keepAlive = MAX_KEEP_ALIVE);
         throw new NameNotFoundException();
     }
 
     public void stopTask(int taskId) {
-        tasks.stream().filter(t -> t.getTask().getId() == taskId).collect(Collectors.toList()).forEach(tasks::remove);
-        agents.stream().filter(a -> a.task.getId() == taskId).collect(Collectors.toList()).forEach(a -> {
-            a.interrupt();
-            agents.remove(a);
+        tasks.stream().filter(scanTask -> scanTask.getTask().getId() == taskId).collect(Collectors.toList()).forEach
+                (tasks::remove);
+        agents.stream().filter(agent -> agent.task.getId() == taskId).collect(Collectors.toList()).forEach(agent -> {
+            agent.interrupt();
+            agents.remove(agent);
         });
     }
 
     private void reportTheResult(Task task, String password) {
-        if (!password.equals("") || tasks.stream().noneMatch(o -> o.getTask().equals(task))
-                && agents.stream().noneMatch(o -> o.task.equals(task))) {
+        if (!password.equals("") || tasks.stream().noneMatch(scanTask -> scanTask.getTask().equals(task))
+                && agents.stream().noneMatch(agent -> agent.task.equals(task))) {
             task.setStatus(TaskStatus.Completed);
             task.setWifiPassword(password);
             taskRepository.save(task);
-            tasks.stream().filter(t -> t.getTask().equals(task)).collect(Collectors.toList()).forEach(tasks::remove);
-            agents.stream().filter(a -> a.task.equals(task)).collect(Collectors.toList()).forEach(a -> {
-                a.interrupt();
-                agents.remove(a);
+            tasks.stream().filter(scanTask -> scanTask.getTask().equals(task)).collect(Collectors.toList()).forEach
+                    (tasks::remove);
+            agents.stream().filter(agent -> agent.task.equals(task)).collect(Collectors.toList()).forEach(agent -> {
+                agent.interrupt();
+                agents.remove(agent);
             });
         }
     }
@@ -152,7 +154,8 @@ public class ScanManager {
                 keepAlive--;
                 if (keepAlive < 0) {
                     synchronized (tasks) {
-                        Optional<ScanTask> optScanTask = tasks.stream().filter(s -> s.getTask().equals(task)).findFirst();
+                        Optional<ScanTask> optScanTask = tasks.stream().filter(scanTask -> scanTask.getTask().equals
+                                (task)).findFirst();
                         if (optScanTask.isPresent())
                             optScanTask.get().addCommand(uuid, command);
                         else

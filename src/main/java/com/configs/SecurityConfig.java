@@ -26,7 +26,8 @@ public class SecurityConfig {
     private String MASTER_PASSWORD;
 
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth, @Qualifier("dataSource") DataSource dataSource) throws Exception {
+    public void configureGlobal(AuthenticationManagerBuilder auth, @Qualifier("dataSource") DataSource dataSource)
+            throws Exception {
         auth.jdbcAuthentication().dataSource(dataSource).usersByUsernameQuery(USERS_QUERY)
                 .authoritiesByUsernameQuery(ROLES_QUERY).and().inMemoryAuthentication().withUser(MASTER_USERNAME)
                 .password(MASTER_PASSWORD).roles("ADMIN");
