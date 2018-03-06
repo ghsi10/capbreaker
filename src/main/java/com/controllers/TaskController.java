@@ -1,9 +1,6 @@
 package com.controllers;
 
-import java.io.IOException;
-
-import javax.activation.UnsupportedDataTypeException;
-
+import com.services.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,72 +10,71 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.models.Task;
-import com.services.TaskService;
+import javax.activation.UnsupportedDataTypeException;
+import java.io.IOException;
 
 @Controller
 public class TaskController {
 
-	private TaskService taskService;
+    private TaskService taskService;
 
-	@RequestMapping(value = { "/", "/tasks" }, method = RequestMethod.GET)
-	public String getTable(Model model, @RequestParam(required = false, defaultValue = "0") int page) {
-		model.addAttribute("module", "tasks");
-		model.addAttribute("tasks", taskService.getTable(page));
-		return "tasks";
-	}
+    @RequestMapping(value = {"/", "/tasks"}, method = RequestMethod.GET)
+    public String getTable(Model model, @RequestParam(required = false, defaultValue = "0") int page) {
+        model.addAttribute("module", "tasks");
+        model.addAttribute("tasks", taskService.getTable(page));
+        return "tasks";
+    }
 
-	@RequestMapping(value = "/upload", method = RequestMethod.GET)
-	public String uploaded(Model model) {
-		model.addAttribute("module", "upload");
-		return "upload";
-	}
+    @RequestMapping(value = "/upload", method = RequestMethod.GET)
+    public String uploaded(Model model) {
+        model.addAttribute("module", "upload");
+        return "upload";
+    }
 
-	@RequestMapping(value = "/upload", method = RequestMethod.POST)
-	public String uploaded(Model model, @RequestParam MultipartFile capFile, @RequestParam String essid,
-			@RequestParam String bssid) throws UnsupportedDataTypeException, IOException {
-		model.addAttribute("module", "upload");
-		Task task = taskService.uploadCap(capFile.getBytes(), essid, bssid);
-		model.addAttribute("task", task);
-		return "uploaded";
-	}
+    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+    public String uploaded(Model model, @RequestParam MultipartFile capFile, @RequestParam String essid,
+                           @RequestParam String bssid) throws IOException {
+        model.addAttribute("module", "upload");
+        model.addAttribute("task", taskService.uploadCap(capFile.getBytes(), essid, bssid));
+        return "uploaded";
+    }
 
-	@RequestMapping(value = "/result", method = RequestMethod.GET)
-	public String result(Model model) {
-		model.addAttribute("module", "result");
-		return "result";
-	}
+    @RequestMapping(value = "/result", method = RequestMethod.GET)
+    public String result(Model model) {
+        model.addAttribute("module", "result");
+        return "result";
+    }
 
-	@RequestMapping(value = "/result", method = RequestMethod.POST)
-	public String resultOf(Model model, @RequestParam String taskId, @RequestParam String taskPassword) {
-		model.addAttribute("module", "result");
-		model.addAttribute("task", taskService.getResult(taskId, taskPassword));
-		return "resultof";
-	}
+    @RequestMapping(value = "/result", method = RequestMethod.POST)
+    public String resultOf(Model model, @RequestParam String taskId, @RequestParam String taskPassword) {
+        model.addAttribute("module", "result");
+        model.addAttribute("task", taskService.getResult(taskId, taskPassword));
+        return "resultof";
+    }
 
-	@ExceptionHandler(UnsupportedDataTypeException.class)
-	public String handleDbError(UnsupportedDataTypeException e, Model model) {
-		model.addAttribute("module", "upload");
-		model.addAttribute("error", e.getMessage());
-		return "uploaded";
-	}
+    @ExceptionHandler(UnsupportedDataTypeException.class)
+    public String handleUnsupportedDataError(UnsupportedDataTypeException e, Model model) {
+        model.addAttribute("module", "upload");
+        model.addAttribute("error", e.getMessage());
+        return "uploaded";
+    }
 
-	@ExceptionHandler(IOException.class)
-	public String handleDbError(IOException e, Model model) {
-		model.addAttribute("module", "upload");
-		model.addAttribute("error", "Unexpected error");
-		return "uploaded";
-	}
+    @ExceptionHandler(IOException.class)
+    public String handleIOError(Model model) {
+        model.addAttribute("module", "upload");
+        model.addAttribute("error", "Unexpected error");
+        return "uploaded";
+    }
 
-	@ExceptionHandler(NumberFormatException.class)
-	public String handleDbError(NumberFormatException e, Model model) {
-		model.addAttribute("module", "result");
-		model.addAttribute("error", "Invalid task id and password.");
-		return "result";
-	}
+    @ExceptionHandler(NumberFormatException.class)
+    public String handleNumberFormatError(Model model) {
+        model.addAttribute("module", "result");
+        model.addAttribute("error", "Invalid task id and password.");
+        return "result";
+    }
 
-	@Autowired
-	public void setTaskService(TaskService taskService) {
-		this.taskService = taskService;
-	}
+    @Autowired
+    public void setTaskService(TaskService taskService) {
+        this.taskService = taskService;
+    }
 }

@@ -1,42 +1,44 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<link th:replace="fragments/header :: header-css" />
-<link rel="stylesheet" href="/css/upload.css" />
+    <link th:replace="fragments/header :: header-css"/>
+    <link rel="stylesheet" href="/css/upload.css"/>
 </head>
 <body class="container">
-	<div th:replace="fragments/header :: header"></div>
-	<form th:if="${error}!=null" id="upload-file-error"
-		class="new-task-message-container panel-body text-center"
-		th:action="@{/upload}">
-		<div class="alert alert-danger fade in alert-dismissable text-center"
-			th:text="${error}">error</div>
-		<div class="row">
-			<button id="finish-upload-btn" class="btn btn-primary" type="submit">Back</button>
-		</div>
-	</form>
-	<form th:if="${error}==null" id="new-task-info-div"
-		class="panel-body text-center" th:action="@{/}">
-		<div class="row">
-			<p>Congratulations, your task was successfully uploaded to our
-				server!</p>
-		</div>
-		<div class="row">
-			<p>
-				Your Task id is: <span class="text-warning" id="new-task-id-span"
-					th:text="${task.id}">id</span><br /> Your Task Password is: <span
-					class="text-warning" id="new-task-id-span"
-					th:text="${task.taskPassword}">password</span><br />
-			</p>
-		</div>
-		<div class="row">
-			<small class="results-highlight"> Please write down your task
-				id and password since you will need it later to get access to your
-				task! </small>
-		</div>
-		<div class="row">
-			<button id="finish-upload-btn" class="btn btn-primary" type="submit">Finish</button>
-		</div>
-	</form>
+<div th:replace="fragments/header :: header"></div>
+<form th:if="${error}!=null" id="upload-file-error"
+      class="new-task-message-container panel-body text-center"
+      th:action="@{/upload}">
+    <div class="alert alert-danger fade in alert-dismissable text-center"
+         th:text="${error}">error
+    </div>
+    <div class="row">
+        <button id="finish-upload-btn" class="btn btn-primary" type="submit">Back</button>
+    </div>
+</form>
+<form th:if="${error}==null" id="new-task-info-div"
+      class="panel-body text-center" th:action="@{/}">
+    <div class="row">
+        <p>Congratulations, your task was successfully uploaded to our
+            server!</p>
+    </div>
+    <div class="row">
+        <p>
+            Your Task id is: <span class="text-warning" id="new-task-id-span"
+                                   th:text="${task.id}">id</span><br/> Your Task Password is: <span
+                class="text-warning" id="new-task-id-span"
+                th:text="${task.taskPassword}">password</span><br/>
+        </p>
+    </div>
+    <div class="row">
+        <small class="results-highlight"> Please write down your task
+            id and password since you will need it later to get access to your
+            task!
+        </small>
+    </div>
+    <div class="row">
+        <button id="finish-upload-btn" class="btn btn-primary" type="submit">Finish</button>
+    </div>
+</form>
 </body>
 </html>

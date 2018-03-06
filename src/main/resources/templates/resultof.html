@@ -1,32 +1,32 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<link th:replace="fragments/header :: header-css" />
-<link rel="stylesheet" href="/css/result.css" />
+    <link th:replace="fragments/header :: header-css"/>
+    <link rel="stylesheet" href="/css/result.css"/>
 </head>
 <body class="container">
-	<div th:replace="fragments/header :: header"></div>
-	<form id="get-resultof-form" class="form-signin form-horizontal"
-		role="form" th:action="@{/tasks}" data-toggle="validator">
-		<div class="report" id="results">
-			Task id: <span class="results-spans" id="essid-span"
-				th:text="${task.id}">id</span><br /> ESSID: <span
-				class="results-spans" id="essid-span" th:text="${task.essid}">essid</span><br />
-			BSSID: <span class="results-spans" id="bssid-span"
-				th:text="${task.bssid}">bssid</span><br /> Status: <span
-				class="results-spans" id="status-span" th:text="${task.status}">status</span><br />
-			<div th:if="${task.wifiPassword}!=''">
-				Password: <span id="password-span" th:text="${task.wifiPassword}">password</span>
-			</div>
-			<div th:if="${task.wifiPassword}==''">
-				Password: <span class="results-spans" id="status-span">Not
-					Found</span><br />
-			</div>
-		</div>
-		<br />
-		<div align="center">
-			<button id="finish-upload-btn" class="btn btn-primary" type="submit">Back</button>
-		</div>
-	</form>
+<div th:replace="fragments/header :: header"></div>
+<form id="get-resultof-form" class="form-signin form-horizontal"
+      role="form" th:action="@{/tasks}" data-toggle="validator">
+    <div class="report" id="results">
+        Task id: <span class="results-spans" id="essid-span"
+                       th:text="${task.id}">id</span><br/> ESSID: <span
+            class="results-spans" id="essid-span" th:text="${task.essid}">essid</span><br/>
+        BSSID: <span class="results-spans" id="bssid-span"
+                     th:text="${task.bssid}">bssid</span><br/> Status: <span
+            class="results-spans" id="status-span" th:text="${task.status}">status</span><br/>
+        <div th:if="${task.wifiPassword}!=''">
+            Password: <span id="password-span" th:text="${task.wifiPassword}">password</span>
+        </div>
+        <div th:if="${task.wifiPassword}==''">
+            Password: <span class="results-spans" id="status-span">Not
+					Found</span><br/>
+        </div>
+    </div>
+    <br/>
+    <div align="center">
+        <button id="finish-upload-btn" class="btn btn-primary" type="submit">Back</button>
+    </div>
+</form>
 </body>
 </html>

@@ -1,101 +1,101 @@
 .report {
-	color: #ccc;
-	border: none;
-	text-align: left;
-	background: transparent;
-	overflow: auto;
-	width: 100%;
-	height: auto;
-	padding: 0;
+    color: #ccc;
+    border: none;
+    text-align: left;
+    background: transparent;
+    overflow: auto;
+    width: 100%;
+    height: auto;
+    padding: 0;
 }
 
 .form-signin {
-	max-width: 340px;
-	padding: 15px;
-	margin: 0 auto;
+    max-width: 340px;
+    padding: 15px;
+    margin: 0 auto;
 }
 
 .form-signin .form-signin-heading, .form-signin .checkbox {
-	margin-left: 2px;
-	margin-bottom: 5px;
-	font-size: 12px;
-	text-align: center;
-	font-weight: bold;
+    margin-left: 2px;
+    margin-bottom: 5px;
+    font-size: 12px;
+    text-align: center;
+    font-weight: bold;
 }
 
 .form-signin .checkbox {
-	font-weight: normal;
+    font-weight: normal;
 }
 
 .form-signin .form-control {
-	position: relative;
-	height: auto;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-	padding: 10px;
-	font-size: 16px;
+    position: relative;
+    height: auto;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 10px;
+    font-size: 16px;
 }
 
 .form-signin .form-control:focus {
-	z-index: 2;
+    z-index: 2;
 }
 
 .form-signin input#inputTaskId {
-	margin-bottom: -1px;
-	margin-bottom: 10px;
+    margin-bottom: -1px;
+    margin-bottom: 10px;
 }
 
 .form-signin input#inputPassword {
-	margin-bottom: 15px;
-	border-top-left-radius: 0;
-	border-top-right-radius: 0;
+    margin-bottom: 15px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 }
 
 .form-signin input {
-	text-align: center;
+    text-align: center;
 }
 
 #results, #results-error {
-	border: none;
-	-moz-border-radius: 16px;
-	-webkit-border-radius: 16px;
-	border-radius: 16px;
-	color: #aaa;
-	font-size: 14px;
-	text-align: left;
-	background: black;
-	opacity: 0.85;
-	overflow: auto;
-	width: 100%;
-	height: auto;
-	margin: auto;
-	padding: 20px;
+    border: none;
+    -moz-border-radius: 16px;
+    -webkit-border-radius: 16px;
+    border-radius: 16px;
+    color: #aaa;
+    font-size: 14px;
+    text-align: left;
+    background: black;
+    opacity: 0.85;
+    overflow: auto;
+    width: 100%;
+    height: auto;
+    margin: auto;
+    padding: 20px;
 }
 
 #results-error {
-	text-align: center;
+    text-align: center;
 }
 
 .results-spans {
-	color: #eee;
+    color: #eee;
 }
 
 #password-span {
-	color: #337ab7;
+    color: #337ab7;
 }
 
 #results-error-span {
-	color: red;
-	font-weight: bold;
-	font-style: italic;
+    color: red;
+    font-weight: bold;
+    font-style: italic;
 }
 
 .task-failed {
-	margin-top: 10px;
-	margin-bottom: 10px;
-	text-align: center;
-	font-size: 15px;
-	font-weight: bold;
-	color: red;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+    font-size: 15px;
+    font-weight: bold;
+    color: red;
 }

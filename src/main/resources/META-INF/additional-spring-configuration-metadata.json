@@ -1,52 +1,54 @@
-{"properties": [
-  {
-    "name": "scan.commands",
-    "type": "java.lang.String",
-    "description": "scans list"
-  },
-  {
-    "name": "spring.queries.users-query",
-    "type": "java.lang.String",
-    "description": "query for get username and password'"
-  },
-  {
-    "name": "spring.queries.roles-query",
-    "type": "java.lang.String",
-    "description": "query for get role of user"
-  },
-  {
-    "name": "spring.login.username",
-    "type": "java.lang.String",
-    "description": "master username"
-  },
-  {
-    "name": "spring.login.password",
-    "type": "java.lang.String",
-    "description": "master password"
-  },
-  {
-    "name": "agent.server.dns",
-    "type": "java.lang.String",
-    "description": "server dns inject to agent"
-  },
-  {
-    "name": "agent.download.url",
-    "type": "java.lang.String",
-    "description": "url for agent download"
-  },
-  {
-    "name": "view.page.size",
-    "type": "java.lang.Integar",
-    "description": "number of tasks in page"
-  },
-  {
-    "name": "agent.keepalive.max",
-    "type": "java.lang.Integar",
-    "description": "number of max keep alive"
-  },
-  {
-    "name": "agent.keepalive.timer",
-    "type": "java.lang.Integar",
-    "description": "timer for keep alive in seconds"
-  }
-]}
+{
+  "properties": [
+    {
+      "name": "scan.commands",
+      "type": "java.lang.String",
+      "description": "scans list"
+    },
+    {
+      "name": "spring.queries.users-query",
+      "type": "java.lang.String",
+      "description": "query for get username and password'"
+    },
+    {
+      "name": "spring.queries.roles-query",
+      "type": "java.lang.String",
+      "description": "query for get role of user"
+    },
+    {
+      "name": "spring.login.username",
+      "type": "java.lang.String",
+      "description": "master username"
+    },
+    {
+      "name": "spring.login.password",
+      "type": "java.lang.String",
+      "description": "master password"
+    },
+    {
+      "name": "agent.server.dns",
+      "type": "java.lang.String",
+      "description": "server dns inject to agent"
+    },
+    {
+      "name": "agent.download.url",
+      "type": "java.lang.String",
+      "description": "url for agent download"
+    },
+    {
+      "name": "view.page.size",
+      "type": "java.lang.Integar",
+      "description": "number of tasks in page"
+    },
+    {
+      "name": "agent.keepalive.max",
+      "type": "java.lang.Integar",
+      "description": "number of max keep alive"
+    },
+    {
+      "name": "agent.keepalive.timer",
+      "type": "java.lang.Integar",
+      "description": "timer for keep alive in seconds"
+    }
+  ]
+}
