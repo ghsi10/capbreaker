@@ -31,12 +31,12 @@ public class AgentController {
     }
 
     @ExceptionHandler(NotBoundException.class)
-    public ResponseEntity<?> handleDbError(NotBoundException e) {
+    public ResponseEntity<?> handleNotBoundException() {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<?> handleDbError(NoSuchElementException e) {
+    public ResponseEntity<?> handleNoSuchElementException() {
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 

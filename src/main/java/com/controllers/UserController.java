@@ -55,7 +55,7 @@ public class UserController {
     }
 
     @ExceptionHandler(NumberFormatException.class)
-    public String handleDbError(NumberFormatException e, Model model) {
+    public String handleNumberFormatException(Model model) {
         model.addAttribute("module", "result");
         model.addAttribute("error", "Invalid task id.");
         return "result";

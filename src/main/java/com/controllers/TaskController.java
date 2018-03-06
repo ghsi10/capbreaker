@@ -53,21 +53,21 @@ public class TaskController {
     }
 
     @ExceptionHandler(UnsupportedDataTypeException.class)
-    public String handleUnsupportedDataError(UnsupportedDataTypeException e, Model model) {
+    public String handleUnsupportedDataTypeException(UnsupportedDataTypeException e, Model model) {
         model.addAttribute("module", "upload");
         model.addAttribute("error", e.getMessage());
         return "uploaded";
     }
 
     @ExceptionHandler(IOException.class)
-    public String handleIOError(Model model) {
+    public String handleIOException(Model model) {
         model.addAttribute("module", "upload");
         model.addAttribute("error", "Unexpected error");
         return "uploaded";
     }
 
     @ExceptionHandler(NumberFormatException.class)
-    public String handleNumberFormatError(Model model) {
+    public String handleNumberFormatException(Model model) {
         model.addAttribute("module", "result");
         model.addAttribute("error", "Invalid task id and password.");
         return "result";
