@@ -14,20 +14,17 @@
       data-toggle="validator" sec:authorize="!hasRole('ROLE_ADMIN')">
     <div class="form-group">
         <div class="col-md-12">
-            <h4 class="form-signin-heading">Enter your task id</h4>
-            <label for="inputTaskId" class="sr-only">Task id</label> <input
-                id="inputTaskId" name="taskId" class="form-control" type="text"
-                maxlength="12" placeholder="Task id"/>
-            <h4 class="form-signin-heading">Enter your task password</h4>
+            <div class="form-signin-heading">Enter your task id</div>
+            <label for="inputTaskId" class="sr-only">Task id</label>
+            <input id="inputTaskId" name="taskId" class="form-control" type="text" maxlength="12"
+                   placeholder="Task id"/>
+            <div class="form-signin-heading">Enter your task password</div>
             <label for="inputTaskPassword" class="sr-only">Task password</label>
-            <input id="inputTaskPassword" name="taskPassword"
-                   class="form-control" type="password" placeholder="Task password"
-                   maxlength="12" autocomplete="off"/>
+            <input id="inputTaskPassword" name="taskPassword" class="form-control" type="password"
+                   placeholder="Task password" maxlength="12" autocomplete="off"/>
         </div>
     </div>
-    <div th:if="${error}" class="task-failed" th:text="${error}">Invalid
-        task id and password.
-    </div>
+    <div th:if="${error}" class="task-failed" th:text="${error}">Invalid task id and password.</div>
     <div class="form-group">
         <div class="col-md-12">
             <button id="getResultBtn" class="btn btn-lg btn-primary btn-block"
@@ -41,15 +38,13 @@
       data-toggle="validator" sec:authorize="hasRole('ROLE_ADMIN')">
     <div class="form-group">
         <div class="col-md-12">
-            <h4 class="form-signin-heading">Enter your task id</h4>
-            <label for="inputTaskId" class="sr-only">Task id</label> <input
-                id="adminInputTaskId" name="taskId" class="form-control"
-                type="text" maxlength="12" placeholder="Task id"/>
+            <div class="form-signin-heading">Enter your task id</div>
+            <label for="inputTaskId" class="sr-only">Task id</label>
+            <input id="adminInputTaskId" name="taskId" class="form-control" type="text" maxlength="12"
+                   placeholder="Task id"/>
         </div>
     </div>
-    <div th:if="${error}" class="task-failed" th:text="${error}">Invalid
-        task id and password.
-    </div>
+    <div th:if="${error}" class="task-failed" th:text="${error}">Invalid task id and password.</div>
     <div class="form-group">
         <div class="col-md-12">
             <button id="getResultBtn" class="btn btn-lg btn-primary btn-block"
