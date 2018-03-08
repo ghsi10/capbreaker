@@ -11,7 +11,7 @@
 <form id="add-task-form" class="container" th:action="@{/upload}" method="POST" enctype="multipart/form-data">
     <div class="form-group">
         <label class="btn btn-default btn-file file-label" for="cap-file">
-            <span id="fname">Click to browse .cap file</span>
+            <span id="fName">Click to browse .cap file</span>
             <input id="cap-file" name="capFile" type="file" accept=".cap"/>
         </label>
     </div>
@@ -31,13 +31,12 @@
             <br/> Widely known, password brute forcing can also be used for illegal purposes. We request you not to use
             this service for cracking others passwords and we take no responsibility for that!
             <div class="checkbox" id="checkbox-terms">
-                <label> <input type="checkbox" id="terms"/>I agree with CAP Breaker terms and conditions</label>
+                <label><input type="checkbox" id="terms"/>I agree with CAP Breaker terms and conditions</label>
             </div>
         </div>
     </div>
     <div class="form-group">
-        <button id="upload-file-btn" class="btn btn-lg btn-primary btn-block"
-                disabled="disabled" type="submit">Upload
+        <button id="upload-file-btn" class="btn btn-lg btn-primary btn-block" disabled="disabled" type="submit">Upload
         </button>
     </div>
 </form>

@@ -27,8 +27,7 @@ public class ScanManager {
 
     private final List<String[]> commands;
     private final List<ScanTask> tasks;
-
-    private Set<Agent> agents;
+    private final Set<Agent> agents;
 
     private TaskRepository taskRepository;
 

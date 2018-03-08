@@ -6,8 +6,7 @@
 </head>
 <body class="container">
 <div th:replace="fragments/header :: header"></div>
-<form id="get-resultof-form" class="form-signin form-horizontal" role="form" th:action="@{/tasks}"
-      data-toggle="validator">
+<form class="form-signin form-horizontal" role="form" th:action="@{/tasks}" data-toggle="validator">
     <div class="report" id="results">
         Task id: <span class="results-spans" id="essid-span" th:text="${task.id}">id</span>
         <br/> ESSID: <span class="results-spans" id="essid-span" th:text="${task.essid}">essid</span>

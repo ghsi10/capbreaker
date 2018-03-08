@@ -6,21 +6,20 @@
 </head>
 <body class="container">
 <div th:replace="fragments/header :: header"></div>
-<form th:if="${error}!=null" id="upload-file-error" class="new-task-message-container panel-body text-center"
-      th:action="@{/upload}">
+<form th:if="${error}!=null" class="new-task-message-container panel-body text-center" th:action="@{/upload}">
     <div class="alert alert-danger fade in alert-dismissable text-center" th:text="${error}">error</div>
     <div class="row">
-        <button id="finish-upload-btn" class="btn btn-primary" type="submit">Back</button>
+        <button class="btn btn-primary" type="submit">Back</button>
     </div>
 </form>
-<form th:if="${error}==null" id="new-task-info-div" class="panel-body text-center" th:action="@{/}">
+<form th:if="${error}==null" class="panel-body text-center" th:action="@{/}">
     <div class="row">
         <p>Congratulations, your task was successfully uploaded to our server!</p>
     </div>
     <div class="row">
-        <p>Your Task id is: <span class="text-warning" id="new-task-id-span" th:text="${task.id}">id</span>
+        <p>Your Task id is: <span class="text-warning" th:text="${task.id}">id</span>
             <br/> Your Task Password is:
-            <span class="text-warning" id="new-task-id-span" th:text="${task.taskPassword}">password</span>
+            <span class="text-warning" th:text="${task.taskPassword}">password</span>
             <br/>
         </p>
     </div>
@@ -30,7 +29,7 @@
         </small>
     </div>
     <div class="row">
-        <button id="finish-upload-btn" class="btn btn-primary" type="submit">Finish</button>
+        <button class="btn btn-primary" type="submit">Finish</button>
     </div>
 </form>
 </body>

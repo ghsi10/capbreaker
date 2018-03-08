@@ -9,9 +9,8 @@
 </head>
 <body class="container">
 <div th:replace="fragments/header :: header"></div>
-<form id="get-result-form" class="form-signin form-horizontal"
-      role="form" th:action="@{/result}" method="POST"
-      data-toggle="validator" sec:authorize="!hasRole('ROLE_ADMIN')">
+<form class="form-signin form-horizontal" role="form" th:action="@{/result}" method="POST" data-toggle="validator"
+      sec:authorize="!hasRole('ROLE_ADMIN')">
     <div class="form-group">
         <div class="col-md-12">
             <div class="form-signin-heading">Enter your task id</div>
@@ -33,13 +32,12 @@
         </div>
     </div>
 </form>
-<form id="get-result-form" class="form-signin form-horizontal"
-      role="form" th:action="@{/admin/result}" method="GET"
-      data-toggle="validator" sec:authorize="hasRole('ROLE_ADMIN')">
+<form class="form-signin form-horizontal" role="form" th:action="@{/admin/result}" method="GET" data-toggle="validator"
+      sec:authorize="hasRole('ROLE_ADMIN')">
     <div class="form-group">
         <div class="col-md-12">
             <div class="form-signin-heading">Enter your task id</div>
-            <label for="inputTaskId" class="sr-only">Task id</label>
+            <label for="adminInputTaskId" class="sr-only">Task id</label>
             <input id="adminInputTaskId" name="taskId" class="form-control" type="text" maxlength="12"
                    placeholder="Task id"/>
         </div>
@@ -47,7 +45,7 @@
     <div th:if="${error}" class="task-failed" th:text="${error}">Invalid task id and password.</div>
     <div class="form-group">
         <div class="col-md-12">
-            <button id="getResultBtn" class="btn btn-lg btn-primary btn-block"
+            <button id="getAdminResultBtn" class="btn btn-lg btn-primary btn-block"
                     disabled="disabled" type="submit">Get Result
             </button>
         </div>

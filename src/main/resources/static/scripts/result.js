@@ -15,8 +15,8 @@ $(document).ready(function () {
 
     $("#adminInputTaskId").on('input', function () {
         if (this.value.length > 0)
-            $("#getResultBtn").removeAttr("disabled");
+            $("#getAdminResultBtn").removeAttr("disabled");
         else
-            $("#getResultBtn").attr("disabled", "disabled");
+            $("#getAdminResultBtn").attr("disabled", "disabled");
     });
 });

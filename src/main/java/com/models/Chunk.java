@@ -7,9 +7,6 @@ public class Chunk {
     private Handshake handshake;
     private String[] commands;
 
-    public Chunk() {
-    }
-
     public Chunk(Chunk chunk) {
         uuid = chunk.uuid;
         handshake = chunk.handshake;
@@ -48,9 +45,7 @@ public class Chunk {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Chunk)
-            return ((Chunk) obj).uuid.equals(uuid);
-        return false;
+        return obj instanceof Chunk && ((Chunk) obj).uuid.equals(uuid);
     }
 
     @Override

@@ -5,10 +5,7 @@ $(document).ready(function () {
 
     $("#terms").click(function () {
         var checked_status = this.checked;
-        if (checked_status === true)
-            isTermsChecked = true;
-        else
-            isTermsChecked = false;
+        isTermsChecked = checked_status === true;
         validator();
     });
 
@@ -16,7 +13,7 @@ $(document).ready(function () {
         var file = this.files.item(0);
         isSelectedfile = true;
         validator();
-        $("#fname").html(file.name);
+        $("#fName").html(file.name);
     });
 });
 
