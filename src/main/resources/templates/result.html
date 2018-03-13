@@ -1,14 +1,15 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org"
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <link th:replace="fragments/header :: header-css"/>
-    <link rel="stylesheet" href="/css/result.css"/>
-    <script type="text/javascript" src="/scripts/jquery.js"></script>
-    <script type="text/javascript" src="/scripts/result.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/result.css"/>
+    <script type="text/javascript" src="../scripts/jquery.js"></script>
+    <script type="text/javascript" src="../scripts/result.js"></script>
 </head>
 <body class="container">
 <div th:replace="fragments/header :: header"></div>
+<!--/*@thymesVar id="error" type="java.lang.String"*/-->
 <form class="form-signin form-horizontal" role="form" th:action="@{/result}" method="POST" data-toggle="validator"
       sec:authorize="!hasRole('ROLE_ADMIN')">
     <div class="form-group">

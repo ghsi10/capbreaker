@@ -1,11 +1,12 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <link th:replace="fragments/header :: header-css"/>
-    <link rel="stylesheet" href="/css/upload.css"/>
+    <link rel="stylesheet" href="../css/upload.css"/>
 </head>
 <body class="container">
 <div th:replace="fragments/header :: header"></div>
+<!--/*@thymesVar id="error" type="java.lang.String"*/-->
 <form th:if="${error}!=null" class="new-task-message-container panel-body text-center" th:action="@{/upload}">
     <div class="alert alert-danger fade in alert-dismissable text-center" th:text="${error}">error</div>
     <div class="row">
