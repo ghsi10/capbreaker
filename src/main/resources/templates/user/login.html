@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <link th:replace="fragments/header :: header-css"/>
-    <link rel="stylesheet" href="../css/login.css"/>
-    <script type="text/javascript" src="../scripts/jquery.js"></script>
-    <script type="text/javascript" src="../scripts/login.js"></script>
+    <link rel="stylesheet" type="text/css" th:href="${'/css/login.css'}"/>
+    <script type="text/javascript" th:src="${'/scripts/jquery.js'}"></script>
+    <script type="text/javascript" th:src="${'/scripts/login.js'}"></script>
 </head>
 <body class="container">
 <div th:replace="fragments/header :: header"></div>

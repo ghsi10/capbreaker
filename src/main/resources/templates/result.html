@@ -3,9 +3,9 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <link th:replace="fragments/header :: header-css"/>
-    <link rel="stylesheet" type="text/css" href="../css/result.css"/>
-    <script type="text/javascript" src="../scripts/jquery.js"></script>
-    <script type="text/javascript" src="../scripts/result.js"></script>
+    <link rel="stylesheet" type="text/css" th:href="${'/css/result.css'}"/>
+    <script type="text/javascript" th:src="${'/scripts/jquery.js'}"></script>
+    <script type="text/javascript" th:src="${'/scripts/result.js'}"></script>
 </head>
 <body class="container">
 <div th:replace="fragments/header :: header"></div>
