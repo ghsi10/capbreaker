@@ -2,39 +2,46 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <link th:replace="fragments/header :: header-css"/>
-    <link rel="stylesheet" href="/css/tasks.css"/>
+    <link th:replace="fragments/header :: header-css" />
+    <link rel="stylesheet" href="/css/tasks.css" />
 </head>
-<body class="container">
-<div th:replace="fragments/header :: header"></div>
-<table class="table table-striped">
-    <thead>
-    <tr>
-        <th>Task id</th>
-        <th>ESSID</th>
-        <th>Status</th>
-        <th>Result</th>
-        <th sec:authorize="hasRole('ROLE_ADMIN')">Admin action</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="task:${tasks}">
-        <td th:text="${task.id}">taskId</td>
-        <td th:text="${task.essid}">essid</td>
-        <td th:text="${task.status}">status</td>
-        <td th:if="${task.status!=T(com.models.TaskStatus).Completed}">-</td>
-        <td th:if="${task.status==T(com.models.TaskStatus).Completed}">
-            <div th:if="${task.wifiPassword!=''}" class="ok">Found</div>
-            <div th:if="${task.wifiPassword==''}" class="fail">Not Found</div>
-        </td>
-        <td sec:authorize="hasRole('ROLE_ADMIN')">
-            <a th:href="${'/admin/result?taskId=' + {task.id}}" class="btn btn-primary btn-xs">Result</a>
-            <a onclick="return confirm('Are you sure you want to delete this task?');"
-               th:href="${'/admin/delete?taskId=' + {task.id}}" class="btn btn-danger btn-xs">Delete</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
-<div th:replace="fragments/footer :: footer"></div>
+<body>
+<div class="container">
+    <header th:replace="fragments/header :: header"></header>
+
+    <main>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Task id</th>
+                <th>ESSID</th>
+                <th>Status</th>
+                <th>Result</th>
+                <th sec:authorize="hasRole('ROLE_ADMIN')">Admin action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="task:${tasks}">
+                <td th:text="${task.id}">taskId</td>
+                <td th:text="${task.essid}">essid</td>
+                <td th:text="${task.status}">status</td>
+                <td th:if="${task.status!=T(com.models.TaskStatus).Completed}">-</td>
+                <td th:if="${task.status==T(com.models.TaskStatus).Completed}">
+                    <div th:if="${task.wifiPassword!=''}" class="ok">Found</div>
+                    <div th:if="${task.wifiPassword==''}" class="fail">Not Found</div>
+                </td>
+                <td sec:authorize="hasRole('ROLE_ADMIN')"><a
+                        th:href="${'/admin/result?taskId=' + {task.id}}"
+                        class="btn btn-primary btn-xs">Result</a> <a
+                        onclick="return confirm('Are you sure you want to delete this task?');"
+                        th:href="${'/admin/delete?taskId=' + {task.id}}"
+                        class="btn btn-danger btn-xs">Delete</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </main>
+
+    <footer th:replace="fragments/footer :: footer"></footer>
+</div>
 </body>
 </html>
