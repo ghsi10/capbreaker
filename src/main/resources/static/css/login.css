@@ -1,29 +1,29 @@
 .form-signin {
-	max-width: 340px;
-	padding: 15px;
-	margin: 0 auto;
+    max-width: 340px;
+    padding: 15px;
+    margin: 0 auto;
 }
 
 .form-signin .form-signin-heading, .form-signin .checkbox {
-	margin-left: 2px;
-	margin-bottom: 5px;
-	font-size: 12px;
-	text-align: center;
-	font-weight: bold;
+    margin-left: 2px;
+    margin-bottom: 5px;
+    font-size: 12px;
+    text-align: center;
+    font-weight: bold;
 }
 
 .form-signin .checkbox {
-	font-weight: normal;
+    font-weight: normal;
 }
 
 .form-signin .form-control {
-	position: relative;
-	height: auto;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-	padding: 10px;
-	font-size: 16px;
+    position: relative;
+    height: auto;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 10px;
+    font-size: 16px;
 }
 
 .form-signin .form-control:focus {
@@ -55,10 +55,10 @@
 }
 
 .login-logout {
-	margin-left: 2px;
-	margin-bottom: 20px;
-	text-align: center;
-	font-size: 15px;
-	font-weight: bold;
-	color: rgb(51, 122, 183);
+    margin-left: 2px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 15px;
+    font-weight: bold;
+    color: rgb(51, 122, 183);
 }
