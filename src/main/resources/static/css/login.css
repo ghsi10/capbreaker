@@ -46,7 +46,7 @@
 
 .login-failed {
     margin-top: 10px;
-    margin-bottom: 0px;
+    margin-bottom: 0;
     margin-left: 2px;
     text-align: center;
     font-size: 15px;
