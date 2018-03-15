@@ -1,6 +1,8 @@
 package com.services;
 
 import com.models.Task;
+import com.models.User;
+import com.models.UserRole;
 import com.repositories.TaskRepository;
 import com.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,26 @@ public class UserService {
     public void deletTask(String taskId) {
         scanManager.stopTask(Integer.parseInt(taskId));
         taskRepository.delete(Integer.parseInt(taskId));
+    }
+
+    public User signUp(String username, String password, String passwordAgain) {
+        User user = null;
+
+        if (password.equals(passwordAgain)) {
+            // TODO: For now I created registered user as enabled, later should change it to User(username, password)
+            // ctor.
+            user = new User(username, password, UserRole.ROLE_USER, true);
+
+            // TODO: For now I catch everything and returns null. Later should change it to support different kinds
+            // of messages.
+            try {
+                userRepository.save(user);
+            } catch (Exception exp) {
+                return null;
+            }
+        }
+
+        return user;
     }
 
     public String getPassword(String username) {

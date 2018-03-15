@@ -1,37 +1,53 @@
 <!DOCTYPE HTML>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <link th:replace="fragments/header :: header-css"/>
-    <link rel="stylesheet" type="text/css" th:href="${'/css/upload.css'}"/>
+    <link rel="stylesheet" href="/css/upload.css"/>
+    <script type="text/javascript" src="/scripts/jquery.js"></script>
+    <script type="text/javascript" src="/scripts/upload.js"></script>
 </head>
-<body class="container">
-<div th:replace="fragments/header :: header"></div>
-<!--/*@thymesVar id="error" type="java.lang.String"*/-->
-<form th:if="${error}!=null" class="new-task-message-container panel-body text-center" th:action="@{/upload}">
-    <div class="alert alert-danger fade in alert-dismissable text-center" th:text="${error}">error</div>
-    <div class="row">
-        <button class="btn btn-primary" type="submit">Back</button>
-    </div>
-</form>
-<form th:if="${error}==null" class="panel-body text-center" th:action="@{/}">
-    <div class="row">
-        <p>Congratulations, your task was successfully uploaded to our server!</p>
-    </div>
-    <div class="row">
-        <p>Your Task id is: <span class="text-warning" th:text="${task.id}">id</span>
-            <br/> Your Task Password is:
-            <span class="text-warning" th:text="${task.taskPassword}">password</span>
-            <br/>
-        </p>
-    </div>
-    <div class="row">
-        <small class="results-highlight"> Please write down your task id and password since you will need it later to
-            get access to your task!
-        </small>
-    </div>
-    <div class="row">
-        <button class="btn btn-primary" type="submit">Finish</button>
-    </div>
-</form>
+<body>
+<div class="container">
+    <div th:replace="fragments/header :: header"></div>
+
+    <form id="add-task-form" class="container" th:action="@{/upload}"
+          method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label class="btn btn-default btn-file file-label" for="cap-file"><span
+                    id="fname">Click to browse .cap file</span><input id="cap-file"
+                                                                      name="capFile" type="file" accept=".cap"/></label>
+        </div>
+        <div class="form-group">
+            <input class="form-control v-spacing" type="text"
+                   placeholder="ESSID (Optional, case sensitive, leave blank for autodetect)"
+                   name="essid" maxlength="36" size="32"/> <input
+                class="form-control v-spacing" type="text"
+                placeholder="BSSID (Optional, hexadecimal, leave blank for autodetect)"
+                name="bssid" maxlength="17" size="32"/>
+        </div>
+        <div class="form-group">
+            <div id="wpa-terms-div"
+                 class="alert alert-dismissible alert-info left-justified text-center"
+                 style="margin-top: 10px">
+                <strong>This service is for penetration testing of your own
+                    wireless networks only.</strong> <br/> Widely known, password brute
+                forcing can also be used for illegal purposes. We request you not to
+                use this service for cracking others passwords and we take no
+                responsibility for that!
+
+                <div class="checkbox" id="checkbox-terms">
+                    <label> <input type="checkbox" id="terms"/>I agree with
+                        CAP Breaker terms and conditions
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <button id="upload-file-btn" class="btn btn-lg btn-primary btn-block"
+                    disabled="disabled" type="submit">Upload
+            </button>
+        </div>
+    </form>
+</div>
 </body>
 </html>

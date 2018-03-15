@@ -26,6 +26,10 @@ public class User {
         enable = user.enable;
     }
 
+    public User(String username, String password) {
+        this(username, password, UserRole.ROLE_USER, false);
+    }
+
     public User(String username, String password, UserRole role, boolean enable) {
         this.username = username;
         this.password = password;

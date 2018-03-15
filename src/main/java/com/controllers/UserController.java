@@ -24,6 +24,25 @@ public class UserController {
 
     private UserService userService;
 
+    @RequestMapping(value = "/register", method = RequestMethod.GET)
+    public String register(Model model) {
+        model.addAttribute("module", "register");
+        return "user/register";
+    }
+
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public String register(Model model, @RequestParam String userName, @RequestParam String password, @RequestParam
+            String passwordAgain) {
+        com.models.User user = userService.signUp(userName, password, passwordAgain);
+
+        if (user != null) {
+            return "redirect:/tasks";
+        }
+
+        model.addAttribute("module", "register");
+        return "user/register";
+    }
+
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(Model model) {
         model.addAttribute("module", "login");

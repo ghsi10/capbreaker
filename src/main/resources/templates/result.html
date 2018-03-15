@@ -1,30 +1,32 @@
 <!DOCTYPE HTML>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+<html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <link th:replace="fragments/header :: header-css"/>
-    <link rel="stylesheet" type="text/css" th:href="${'/css/result.css'}"/>
-    <script type="text/javascript" th:src="${'/scripts/jquery.js'}"></script>
-    <script type="text/javascript" th:src="${'/scripts/result.js'}"></script>
+    <link rel="stylesheet" href="/css/result.css"/>
+    <script type="text/javascript" src="/scripts/jquery.js"></script>
+    <script type="text/javascript" src="/scripts/result.js"></script>
 </head>
 <body class="container">
 <div th:replace="fragments/header :: header"></div>
-<!--/*@thymesVar id="error" type="java.lang.String"*/-->
-<form class="form-signin form-horizontal" role="form" th:action="@{/result}" method="POST" data-toggle="validator"
-      sec:authorize="!hasRole('ROLE_ADMIN')">
+<form id="get-result-form" class="form-signin form-horizontal text-center"
+      role="form" th:action="@{/result}" method="POST"
+      data-toggle="validator" sec:authorize="!hasRole('ROLE_ADMIN')">
+    <h1 class="h3 mb=3 font-weight-normal">Fill in your task</h1>
     <div class="form-group">
         <div class="col-md-12">
-            <div class="form-signin-heading">Enter your task id</div>
-            <label for="inputTaskId" class="sr-only">Task id</label>
-            <input id="inputTaskId" name="taskId" class="form-control" type="text" maxlength="12"
-                   placeholder="Task id"/>
-            <div class="form-signin-heading">Enter your task password</div>
+            <label for="inputTaskId" class="sr-only">Task id</label> <input
+                id="inputTaskId" name="taskId" class="form-control" type="text"
+                maxlength="12" placeholder="Task id"/>
             <label for="inputTaskPassword" class="sr-only">Task password</label>
-            <input id="inputTaskPassword" name="taskPassword" class="form-control" type="password"
-                   placeholder="Task password" maxlength="12" autocomplete="off"/>
+            <input id="inputTaskPassword" name="taskPassword"
+                   class="form-control" type="password" placeholder="Task password"
+                   maxlength="12" autocomplete="off"/>
         </div>
     </div>
-    <div th:if="${error}" class="task-failed" th:text="${error}">Invalid task id and password.</div>
+    <div th:if="${error}" class="task-failed" th:text="${error}">Invalid
+        task id and password.
+    </div>
     <div class="form-group">
         <div class="col-md-12">
             <button id="getResultBtn" class="btn btn-lg btn-primary btn-block"
@@ -33,20 +35,23 @@
         </div>
     </div>
 </form>
-<form class="form-signin form-horizontal" role="form" th:action="@{/admin/result}" method="GET" data-toggle="validator"
-      sec:authorize="hasRole('ROLE_ADMIN')">
+<form id="get-result-form" class="form-signin form-horizontal text-center"
+      role="form" th:action="@{/admin/result}" method="GET"
+      data-toggle="validator" sec:authorize="hasRole('ROLE_ADMIN')">
+    <h1 class="h3 mb=3 font-weight-normal">Fill in your task</h1>
     <div class="form-group">
         <div class="col-md-12">
-            <div class="form-signin-heading">Enter your task id</div>
-            <label for="adminInputTaskId" class="sr-only">Task id</label>
-            <input id="adminInputTaskId" name="taskId" class="form-control" type="text" maxlength="12"
-                   placeholder="Task id"/>
+            <label for="inputTaskId" class="sr-only">Task id</label> <input
+                id="adminInputTaskId" name="taskId" class="form-control"
+                type="text" maxlength="12" placeholder="Task id"/>
         </div>
     </div>
-    <div th:if="${error}" class="task-failed" th:text="${error}">Invalid task id and password.</div>
+    <div th:if="${error}" class="task-failed" th:text="${error}">Invalid
+        task id and password.
+    </div>
     <div class="form-group">
         <div class="col-md-12">
-            <button id="getAdminResultBtn" class="btn btn-lg btn-primary btn-block"
+            <button id="getResultBtn" class="btn btn-lg btn-primary btn-block"
                     disabled="disabled" type="submit">Get Result
             </button>
         </div>

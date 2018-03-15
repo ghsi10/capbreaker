@@ -30,7 +30,7 @@
     z-index: 2;
 }
 
-.form-signin input#username {
+.form-signin input#username, input#password {
     margin-bottom: 10px;
 }
 
