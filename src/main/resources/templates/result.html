@@ -2,8 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <link th:replace="fragments/header :: header-css" />
-    <link rel="stylesheet" href="/css/result.css" />
+    <link th:replace="fragments/header :: header-css"/>
+    <link rel="stylesheet" href="/css/result.css"/>
     <script type="text/javascript" src="/scripts/jquery.js"></script>
     <script type="text/javascript" src="/scripts/result.js"></script>
 </head>
@@ -17,19 +17,21 @@
         <div class="col-md-12">
             <label for="inputTaskId" class="sr-only">Task id</label> <input
                 id="inputTaskId" name="taskId" class="form-control" type="text"
-                maxlength="12" placeholder="Task id" />
+                maxlength="12" placeholder="Task id"/>
             <label for="inputTaskPassword" class="sr-only">Task password</label>
             <input id="inputTaskPassword" name="taskPassword"
                    class="form-control" type="password" placeholder="Task password"
-                   maxlength="12" autocomplete="off" />
+                   maxlength="12" autocomplete="off"/>
         </div>
     </div>
     <div th:if="${error}" class="task-failed" th:text="${error}">Invalid
-        task id and password.</div>
+        task id and password.
+    </div>
     <div class="form-group">
         <div class="col-md-12">
             <button id="getResultBtn" class="btn btn-lg btn-primary btn-block"
-                    disabled="disabled" type="submit">Get Result</button>
+                    disabled="disabled" type="submit">Get Result
+            </button>
         </div>
     </div>
 </form>
@@ -41,15 +43,17 @@
         <div class="col-md-12">
             <label for="inputTaskId" class="sr-only">Task id</label> <input
                 id="adminInputTaskId" name="taskId" class="form-control"
-                type="text" maxlength="12" placeholder="Task id" />
+                type="text" maxlength="12" placeholder="Task id"/>
         </div>
     </div>
     <div th:if="${error}" class="task-failed" th:text="${error}">Invalid
-        task id and password.</div>
+        task id and password.
+    </div>
     <div class="form-group">
         <div class="col-md-12">
             <button id="getResultBtn" class="btn btn-lg btn-primary btn-block"
-                    disabled="disabled" type="submit">Get Result</button>
+                    disabled="disabled" type="submit">Get Result
+            </button>
         </div>
     </div>
 </form>

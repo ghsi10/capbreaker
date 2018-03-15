@@ -20,15 +20,13 @@ import java.util.stream.Collectors;
 @Service
 public class ScanManager {
 
+    private final List<String[]> commands;
+    private final List<ScanTask> tasks;
+    private final Set<Agent> agents;
     @Value("${agent.keepalive.timer}")
     private int AGENT_TIMER;
     @Value("${agent.keepalive.max}")
     private int MAX_KEEP_ALIVE;
-
-    private final List<String[]> commands;
-    private final List<ScanTask> tasks;
-    private final Set<Agent> agents;
-
     private TaskRepository taskRepository;
 
     public ScanManager(@Value("#{'${scan.commands}'.split(',')}") String[] commandsFromProperties) {

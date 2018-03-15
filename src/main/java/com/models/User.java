@@ -25,8 +25,8 @@ public class User {
         role = user.role;
         enable = user.enable;
     }
-    
-    public User (String username, String password) {
+
+    public User(String username, String password) {
         this(username, password, UserRole.ROLE_USER, false);
     }
 
