@@ -30,6 +30,18 @@ public class UserController {
         return "user/login";
     }
 
+    @RequestMapping(value = "/register", method = RequestMethod.GET)
+    public String register(Model model) {
+        model.addAttribute("module", "register");
+        return "user/register";
+    }
+
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public String register(@RequestParam String userName, @RequestParam String password, @RequestParam String passwordAgain) {
+       userService.signup(userName, password, passwordAgain);
+       return "redirect:/tasks";
+    }
+
     @RequestMapping(value = {"user/download"}, method = RequestMethod.GET)
     public String download(Model model, HttpServletResponse response, @AuthenticationPrincipal User user) {
         response.setHeader("Content-Disposition", "attachment; filename=\"CapBreakerAgent.py\"");
@@ -48,9 +60,8 @@ public class UserController {
     }
 
     @RequestMapping(value = "/admin/delete", method = RequestMethod.GET)
-    public String adminDelete(Model model, @RequestParam String taskId) {
-        model.addAttribute("module", "tasks");
-        userService.deletTask(taskId);
+    public String adminDelete(@RequestParam String taskId) {
+        userService.deleteTask(taskId);
         return "redirect:/tasks";
     }
 

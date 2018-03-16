@@ -46,7 +46,8 @@ public class TaskController {
     }
 
     @RequestMapping(value = "/result", method = RequestMethod.POST)
-    public String resultOf(Model model, @RequestParam String taskId, @RequestParam String taskPassword) {
+    public String resultOf(Model model, @RequestParam String taskId, @RequestParam String taskPassword) throws
+            NumberFormatException {
         model.addAttribute("module", "result");
         model.addAttribute("task", taskService.getResult(taskId, taskPassword));
         return "resultof";

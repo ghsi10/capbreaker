@@ -1,6 +1,8 @@
 package com.services;
 
 import com.models.Task;
+import com.models.User;
+import com.models.UserRole;
 import com.repositories.TaskRepository;
 import com.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,16 @@ public class UserService {
     private TaskRepository taskRepository;
     private ScanManager scanManager;
 
+
+    public void signup(String username, String password, String passwordAgain) {
+        if (password.equals(passwordAgain)) {
+            // TODO: fix it
+            User user = new User(username, password, UserRole.ROLE_USER, true);
+            userRepository.save(user);
+        }
+
+    }
+
     public Task getResult(String taskId) throws NumberFormatException {
         Task task = taskRepository.findOne(Integer.parseInt(taskId));
         if (task != null)
@@ -26,7 +38,7 @@ public class UserService {
         throw new NumberFormatException();
     }
 
-    public void deletTask(String taskId) {
+    public void deleteTask(String taskId) {
         scanManager.stopTask(Integer.parseInt(taskId));
         taskRepository.delete(Integer.parseInt(taskId));
     }
