@@ -75,8 +75,10 @@ public class ScanManager {
 
     public void keepAlive(String uuid) throws NameNotFoundException {
         Optional<Agent> optAgent = agents.stream().filter(agent -> agent.uuid.equals(uuid)).findFirst();
-        optAgent.ifPresent(agent -> agent.keepAlive = MAX_KEEP_ALIVE);
-        throw new NameNotFoundException();
+        if (optAgent.isPresent())
+            optAgent.get().keepAlive = MAX_KEEP_ALIVE;
+        else
+            throw new NameNotFoundException();
     }
 
     public void stopTask(int taskId) {
