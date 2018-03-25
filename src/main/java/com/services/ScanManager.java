@@ -82,8 +82,7 @@ public class ScanManager {
     }
 
     public void stopTask(int taskId) {
-        tasks.stream().filter(scanTask -> scanTask.getTask().getId() == taskId).collect(Collectors.toList()).forEach
-                (tasks::remove);
+        tasks.removeIf(scanTask -> scanTask.getTask().getId() == taskId);
         agents.stream().filter(agent -> agent.task.getId() == taskId).collect(Collectors.toList()).forEach(agent -> {
             agent.interrupt();
             agents.remove(agent);
@@ -96,8 +95,7 @@ public class ScanManager {
             task.setStatus(TaskStatus.Completed);
             task.setWifiPassword(password);
             taskRepository.save(task);
-            tasks.stream().filter(scanTask -> scanTask.getTask().equals(task)).collect(Collectors.toList()).forEach
-                    (tasks::remove);
+            tasks.removeIf(scanTask -> scanTask.getTask().equals(task));
             agents.stream().filter(agent -> agent.task.equals(task)).collect(Collectors.toList()).forEach(agent -> {
                 agent.interrupt();
                 agents.remove(agent);
