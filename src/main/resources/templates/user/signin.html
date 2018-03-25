@@ -10,7 +10,7 @@
 <div class="container">
     <header th:replace="fragments/header :: header"></header>
 
-    <form class="form-signin form-horizontal text-center" th:action="@{/login}" method="post">
+    <form class="form-signin form-horizontal text-center" th:action="@{/signin}" method="post">
         <div th:if="${#httpServletRequest.getParameter('logout')}" class="login-logout">You have been logged out.</div>
 
         <h1 class="h3 mb=3 font-weight-normal">Please sign in</h1>
@@ -34,7 +34,7 @@
             </div>
         </div>
 
-        <a class="small" id="signUpLink" th:href="@{/register}">Not a member? click here to sign up!</a>
+        <a class="small" id="signUpLink" th:href="@{/signup}">Not a member? click here to sign up!</a>
     </form>
 </div>
 </body>

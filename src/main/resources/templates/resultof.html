@@ -15,10 +15,10 @@
             <h1 class="h3 mb=3 font-weight-normal">Task's Result</h1>
 
             <div class="report" id="results">
-                <div> Task id: <span class="results-spans" th:text="${task.id}">id</span> </div>
-                <div> ESSID: <span class="results-spans" th:text="${task.essid}">essid</span> </div>
-                <div> BSSID: <span class="results-spans" th:text="${task.bssid}">bssid</span> </div>
-                <div> Status: <span class="results-spans" th:text="${task.status}">status</span> </div>
+                <div> Task id: <span class="results-spans" th:text="${task.id}">id</span></div>
+                <div> ESSID: <span class="results-spans" th:text="${task.essid}">essid</span></div>
+                <div> BSSID: <span class="results-spans" th:text="${task.bssid}">bssid</span></div>
+                <div> Status: <span class="results-spans" th:text="${task.status}">status</span></div>
                 <div th:if="${task.wifiPassword}!=''">
                     Password: <span th:text="${task.wifiPassword}">password</span>
                 </div>
@@ -27,7 +27,9 @@
                 </div>
             </div>
 
-            <a href="/result"> <button class="btn btn-primary center-block">Back</button> </a>
+            <a href="/result">
+                <button class="btn btn-primary center-block">Back</button>
+            </a>
         </div>
     </div>
 </div>

@@ -49,7 +49,7 @@ public class SecurityConfig {
         protected void configure(HttpSecurity http) throws Exception {
             http.headers().frameOptions().disable().and().csrf().disable().authorizeRequests().antMatchers("/admin/**")
                     .hasRole("ADMIN").antMatchers("/user/**").hasAnyRole("ADMIN", "USER").and().formLogin()
-                    .loginPage("/login").and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
+                    .loginPage("/signin").and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
         }
     }
 }

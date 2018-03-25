@@ -24,22 +24,23 @@ public class UserController {
 
     private UserService userService;
 
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String login(Model model) {
-        model.addAttribute("module", "login");
-        return "user/login";
+    @RequestMapping(value = "/signin", method = RequestMethod.GET)
+    public String signin(Model model) {
+        model.addAttribute("module", "signin");
+        return "user/signin";
     }
 
-    @RequestMapping(value = "/register", method = RequestMethod.GET)
-    public String register(Model model) {
-        model.addAttribute("module", "register");
-        return "user/register";
+    @RequestMapping(value = "/signup", method = RequestMethod.GET)
+    public String signup(Model model) {
+        model.addAttribute("module", "signup");
+        return "user/signup";
     }
 
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String register(@RequestParam String userName, @RequestParam String password, @RequestParam String passwordAgain) {
-       userService.signup(userName, password, passwordAgain);
-       return "redirect:/tasks";
+    @RequestMapping(value = "/signup", method = RequestMethod.POST)
+    public String register(@RequestParam String userName, @RequestParam String password, @RequestParam String
+            passwordAgain) {
+        userService.signup(userName, password, passwordAgain);
+        return "redirect:/tasks";
     }
 
     @RequestMapping(value = {"user/download"}, method = RequestMethod.GET)

@@ -7,7 +7,7 @@
 <body>
 <div class="container">
     <div th:replace="fragments/header :: header"></div>
-    
+
     <!--/*@thymesVar id="error" type="java.lang.String"*/-->
     <form th:if="${error}!=null" class="new-task-message-container panel-body text-center" th:action="@{/upload}">
         <div class="alert alert-danger fade in alert-dismissable text-center" th:text="${error}">error</div>

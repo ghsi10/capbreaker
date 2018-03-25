@@ -3,11 +3,6 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:fragment="header-css">
     <link rel="stylesheet" type="text/css" th:href="${'/css/bootstrap.css'}"/>
-
-    <!-- Bootstrap CSS -->
-    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
--->
     <link rel="stylesheet" type="text/css" th:href="${'/css/main.css'}"/>
     <title>Cap Breaker</title>
 </head>
@@ -30,12 +25,12 @@
         <li sec:authorize="isAuthenticated()">
             <a th:href="@{/user/download}">Download agent</a>
         </li>
-        <!--<li th:class="${module=='register'?'pull-right active':'pull-right'}"sec:authorize="isAnonymous()">
-            <a th:href="@{/register}">Sign Up</a>
+        <!--<li th:class="${module=='signup'?'pull-right active':'pull-right'}"sec:authorize="isAnonymous()">
+            <a th:href="@{/signup}">Sign Up</a>
         </li>-->
-        <li th:class="${module=='login'?'pull-right active':'pull-right'}"
+        <li th:class="${module=='signin'?'pull-right active':'pull-right'}"
             sec:authorize="isAnonymous()">
-            <a th:href="@{/login}">Sign In</a>
+            <a th:href="@{/signin}">Sign In</a>
         </li>
         <li class="pull-right" sec:authorize="isAuthenticated()">
             <a th:href="@{/logout}">Logout</a>

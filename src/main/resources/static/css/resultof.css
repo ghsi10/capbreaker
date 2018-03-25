@@ -21,10 +21,9 @@
     opacity: 0.85;
     overflow: auto;
     height: auto;
-    margin: auto;
     padding: 20px;
     max-width: 310px;
-    margin-bottom: 15px;
+    margin: auto auto 15px;
 }
 
 .results-spans {
