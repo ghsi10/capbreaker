@@ -20,10 +20,10 @@
                 <div> BSSID: <span class="results-spans" th:text="${task.bssid}">bssid</span></div>
                 <div> Status: <span class="results-spans" th:text="${task.status}">status</span></div>
                 <div th:if="${task.wifiPassword}!=''">
-                    Password: <span th:text="${task.wifiPassword}">password</span>
+                    Password: <span id="password-span" th:text="${task.wifiPassword}">password</span>
                 </div>
                 <div th:if="${task.wifiPassword}==''">
-                    Password: <span class="results-spans" id="password-span">Not Found</span>
+                    Password: <span class="results-spans">Not Found</span>
                 </div>
             </div>
 
