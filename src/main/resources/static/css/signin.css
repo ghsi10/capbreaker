@@ -30,8 +30,12 @@
     z-index: 2;
 }
 
-.form-signin input#username, button#loginSubmit {
+.form-signin input {
     margin-bottom: 10px;
+}
+
+.form-signin input:last-child {
+    margin-bottom: 0;
 }
 
 .form-signin input#inputPassword {

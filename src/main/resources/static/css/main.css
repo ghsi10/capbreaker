@@ -70,11 +70,6 @@ ul#menu {
     color: #000;
 }
 
-#add-task-captcha, #contact-captcha, #get-result-captcha {
-    width: 304px;
-    margin: auto;
-}
-
 input[placeholder], input::-moz-placeholder, input:-moz-placeholder,
 input:-ms-input-placeholder {
     text-overflow: ellipsis;
@@ -88,14 +83,4 @@ input:-ms-input-placeholder {
 
 .row {
     margin-bottom: 10px;
-}
-
-.ng-valid[required], .ng-valid.required {
-    border: 2px solid #42A948;
-    border-left: 5px solid #42A948;
-}
-
-.ng-invalid:not(form) {
-    border: 2px solid #a94442;
-    border-left: 5px solid #a94442;
 }

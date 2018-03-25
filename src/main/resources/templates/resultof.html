@@ -2,30 +2,34 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <link th:replace="fragments/header :: header-css"/>
-    <link rel="stylesheet" type="text/css" th:href="${'/css/result.css'}"/>
+    <link rel="stylesheet" type="text/css" th:href="${'/css/resultof.css'}"/>
 </head>
 <body>
 <div class="container">
-    <div th:replace="fragments/header :: header"></div>
+    <div class="row">
+        <div th:replace="fragments/header :: header"></div>
+    </div>
 
-    <form class="form-signin form-horizontal" role="form" th:action="@{/tasks}">
-        <div class="report" id="results">
-            Task id: <span class="results-spans" th:text="${task.id}">id</span>
-            <br/> ESSID: <span class="results-spans" th:text="${task.essid}">essid</span>
-            <br/> BSSID: <span class="results-spans" th:text="${task.bssid}">bssid</span>
-            <br/> Status: <span class="results-spans" th:text="${task.status}">status</span><br/>
-            <div th:if="${task.wifiPassword}!=''">
-                Password: <span th:text="${task.wifiPassword}">password</span>
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <h1 class="h3 mb=3 font-weight-normal">Task's Result</h1>
+
+            <div class="report" id="results">
+                <div> Task id: <span class="results-spans" th:text="${task.id}">id</span> </div>
+                <div> ESSID: <span class="results-spans" th:text="${task.essid}">essid</span> </div>
+                <div> BSSID: <span class="results-spans" th:text="${task.bssid}">bssid</span> </div>
+                <div> Status: <span class="results-spans" th:text="${task.status}">status</span> </div>
+                <div th:if="${task.wifiPassword}!=''">
+                    Password: <span th:text="${task.wifiPassword}">password</span>
+                </div>
+                <div th:if="${task.wifiPassword}==''">
+                    Password: <span class="results-spans" id="password-span">Not Found</span>
+                </div>
             </div>
-            <div th:if="${task.wifiPassword}==''">
-                Password: <span class="results-spans">Not Found</span><br/>
-            </div>
+
+            <a href="/result"> <button class="btn btn-primary center-block">Back</button> </a>
         </div>
-        <br/>
-        <div align="center">
-            <button class="btn btn-primary" type="submit">Back</button>
-        </div>
-    </form>
+    </div>
 </div>
 </body>
 </html>
