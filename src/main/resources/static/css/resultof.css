@@ -1,0 +1,36 @@
+.report {
+    color: #ccc;
+    border: none;
+    text-align: left;
+    background: transparent;
+    overflow: auto;
+    width: 100%;
+    height: auto;
+    padding: 0;
+}
+
+#results, #results-error {
+    border: none;
+    -moz-border-radius: 16px;
+    -webkit-border-radius: 16px;
+    border-radius: 16px;
+    color: #aaa;
+    font-size: 14px;
+    text-align: left;
+    background: black;
+    opacity: 0.85;
+    overflow: auto;
+    height: auto;
+    margin: auto;
+    padding: 20px;
+    max-width: 310px;
+    margin-bottom: 15px;
+}
+
+.results-spans {
+    color: #eee;
+}
+
+#password-span {
+    color: #337ab7;
+}

@@ -25,7 +25,8 @@
                        placeholder="Task password" maxlength="12" autocomplete="off"/>
             </div>
         </div>
-        <div th:if="${error}" class="task-failed" th:text="${error}">
+        <div th:if="${error}" class="task-failed alert alert-danger fade in alert-dismissable text-center"
+             th:text="${error}">
             Invalid task id and password.
         </div>
         <div class="form-group">
@@ -46,7 +47,8 @@
                        placeholder="Task id"/>
             </div>
         </div>
-        <div th:if="${error}" class="task-failed" th:text="${error}">
+        <div th:if="${error}" class="task-failed alert alert-danger fade in alert-dismissable text-center"
+             th:text="${error}">
             Invalid task id and password.
         </div>
         <div class="form-group">

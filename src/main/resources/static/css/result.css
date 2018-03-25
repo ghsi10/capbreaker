@@ -1,26 +1,15 @@
-.report {
-    color: #ccc;
-    border: none;
-    text-align: left;
-    background: transparent;
-    overflow: auto;
-    width: 100%;
-    height: auto;
-    padding: 0;
-}
-
-.form-signin {
-    max-width: 340px;
-    padding: 15px;
-    margin: 0 auto;
-}
-
 .form-signin .form-signin-heading, .form-signin .checkbox {
     margin-left: 2px;
     margin-bottom: 5px;
     font-size: 12px;
     text-align: center;
     font-weight: bold;
+}
+
+.form-signin {
+    max-width: 340px;
+    padding: 15px;
+    margin: 0 auto;
 }
 
 .form-signin .checkbox {
@@ -53,41 +42,6 @@
 
 .form-signin input {
     text-align: center;
-}
-
-#results, #results-error {
-    border: none;
-    -moz-border-radius: 16px;
-    -webkit-border-radius: 16px;
-    border-radius: 16px;
-    color: #aaa;
-    font-size: 14px;
-    text-align: left;
-    background: black;
-    opacity: 0.85;
-    overflow: auto;
-    width: 100%;
-    height: auto;
-    margin: auto;
-    padding: 20px;
-}
-
-#results-error {
-    text-align: center;
-}
-
-.results-spans {
-    color: #eee;
-}
-
-#password-span {
-    color: #337ab7;
-}
-
-#results-error-span {
-    color: red;
-    font-weight: bold;
-    font-style: italic;
 }
 
 .task-failed {
