@@ -57,14 +57,14 @@ public class TaskController {
     public String handleUnsupportedDataTypeException(UnsupportedDataTypeException e, Model model) {
         model.addAttribute("module", "upload");
         model.addAttribute("error", e.getMessage());
-        return "uploaded";
+        return "upload";
     }
 
     @ExceptionHandler(IOException.class)
     public String handleIOException(Model model) {
         model.addAttribute("module", "upload");
         model.addAttribute("error", "Unexpected error");
-        return "uploaded";
+        return "upload";
     }
 
     @ExceptionHandler(NumberFormatException.class)

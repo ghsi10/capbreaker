@@ -25,10 +25,7 @@
                        placeholder="Task password" maxlength="12" autocomplete="off"/>
             </div>
         </div>
-        <div th:if="${error}" class="task-failed alert alert-danger fade in alert-dismissable text-center"
-             th:text="${error}">
-            Invalid task id and password.
-        </div>
+        <div th:if="${error}" class="task-failed" th:text="${error}">Invalid task id or password.</div>
         <div class="form-group">
             <div class="col-md-12">
                 <button id="getResultBtn" class="btn btn-lg btn-primary btn-block" disabled="disabled" type="submit">
@@ -47,10 +44,7 @@
                        placeholder="Task id"/>
             </div>
         </div>
-        <div th:if="${error}" class="task-failed alert alert-danger fade in alert-dismissable text-center"
-             th:text="${error}">
-            Invalid task id and password.
-        </div>
+        <div th:if="${error}" class="task-failed" th:text="${error}">Invalid task id.</div>
         <div class="form-group">
             <div class="col-md-12">
                 <button id="getAdminResultBtn" class="btn btn-lg btn-primary btn-block" disabled="disabled"

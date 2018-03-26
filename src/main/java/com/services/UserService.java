@@ -22,12 +22,19 @@ public class UserService {
     private ScanManager scanManager;
 
 
-    public void signup(String username, String password, String passwordAgain) {
-        if (password.equals(passwordAgain)) {
-            // TODO: fix it
-            User user = new User(username, password, UserRole.ROLE_USER, true);
-            userRepository.save(user);
-        }
+    public void signup(String username, String password, String passwordAgain) throws NoSuchFieldException {
+        if (username.length() < 3)
+            throw new NoSuchFieldException("Username is not available.");
+        if (password.length() < 8 || password.length() > 32)
+            throw new NoSuchFieldException("Password should be between 8 to 32 characters.");
+        if (!username.matches("[a-zA-Z0-9]+") || !password.matches("[a-zA-Z0-9]+"))
+            throw new NoSuchFieldException("Username/password contains illegal characters.");
+        if (!password.equals(passwordAgain))
+            throw new NoSuchFieldException("Password does not match the confirm password.");
+        if (userRepository.findOneByUsername(username) != null)
+            throw new NoSuchFieldException("Username is not available.");
+        User user = new User(username, password, UserRole.ROLE_USER, true);
+        userRepository.save(user);
 
     }
 

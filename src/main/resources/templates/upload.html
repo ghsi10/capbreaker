@@ -10,6 +10,7 @@
 <div class="container">
     <div th:replace="fragments/header :: header"></div>
 
+    <!--/*@thymesVar id="error" type="java.lang.String"*/-->
     <form id="add-task-form" class="container" th:action="@{/upload}" method="POST" enctype="multipart/form-data">
         <div class="form-group">
             <label class="btn btn-default btn-file file-label" for="cap-file">
@@ -18,13 +19,10 @@
             </label>
         </div>
         <div class="form-group">
-            <input class="form-control v-spacing" type="text"
-                   placeholder="ESSID (Optional, case sensitive, leave blank for autodetect)" name="essid"
-                   maxlength="36"
-                   size="32"/>
-            <input class="form-control v-spacing" type="text"
-                   placeholder="BSSID (Optional, hexadecimal, leave blank for autodetect)" name="bssid" maxlength="17"
-                   size="32"/>
+            <input class="form-control v-spacing" type="text" name="essid" maxlength="36" size="32"
+                   placeholder="ESSID (Optional, case sensitive, leave blank for autodetect)"/>
+            <input class="form-control v-spacing" type="text" name="bssid" maxlength="17" size="32"
+                   placeholder="BSSID (Optional, hexadecimal, leave blank for autodetect)"/>
         </div>
         <div class="form-group">
             <div id="wpa-terms-div" class="alert alert-dismissible alert-info left-justified text-center">
@@ -41,6 +39,7 @@
                 Upload
             </button>
         </div>
+        <div th:if="${error}" class="upload-failed" th:text="${error}">error.</div>
     </form>
 </div>
 </body>

@@ -10,6 +10,7 @@
 <div class="container">
     <header th:replace="fragments/header :: header"></header>
 
+    <!--/*@thymesVar id="error" type="java.lang.String"*/-->
     <form class="form-signin form-horizontal text-center" th:action="@{/signup}" method="post">
         <h1 class="h3 mb=3 font-weight-normal">Please sign up</h1>
         <div class="form-group">
@@ -17,13 +18,12 @@
                 <label for="username" class="sr-only">Username</label>
                 <input type="text" name="userName" id="username" class="form-control input-lg" placeholder="Username"/>
                 <label for="password" class="sr-only">Password</label>
-                <input type="password" name="password" id="password"
-                       class="form-control input-lg" placeholder="Password"
-                       autocomplete="off"/>
+                <input type="password" name="password" id="password" class="form-control input-lg"
+                       placeholder="Password" autocomplete="off"/>
                 <label for="passwordAgain" class="sr-only">Password</label>
-                <input type="password" name="passwordAgain" id="passwordAgain"
-                       class="form-control input-lg" placeholder="Password Again"
-                       autocomplete="off"/>
+                <input type="password" name="passwordAgain" id="passwordAgain" class="form-control input-lg"
+                       placeholder="Password Again" autocomplete="off"/>
+                <div th:if="${error}" class="login-failed" th:text="${error}"></div>
             </div>
         </div>
         <div class="form-group">
@@ -33,6 +33,8 @@
                 </button>
             </div>
         </div>
+
+        <a class="small" id="signUpLink" th:href="@{/signin}">already registered? click here to sign in!</a>
     </form>
 </div>
 </body>

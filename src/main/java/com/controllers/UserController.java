@@ -38,7 +38,7 @@ public class UserController {
 
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public String register(@RequestParam String userName, @RequestParam String password, @RequestParam String
-            passwordAgain) {
+            passwordAgain) throws NoSuchFieldException {
         userService.signup(userName, password, passwordAgain);
         return "redirect:/tasks";
     }
@@ -71,6 +71,13 @@ public class UserController {
         model.addAttribute("module", "result");
         model.addAttribute("error", "Invalid task id.");
         return "result";
+    }
+
+    @ExceptionHandler(NoSuchFieldException.class)
+    public String handleNoSuchFieldException(NoSuchFieldException e, Model model) {
+        model.addAttribute("module", "signup");
+        model.addAttribute("error", e.getMessage());
+        return "user/signup";
     }
 
     @Autowired

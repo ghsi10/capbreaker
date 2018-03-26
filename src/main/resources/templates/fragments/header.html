@@ -25,12 +25,11 @@
         <li sec:authorize="isAuthenticated()">
             <a th:href="@{/user/download}">Download agent</a>
         </li>
-        <!--<li th:class="${module=='signup'?'pull-right active':'pull-right'}"sec:authorize="isAnonymous()">
-            <a th:href="@{/signup}">Sign Up</a>
-        </li>-->
-        <li th:class="${module=='signin'?'pull-right active':'pull-right'}"
-            sec:authorize="isAnonymous()">
+        <li th:class="${module=='signin'?'pull-right active':'pull-right'}" sec:authorize="isAnonymous()">
             <a th:href="@{/signin}">Sign In</a>
+        </li>
+        <li th:class="${module=='signup'?'pull-right active':'pull-right'}" sec:authorize="isAnonymous()">
+            <a th:href="@{/signup}">Sign Up</a>
         </li>
         <li class="pull-right" sec:authorize="isAuthenticated()">
             <a th:href="@{/logout}">Logout</a>

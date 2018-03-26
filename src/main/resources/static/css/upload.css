@@ -69,3 +69,28 @@
 #wpa-terms-div {
     margin-top: 10px;
 }
+
+.upload-failed {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+    font-size: 15px;
+    font-weight: bold;
+    color: red;
+}
+
+#added-task-form {
+    vertical-align: middle;
+    border: none;
+    -moz-border-radius: 16px;
+    -webkit-border-radius: 16px;
+    border-radius: 16px;
+    color: #bbb;
+    font-size: 13px;
+    background-color: rgba(0, 0, 0, 0.65);
+    overflow: auto;
+    max-width: 610px;
+    margin: auto;
+    padding: 16px;
+    text-align: center;
+}
