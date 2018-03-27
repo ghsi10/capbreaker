@@ -15,7 +15,6 @@ public class Task {
     private TaskStatus status;
     private String wifiPassword;
     private String taskPassword;
-    @Lob
     private Handshake handshake;
 
     public Task() {
