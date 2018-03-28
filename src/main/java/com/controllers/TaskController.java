@@ -60,7 +60,7 @@ public class TaskController {
         return "upload";
     }
 
-    @ExceptionHandler(IOException.class)
+    @ExceptionHandler({IOException.class, ArrayIndexOutOfBoundsException.class})
     public String handleIOException(Model model) {
         model.addAttribute("module", "upload");
         model.addAttribute("error", "Unexpected error");
