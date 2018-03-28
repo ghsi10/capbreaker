@@ -28,9 +28,9 @@ public class Task {
         bssid = t.bssid;
         essid = t.essid;
         status = t.status;
+        wifiPassword = t.wifiPassword;
         taskPassword = t.taskPassword;
         handshake = t.handshake;
-        taskPassword = randomPassword();
     }
 
     public Task(Handshake hs) {

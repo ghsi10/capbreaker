@@ -20,6 +20,7 @@ public class User {
     }
 
     public User(User user) {
+        id = user.id;
         username = user.username;
         password = user.password;
         role = user.role;

@@ -12,9 +12,9 @@
     <div th:replace="fragments/header :: header"></div>
 
     <!--/*@thymesVar id="error" type="java.lang.String"*/-->
-    <form class="form-signin form-horizontal text-center" role="form" th:action="@{/result}" method="POST"
+    <form class="form-signin form-horizontal" role="form" th:action="@{/result}" method="POST"
           sec:authorize="!hasRole('ROLE_ADMIN')">
-        <h1 class="h3 mb=3 font-weight-normal">Fill in your task</h1>
+        <h1 class="h3 font-weight-normal text-center">Fill in your task</h1>
         <div class="form-group">
             <div class="col-md-12">
                 <label for="inputTaskId" class="sr-only">Task id</label>

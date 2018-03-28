@@ -37,7 +37,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
-    public String register(@RequestParam String username, @RequestParam String password, @RequestParam String
+    public String signup(@RequestParam String username, @RequestParam String password, @RequestParam String
             passwordAgain) throws NoSuchFieldException {
         userService.signup(username, password, passwordAgain);
         return "redirect:/tasks";
