@@ -22,7 +22,7 @@ public class UserService {
     private ScanManager scanManager;
 
     public void signup(String username, String password, String passwordAgain) throws NoSuchFieldException {
-        if (password.length() < 4 || password.length() > 17)
+        if (username.length() < 4 || password.length() > 17)
             throw new NoSuchFieldException("Username/Password should be between 4 to 16 characters.");
         if (!username.matches("[a-zA-Z0-9]+") || !password.matches("[a-zA-Z0-9]+"))
             throw new NoSuchFieldException("Username/Password contains illegal characters.");
