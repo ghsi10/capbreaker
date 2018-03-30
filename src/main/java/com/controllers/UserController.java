@@ -59,16 +59,16 @@ public class UserController {
         return "user/agent";
     }
 
-    @RequestMapping(value = "/admin/result", method = RequestMethod.GET)
-    public String adminResult(Model model, @RequestParam String taskId) {
+    @RequestMapping(value = "/admin/taskResult", method = RequestMethod.GET)
+    public String taskResult(Model model, @RequestParam String taskId) {
         model.addAttribute("module", "result");
-        model.addAttribute("task", userService.getResult(taskId));
+        model.addAttribute("task", userService.taskResult(taskId));
         return "resultof";
     }
 
-    @RequestMapping(value = "/admin/delete", method = RequestMethod.GET)
-    public String adminDelete(@RequestParam String taskId) {
-        userService.deleteTask(taskId);
+    @RequestMapping(value = "/admin/taskDelete", method = RequestMethod.GET)
+    public String taskDelete(@RequestParam String taskId) {
+        userService.taskDelete(taskId);
         return "redirect:/tasks";
     }
 

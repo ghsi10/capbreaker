@@ -29,14 +29,14 @@ public class UserService {
 
     }
 
-    public Task getResult(String taskId) throws NumberFormatException {
+    public Task taskResult(String taskId) throws NumberFormatException {
         Task task = taskRepository.findOne(Integer.parseInt(taskId));
         if (task != null)
             return task;
         throw new NumberFormatException();
     }
 
-    public void deleteTask(String taskId) {
+    public void taskDelete(String taskId) {
         scanManager.stopTask(Integer.parseInt(taskId));
         taskRepository.delete(Integer.parseInt(taskId));
     }
