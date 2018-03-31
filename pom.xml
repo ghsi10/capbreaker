@@ -8,8 +8,8 @@
     <version>0.4.1</version>
     <packaging>jar</packaging>
 
-    <name>Capbreaker</name>
-    <description>break a cap files</description>
+    <name>Cap breaker</name>
+    <description>Break a cap files</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
