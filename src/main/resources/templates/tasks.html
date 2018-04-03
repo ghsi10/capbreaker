@@ -21,9 +21,9 @@
         </thead>
         <tbody>
         <tr th:each="task:${tasks}">
-            <td th:text="${task.id}">taskId</td>
-            <td th:text="${task.essid}">essid</td>
-            <td th:text="${task.status}">status</td>
+            <td th:text="${task.id}"></td>
+            <td th:text="${task.essid}"></td>
+            <td th:text="${task.status}"></td>
             <td th:if="${task.status!=T(com.models.TaskStatus).Completed}">-</td>
             <td th:if="${task.status==T(com.models.TaskStatus).Completed}">
                 <div th:if="${task.wifiPassword!=''}" class="ok">Found</div>

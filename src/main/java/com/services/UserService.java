@@ -7,10 +7,16 @@ import com.repositories.TaskRepository;
 import com.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserService {
+
+    @Value("${view.page.size}")
+    private int PAGE_SIZE;
 
     @Value("${spring.login.username}")
     private String MASTER_USERNAME;
@@ -32,7 +38,6 @@ public class UserService {
             throw new NoSuchFieldException("Username is not available.");
         User user = new User(username, password, UserRole.ROLE_USER, true);
         userRepository.save(user);
-
     }
 
     public Task getResult(String taskId) throws NumberFormatException {
@@ -45,6 +50,22 @@ public class UserService {
     public void deleteTask(String taskId) {
         scanManager.stopTask(Integer.parseInt(taskId));
         taskRepository.delete(Integer.parseInt(taskId));
+    }
+
+    public void deleteUser(String userId) {
+        userRepository.delete(Integer.parseInt(userId));
+    }
+
+    public List<User> getUsers(int page) {
+        return userRepository.findAllByOrderByIdDesc(new PageRequest(page, PAGE_SIZE)).getContent();
+    }
+
+    public void toggleEnabledUser(String userId, boolean enabled) {
+        userRepository.toggleEnabled(Integer.parseInt(userId), enabled);
+    }
+
+    public void promoteUser(String userId) {
+        userRepository.promote(Integer.parseInt(userId), UserRole.ROLE_ADMIN);
     }
 
     public String getPassword(String username) {

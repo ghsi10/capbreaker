@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <link th:replace="fragments/header :: header-css"/>
+    <link rel="stylesheet" type="text/css" th:href="${'/css/tasks.css'}"/>
+    <link rel="stylesheet" type="text/css" th:href="${'/css/users-management.css'}"/>
+    <link rel="stylesheet" type="text/css" th:href="${'/css/dataTables.bootstrap.min.css'}"/>
+</head>
+<body>
+<div class="container">
+    <div th:replace="fragments/header :: header"></div>
+
+    <table class="table table-striped" id="users-table">
+        <thead>
+        <tr>
+            <th>User id</th>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Enabled</th>
+            <th sec:authorize="hasRole('ROLE_ADMIN')">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user:${users}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.role}"></td>
+            <td th:if="${user.enable} == true" class="ok">Enabled</td>
+            <td th:if="${user.enable} == false" class="fail">Disabled</td>
+            <td sec:authorize="hasRole('ROLE_ADMIN')">
+                <a th:if="${user.enable} == true"
+                   onclick="return confirm('Are you sure you want to DISABLE this user?');"
+                   th:href="@{/admin/toggleEnabledUser(userId=${user.id},enabled='false')}"
+                   class="btn btn-danger btn-xs">
+                    Disable
+                </a>
+                <a th:if="${user.enable} == false"
+                   onclick="return confirm('Are you sure you want to ENABLE this user?');"
+                   th:href="@{/admin/toggleEnabledUser(userId=${user.id},enabled='true')}"
+                   class="btn btn-success btn-xs">
+                    Enable
+                </a>
+
+                <a th:if="${user.role} != 'admin'"
+                   onclick="return confirm('Are you sure you want to PROMOTE this user?');"
+                   th:href="${'/admin/promoteUser?userId=' + user.id}" class="btn btn-primary btn-xs">Promote</a>
+
+                <a onclick="return confirm('Are you sure you want to DELETE this user?');"
+                   th:href="${'/admin/deleteUser?userId=' + user.id}" class="btn btn-danger btn-xs">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript" th:src="${'/scripts/jquery.js'}"></script>
+<script type="text/javascript" th:src="${'/scripts/jquery.dataTables.min.js'}"></script>
+<script type="text/javascript" th:src="${'/scripts/dataTables.bootstrap.min.js'}"></script>
+<script type="text/javascript" th:src="${'/scripts/users-management.js'}"></script>
+</body>
+</html>

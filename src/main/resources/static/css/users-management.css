@@ -1,0 +1,10 @@
+div.dataTables_paginate {
+    text-align: center !important;
+    margin-top: 14px !important;
+}
+
+div.dataTables_filter {
+    text-align: center !important;
+    margin-right: 47px !important;
+    margin-bottom: 17px !important;
+}
