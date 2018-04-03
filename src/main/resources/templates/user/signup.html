@@ -16,14 +16,14 @@
         <div class="form-group">
             <div class="col-md-12">
                 <label for="username" class="sr-only">Username</label>
-                <input type="text" name="username" id="username"
-                       class="form-control input-lg" placeholder="Username" autofocus="autofocus"/>
+                <input type="text" name="username" id="username" class="form-control input-lg"
+                       placeholder="Username" maxlength="16" autofocus="autofocus"/>
                 <label for="password" class="sr-only">Password</label>
                 <input type="password" name="password" id="password" class="form-control input-lg"
-                       placeholder="Password" autocomplete="off"/>
+                       placeholder="Password" maxlength="16" autocomplete="off"/>
                 <label for="passwordAgain" class="sr-only">Password</label>
                 <input type="password" name="passwordAgain" id="passwordAgain" class="form-control input-lg"
-                       placeholder="Password Again" autocomplete="off"/>
+                       placeholder="Password Again" maxlength="16" autocomplete="off"/>
                 <div th:if="${error}" class="login-failed" th:text="${error}"></div>
             </div>
         </div>

@@ -39,7 +39,13 @@ public class UserController {
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public String signup(@RequestParam String username, @RequestParam String password, @RequestParam String
             passwordAgain) throws NoSuchFieldException {
-        userService.signup(username, password, passwordAgain);
+        if (username.length() < 4 || password.length() > 17)
+            throw new NoSuchFieldException("Username/Password should be between 4 to 16");
+        if (!username.matches("[a-zA-Z][a-zA-Z0-9]+") || !password.matches("[a-zA-Z0-9]+"))
+            throw new NoSuchFieldException("Username/Password contains illegal characters");
+        if (!password.equals(passwordAgain))
+            throw new NoSuchFieldException("Password does not match the confirm password");
+        userService.signup(username, password);
         return "redirect:/tasks";
     }
 
@@ -53,16 +59,16 @@ public class UserController {
         return "user/agent";
     }
 
-    @RequestMapping(value = "/admin/result", method = RequestMethod.GET)
-    public String adminResult(Model model, @RequestParam String taskId) {
+    @RequestMapping(value = "/admin/taskResult", method = RequestMethod.GET)
+    public String taskResult(Model model, @RequestParam String taskId) {
         model.addAttribute("module", "result");
-        model.addAttribute("task", userService.getResult(taskId));
+        model.addAttribute("task", userService.taskResult(taskId));
         return "resultof";
     }
 
-    @RequestMapping(value = "/admin/delete", method = RequestMethod.GET)
-    public String adminDelete(@RequestParam String taskId) {
-        userService.deleteTask(taskId);
+    @RequestMapping(value = "/admin/taskDelete", method = RequestMethod.GET)
+    public String taskDelete(@RequestParam String taskId) {
+        userService.taskDelete(taskId);
         return "redirect:/tasks";
     }
 

@@ -30,9 +30,9 @@
                 <div th:if="${task.wifiPassword==''}" class="fail">Not Found</div>
             </td>
             <td sec:authorize="hasRole('ROLE_ADMIN')">
-                <a th:href="${'/admin/result?taskId=' + task.id}" class="btn btn-primary btn-xs">Result</a>
+                <a th:href="${'/admin/taskResult?taskId=' + task.id}" class="btn btn-primary btn-xs">Result</a>
                 <a onclick="return confirm('Are you sure you want to delete this task?');"
-                   th:href="${'/admin/delete?taskId=' + task.id}" class="btn btn-danger btn-xs">Delete</a>
+                   th:href="${'/admin/taskDelete?taskId=' + task.id}" class="btn btn-danger btn-xs">Delete</a>
             </td>
         </tr>
         </tbody>
