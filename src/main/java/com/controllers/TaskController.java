@@ -4,10 +4,7 @@ import com.services.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.activation.UnsupportedDataTypeException;
@@ -18,20 +15,20 @@ public class TaskController {
 
     private TaskService taskService;
 
-    @RequestMapping(value = {"/", "/tasks"}, method = RequestMethod.GET)
+    @GetMapping({"/", "/tasks"})
     public String getTable(Model model, @RequestParam(required = false, defaultValue = "0") int page) {
         model.addAttribute("module", "tasks");
         model.addAttribute("tasks", taskService.getTable(page));
         return "tasks";
     }
 
-    @RequestMapping(value = "/upload", method = RequestMethod.GET)
+    @GetMapping("/upload")
     public String uploaded(Model model) {
         model.addAttribute("module", "upload");
         return "upload";
     }
 
-    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+    @PostMapping("/upload")
     public String uploaded(Model model, @RequestParam MultipartFile capFile, @RequestParam String essid,
                            @RequestParam String bssid) throws IOException {
         model.addAttribute("module", "upload");
@@ -39,13 +36,13 @@ public class TaskController {
         return "uploaded";
     }
 
-    @RequestMapping(value = "/result", method = RequestMethod.GET)
+    @GetMapping("/result")
     public String result(Model model) {
         model.addAttribute("module", "result");
         return "result";
     }
 
-    @RequestMapping(value = "/result", method = RequestMethod.POST)
+    @PostMapping("/result")
     public String resultOf(Model model, @RequestParam String taskId, @RequestParam String taskPassword) throws
             NumberFormatException {
         model.addAttribute("module", "result");

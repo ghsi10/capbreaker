@@ -15,17 +15,17 @@ public class AgentController {
 
     private ScanManager scanManager;
 
-    @RequestMapping(value = "/agent/getTask", method = RequestMethod.POST)
+    @PostMapping("/agent/getTask")
     public ResponseEntity<Chunk> getTask() throws NotBoundException {
         return new ResponseEntity<>(scanManager.getTask(), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/agent/setResult", method = RequestMethod.POST)
+    @PostMapping("/agent/setResult")
     public void setResult(@RequestHeader String uuid, @RequestParam String password) throws NameNotFoundException {
         scanManager.setResult(uuid, password);
     }
 
-    @RequestMapping(value = "/agent/keepAlive", method = RequestMethod.POST)
+    @PostMapping("/agent/keepAlive")
     public void keepAlive(@RequestHeader String uuid) throws NameNotFoundException {
         scanManager.keepAlive(uuid);
     }
