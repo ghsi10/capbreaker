@@ -98,7 +98,8 @@ class Hashcat:
                 if self.found_phrase in output:
                     self.password = output.split(':')[4]
                 requests.post(server + '/agent/setResult', headers={'uuid': chunk['uuid']},
-                              data={'password': hashcat.password}, auth=(username, password))
+                              data={'password': self.password}, auth=(username, password))
+                self.password = ""
                 log.info('Finished working on task.')
                 break
         process.terminate()
