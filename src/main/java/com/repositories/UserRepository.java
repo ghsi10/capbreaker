@@ -20,10 +20,10 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Transactional
     @Modifying
     @Query("update User u set u.enable = ?2 where u.id = ?1")
-    void toggleEnabled(Integer userId, boolean enabled);
+    void toggleEnabled(Integer id, boolean enabled);
 
     @Transactional
     @Modifying
     @Query("update User u set u.role = ?2 where u.id = ?1")
-    void promote(Integer userId, UserRole role);
+    void promote(Integer id, UserRole role);
 }
