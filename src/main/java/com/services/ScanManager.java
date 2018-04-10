@@ -131,7 +131,6 @@ public class ScanManager {
         private int keepAlive;
 
         private Agent(String uuid, Task task, String[] command) {
-
             this.uuid = uuid;
             this.task = task;
             this.command = command;
