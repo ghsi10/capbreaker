@@ -66,9 +66,9 @@ public class UserController {
         return "resultof";
     }
 
-    @GetMapping("/admin/taskDelete")
-    public String taskDelete(@RequestParam String taskId) {
-        userService.taskDelete(taskId);
+    @GetMapping("/admin/deleteTask")
+    public String deleteTask(@RequestParam String taskId) {
+        userService.deleteTask(taskId);
         return "redirect:/tasks";
     }
 

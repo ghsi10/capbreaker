@@ -41,7 +41,7 @@ public class UserService {
         throw new NumberFormatException();
     }
 
-    public void taskDelete(String taskId) {
+    public void deleteTask(String taskId) {
         scanManager.stopTask(Integer.parseInt(taskId));
         taskRepository.delete(Integer.parseInt(taskId));
     }
