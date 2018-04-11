@@ -8,3 +8,21 @@ div.dataTables_filter {
     margin-right: 47px !important;
     margin-bottom: 17px !important;
 }
+
+thead {
+    background: rgba(16, 63, 104, 0.9);
+}
+
+.fail {
+    color: #ef2c2c;
+    font-weight: bold;
+}
+
+.ok {
+    color: #05c505;
+    font-weight: bold;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+    background: rgba(51, 122, 183, 0.3);
+}

@@ -74,7 +74,7 @@ public class UserController {
 
     @GetMapping("admin/users-management")
     public String adminUsersManagement(Model model, @RequestParam(required = false, defaultValue = "0") int page) {
-        model.addAttribute("module", "users-management");
+        model.addAttribute("module", "usersManagement");
         model.addAttribute("users", userService.getUsers(page));
         return "user/users-management";
     }
