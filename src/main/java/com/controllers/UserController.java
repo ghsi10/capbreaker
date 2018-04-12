@@ -67,33 +67,33 @@ public class UserController {
     }
 
     @GetMapping("/admin/deleteTask")
-    public String deleteTask(@RequestParam String taskId) {
+    public String deleteTask(@RequestParam int taskId) {
         userService.deleteTask(taskId);
         return "redirect:/tasks";
     }
 
     @GetMapping("admin/users-management")
-    public String adminUsersManagement(Model model, @RequestParam(required = false, defaultValue = "0") int page) {
+    public String adminUsersManagement(Model model) {
         model.addAttribute("module", "usersManagement");
-        model.addAttribute("users", userService.getUsers(page));
+        model.addAttribute("users", userService.getUsers());
         return "user/users-management";
     }
 
-    @GetMapping("/admin/toggleEnabledUser")
-    public String adminToggleEnabledUser(@RequestParam String userId, @RequestParam Boolean enabled) {
-        userService.toggleEnabledUser(userId, enabled);
+    @GetMapping("/admin/enabledUser")
+    public String adminEnabledUser(@RequestParam int userId, @RequestParam boolean enabled) {
+        userService.enabledUser(userId, enabled);
         return "redirect:/admin/users-management";
     }
 
     @GetMapping("/admin/deleteUser")
-    public String adminDeleteUser(@RequestParam String userId) {
+    public String adminDeleteUser(@RequestParam int userId) {
         userService.deleteUser(userId);
         return "redirect:/admin/users-management";
     }
 
     @GetMapping("/admin/promoteUser")
-    public String adminPromoteUser(@RequestParam String userId) {
-        userService.promoteUser(userId);
+    public String adminPromoteUser(@RequestParam int userId, @RequestParam boolean promote) {
+        userService.promoteUser(userId, promote);
         return "redirect:/admin/users-management";
     }
 

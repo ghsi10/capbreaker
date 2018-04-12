@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.capbreaker</groupId>
-    <artifactId>server</artifactId>
+    <artifactId>capbreaker-server</artifactId>
     <version>0.4.1</version>
     <packaging>jar</packaging>
 

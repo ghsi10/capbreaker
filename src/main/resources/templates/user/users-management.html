@@ -28,20 +28,24 @@
             <td th:text="${user.id}"></td>
             <td th:text="${user.username}"></td>
             <td th:text="${user.role}"></td>
-            <td th:if="${user.enable} == true" class="ok">Enabled</td>
-            <td th:if="${user.enable} == false" class="fail">Disabled</td>
+            <td th:if="${user.enable}==true" class="ok">Enabled</td>
+            <td th:if="${user.enable}==false" class="fail">Disabled</td>
             <td>
-                <a th:if="${user.enable} == true"
-                   th:href="@{/admin/toggleEnabledUser(userId=${user.id},enabled='false')}"
-                   class="btn btn-danger btn-xs">Disable
+                <a th:if="${user.enable}==true"
+                   th:href="@{/admin/enabledUser(userId=${user.id},enabled='false')}"
+                   class="btn btn-warning btn-xs">Disable
                 </a>
-                <a th:if="${user.enable} == false"
-                   th:href="@{/admin/toggleEnabledUser(userId=${user.id},enabled='true')}"
+                <a th:if="${user.enable}==false"
+                   th:href="@{/admin/enabledUser(userId=${user.id},enabled='true')}"
                    class="btn btn-success btn-xs">Enable
                 </a>
 
-
-                <a th:if="${user.role} != 'admin'" th:href="${'/admin/promoteUser?userId=' + user.id}"
+                <a th:if="${user.role==T(com.models.UserRole).ROLE_ADMIN}"
+                   th:href="@{/admin/promoteUser(userId=${user.id},promote='false')}"
+                   class="btn btn-info btn-xs">Demote
+                </a>
+                <a th:if="${user.role==T(com.models.UserRole).ROLE_USER}"
+                   th:href="@{/admin/promoteUser(userId=${user.id},promote='true')}"
                    class="btn btn-primary btn-xs">Promote
                 </a>
 

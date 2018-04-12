@@ -7,7 +7,6 @@ import com.repositories.TaskRepository;
 import com.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,25 +40,28 @@ public class UserService {
         throw new NumberFormatException();
     }
 
-    public void deleteTask(String taskId) {
-        scanManager.stopTask(Integer.parseInt(taskId));
-        taskRepository.delete(Integer.parseInt(taskId));
+    public void deleteTask(int taskId) {
+        scanManager.stopTask(taskId);
+        taskRepository.delete(taskId);
     }
 
-    public void deleteUser(String userId) {
-        userRepository.delete(Integer.parseInt(userId));
+    public void deleteUser(int userId) {
+        userRepository.delete(userId);
     }
 
-    public List<User> getUsers(int page) {
-        return userRepository.findAllByOrderByIdDesc(new PageRequest(page, PAGE_SIZE)).getContent();
+    public List<User> getUsers() {
+        return userRepository.findAllByOrderByIdDesc();
     }
 
-    public void toggleEnabledUser(String userId, boolean enabled) {
-        userRepository.toggleEnabled(Integer.parseInt(userId), enabled);
+    public void enabledUser(int userId, boolean enabled) {
+        userRepository.enabled(userId, enabled);
     }
 
-    public void promoteUser(String userId) {
-        userRepository.promote(Integer.parseInt(userId), UserRole.ROLE_ADMIN);
+    public void promoteUser(int userId, boolean promote) {
+        UserRole userRole = UserRole.ROLE_USER;
+        if (promote)
+            userRole = UserRole.ROLE_ADMIN;
+        userRepository.promote(userId, userRole);
     }
 
     public String getPassword(String username) {
