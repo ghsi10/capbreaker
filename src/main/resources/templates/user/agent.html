@@ -77,7 +77,7 @@ class Hashcat:
         self.found_phrase = (handshake['bssid'].replace(':', '') + ':').lower()
         self.found_phrase += (handshake['station'].replace(':', '') + ':').lower()
         self.found_phrase += handshake['essid']
-        commands = self.path + '/hashcat.exe' + self.path + '/hs.hccapx' + ' -w ' + str(self.mode)
+        commands = self.path + '/hashcat.exe ' + self.path + '/hs.hccapx' + ' -w ' + str(self.mode)
         commands += ' -m 2500 --force --potfile-disable --restore-disable --status --status-timer=20 --logfile-disable'
         for command in chunk['commands']:
             commands += ' ' + command
