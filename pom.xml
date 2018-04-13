@@ -4,12 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.capbreaker</groupId>
-    <artifactId>server</artifactId>
-    <version>0.4.2</version>
+    <artifactId>capbreaker-server</artifactId>
+    <version>0.4.1</version>
     <packaging>jar</packaging>
 
-    <name>Capbreaker</name>
-    <description>break a cap files</description>
+    <name>Cap breaker</name>
+    <description>Break a cap files</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -42,6 +42,13 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <!-- Spring configuration processor -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <!-- Thymeleaf -->

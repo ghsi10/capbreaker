@@ -9,8 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
+
+    @Value("${view.page.size}")
+    private int PAGE_SIZE;
 
     @Value("${spring.login.username}")
     private String MASTER_USERNAME;
@@ -21,30 +26,42 @@ public class UserService {
     private TaskRepository taskRepository;
     private ScanManager scanManager;
 
-    public void signup(String username, String password, String passwordAgain) throws NoSuchFieldException {
-        if (password.length() < 4 || password.length() > 17)
-            throw new NoSuchFieldException("Username/Password should be between 4 to 16 characters.");
-        if (!username.matches("[a-zA-Z0-9]+") || !password.matches("[a-zA-Z0-9]+"))
-            throw new NoSuchFieldException("Username/Password contains illegal characters.");
-        if (!password.equals(passwordAgain))
-            throw new NoSuchFieldException("Password does not match the confirm password.");
+    public void signup(String username, String password) throws NoSuchFieldException {
         if (userRepository.findOneByUsername(username) != null)
-            throw new NoSuchFieldException("Username is not available.");
+            throw new NoSuchFieldException("Username is not available");
         User user = new User(username, password, UserRole.ROLE_USER, true);
         userRepository.save(user);
-
     }
 
-    public Task getResult(String taskId) throws NumberFormatException {
+    public Task taskResult(String taskId) throws NumberFormatException {
         Task task = taskRepository.findOne(Integer.parseInt(taskId));
         if (task != null)
             return task;
         throw new NumberFormatException();
     }
 
-    public void deleteTask(String taskId) {
-        scanManager.stopTask(Integer.parseInt(taskId));
-        taskRepository.delete(Integer.parseInt(taskId));
+    public void deleteTask(int taskId) {
+        scanManager.stopTask(taskId);
+        taskRepository.delete(taskId);
+    }
+
+    public void deleteUser(int userId) {
+        userRepository.delete(userId);
+    }
+
+    public List<User> getUsers() {
+        return userRepository.findAllByOrderByIdDesc();
+    }
+
+    public void enabledUser(int userId, boolean enabled) {
+        userRepository.enabled(userId, enabled);
+    }
+
+    public void promoteUser(int userId, boolean promote) {
+        UserRole userRole = UserRole.ROLE_USER;
+        if (promote)
+            userRole = UserRole.ROLE_ADMIN;
+        userRepository.promote(userId, userRole);
     }
 
     public String getPassword(String username) {

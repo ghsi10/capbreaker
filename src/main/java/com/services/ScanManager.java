@@ -92,9 +92,7 @@ public class ScanManager {
     private void reportTheResult(Task task, String password) {
         if (!password.equals("") || tasks.stream().noneMatch(scanTask -> scanTask.getTask().equals(task))
                 && agents.stream().noneMatch(agent -> agent.task.equals(task))) {
-            task.setStatus(TaskStatus.Completed);
-            task.setWifiPassword(password);
-            taskRepository.save(task);
+            taskRepository.reportTheResult(task.getId(), password);
             tasks.removeIf(scanTask -> scanTask.getTask().equals(task));
             agents.stream().filter(agent -> agent.task.equals(task)).collect(Collectors.toList()).forEach(agent -> {
                 agent.interrupt();
@@ -106,13 +104,11 @@ public class ScanManager {
     private synchronized void updateTasks() throws NotBoundException {
         if (!tasks.isEmpty())
             return;
-        List<Task> taskList = taskRepository.findAllByStatusOrderByIdAsc(TaskStatus.Queued);
-        if (taskList.isEmpty())
+        Task task = taskRepository.getNextTask();
+        if (task == null)
             throw new NotBoundException();
-        Task task = taskList.get(0);
-        task.setStatus(TaskStatus.Working);
         addTaskToScanManager(task);
-        taskRepository.save(task);
+        taskRepository.updateStatusToWorking(task.getId());
     }
 
     private void addTaskToScanManager(Task task) {
@@ -135,7 +131,6 @@ public class ScanManager {
         private int keepAlive;
 
         private Agent(String uuid, Task task, String[] command) {
-
             this.uuid = uuid;
             this.task = task;
             this.command = command;

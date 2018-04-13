@@ -8,8 +8,8 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletResponse;
@@ -24,26 +24,32 @@ public class UserController {
 
     private UserService userService;
 
-    @RequestMapping(value = "/signin", method = RequestMethod.GET)
+    @GetMapping("/signin")
     public String signin(Model model) {
         model.addAttribute("module", "signin");
         return "user/signin";
     }
 
-    @RequestMapping(value = "/signup", method = RequestMethod.GET)
+    @GetMapping("/signup")
     public String signup(Model model) {
         model.addAttribute("module", "signup");
         return "user/signup";
     }
 
-    @RequestMapping(value = "/signup", method = RequestMethod.POST)
+    @PostMapping("/signup")
     public String signup(@RequestParam String username, @RequestParam String password, @RequestParam String
             passwordAgain) throws NoSuchFieldException {
-        userService.signup(username, password, passwordAgain);
+        if (username.length() < 4 || password.length() > 17)
+            throw new NoSuchFieldException("Username/Password should be between 4 to 16");
+        if (!username.matches("[a-zA-Z][a-zA-Z0-9]+") || !password.matches("[a-zA-Z0-9]+"))
+            throw new NoSuchFieldException("Username/Password contains illegal characters");
+        if (!password.equals(passwordAgain))
+            throw new NoSuchFieldException("Password does not match the confirm password");
+        userService.signup(username, password);
         return "redirect:/tasks";
     }
 
-    @RequestMapping(value = {"user/download"}, method = RequestMethod.GET)
+    @GetMapping("user/download")
     public String download(Model model, HttpServletResponse response, @AuthenticationPrincipal User user) {
         response.setHeader("Content-Disposition", "attachment; filename=\"CapBreakerAgent.py\"");
         model.addAttribute("username", user.getUsername());
@@ -53,17 +59,42 @@ public class UserController {
         return "user/agent";
     }
 
-    @RequestMapping(value = "/admin/result", method = RequestMethod.GET)
-    public String adminResult(Model model, @RequestParam String taskId) {
+    @GetMapping("/admin/taskResult")
+    public String taskResult(Model model, @RequestParam String taskId) {
         model.addAttribute("module", "result");
-        model.addAttribute("task", userService.getResult(taskId));
+        model.addAttribute("task", userService.taskResult(taskId));
         return "resultof";
     }
 
-    @RequestMapping(value = "/admin/delete", method = RequestMethod.GET)
-    public String adminDelete(@RequestParam String taskId) {
+    @GetMapping("/admin/deleteTask")
+    public String deleteTask(@RequestParam int taskId) {
         userService.deleteTask(taskId);
         return "redirect:/tasks";
+    }
+
+    @GetMapping("admin/users-management")
+    public String adminUsersManagement(Model model) {
+        model.addAttribute("module", "usersManagement");
+        model.addAttribute("users", userService.getUsers());
+        return "user/users-management";
+    }
+
+    @GetMapping("/admin/enabledUser")
+    public String adminEnabledUser(@RequestParam int userId, @RequestParam boolean enabled) {
+        userService.enabledUser(userId, enabled);
+        return "redirect:/admin/users-management";
+    }
+
+    @GetMapping("/admin/deleteUser")
+    public String adminDeleteUser(@RequestParam int userId) {
+        userService.deleteUser(userId);
+        return "redirect:/admin/users-management";
+    }
+
+    @GetMapping("/admin/promoteUser")
+    public String adminPromoteUser(@RequestParam int userId, @RequestParam boolean promote) {
+        userService.promoteUser(userId, promote);
+        return "redirect:/admin/users-management";
     }
 
     @ExceptionHandler(NumberFormatException.class)

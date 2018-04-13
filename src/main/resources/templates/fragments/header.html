@@ -22,6 +22,9 @@
         <li th:class="${module=='result'?'active':''}">
             <a th:href="@{/result}">Get result</a>
         </li>
+        <li th:class="${module=='usersManagement'?'active':''}" sec:authorize="hasRole('ROLE_ADMIN')">
+            <a th:href="@{/admin/users-management}">Users</a>
+        </li>
         <li sec:authorize="isAuthenticated()">
             <a th:href="@{/user/download}">Download agent</a>
         </li>
