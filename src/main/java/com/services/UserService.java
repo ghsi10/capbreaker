@@ -29,7 +29,7 @@ public class UserService {
     public void signup(String username, String password) throws NoSuchFieldException {
         if (userRepository.findOneByUsername(username) != null)
             throw new NoSuchFieldException("Username is not available");
-        User user = new User(username, password, UserRole.ROLE_USER, true);
+        User user = new User(username, password, UserRole.ROLE_USER, false);
         userRepository.save(user);
     }
 
