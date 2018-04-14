@@ -28,7 +28,7 @@ public class TaskService {
         Handshake handshake = hashConvert.convert(file, essid, bssid);
         Task task = taskRepository.findOneByHandshake(handshake);
         if (task != null)
-            throw new UnsupportedDataTypeException("The handshake is already exist, task id:" + task.getId());
+            throw new UnsupportedDataTypeException("This handshake already exists, task id:" + task.getId());
         task = new Task(handshake);
         taskRepository.save(task);
         return task;
