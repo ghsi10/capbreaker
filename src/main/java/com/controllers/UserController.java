@@ -3,6 +3,7 @@ package com.controllers;
 import com.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Controller
@@ -25,8 +27,17 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/signin")
-    public String signin(Model model) {
+    public String signin(Model model, @RequestParam(required = false) String error, @RequestParam(required = false)
+            String logout, HttpServletRequest request) {
         model.addAttribute("module", "signin");
+        if (error != null) {
+            error = "Invalid username and password.";
+            if (request.getSession().getAttribute("SPRING_SECURITY_LAST_EXCEPTION") instanceof DisabledException)
+                error = "This user is pending to admin approval.";
+            model.addAttribute("error", error);
+        }
+        if (logout != null)
+            model.addAttribute("msg", "You have been logged out.");
         return "user/signin";
     }
 
