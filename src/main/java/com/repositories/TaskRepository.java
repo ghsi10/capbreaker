@@ -1,5 +1,6 @@
 package com.repositories;
 
+import com.models.Handshake;
 import com.models.Task;
 import com.models.TaskStatus;
 import org.springframework.data.domain.Page;
@@ -19,6 +20,8 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
 
     List<Task> findAllByStatusOrderByIdAsc(TaskStatus status);
 
+    Task findOneByHandshake(Handshake handshake);
+
     @Transactional(readOnly = true)
     @Query("select t from Task t WHERE t.id = (select min(t.id) from Task t where t.status = 0)")
     Task getNextTask();
@@ -32,4 +35,5 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
     @Modifying
     @Query("update Task t set t.status = 1 where t.id = ?1")
     void updateStatusToWorking(Integer id);
+
 }

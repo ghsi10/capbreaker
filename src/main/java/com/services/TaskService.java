@@ -26,7 +26,10 @@ public class TaskService {
 
     public Task uploadCap(byte[] file, String essid, String bssid) throws UnsupportedDataTypeException {
         Handshake handshake = hashConvert.convert(file, essid, bssid);
-        Task task = new Task(handshake);
+        Task task = taskRepository.findOneByHandshake(handshake);
+        if (task != null)
+            throw new UnsupportedDataTypeException("The handshake is already exist, task id:" + task.getId());
+        task = new Task(handshake);
         taskRepository.save(task);
         return task;
     }
