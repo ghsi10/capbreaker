@@ -26,10 +26,6 @@ Authors
 * `yevegnykuz <https://github.com/yevegnykuz>`_
 * `TamirGit <https://github.com/TamirGit>`_
 
-License
-=======
-*TBD*
-
 -----
 
 **Project is under development, may be unstable**
