@@ -15,7 +15,7 @@ Features
 Prerequisites
 =============
 * JDK 1.8
-* postgresql* server - you should config it in *application.properties* file
+* *postgresql* server - you should config it in *application.properties* file
 
 Deployment
 ==========
