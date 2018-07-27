@@ -2,7 +2,7 @@
 
 -----
 
-Redistributing hash cracking.
+Redistributing WPA hash cracking.
 
 -----
 
