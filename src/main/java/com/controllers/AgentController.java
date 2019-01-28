@@ -11,21 +11,22 @@ import javax.naming.NameNotFoundException;
 import java.rmi.NotBoundException;
 
 @RestController
+@RequestMapping("/agent")
 public class AgentController {
 
     private ScanManager scanManager;
 
-    @PostMapping("/agent/getTask")
+    @PostMapping("/getTask")
     public ResponseEntity<Chunk> getTask() throws NotBoundException {
         return new ResponseEntity<>(scanManager.getTask(), HttpStatus.OK);
     }
 
-    @PostMapping("/agent/setResult")
+    @PostMapping("/setResult")
     public void setResult(@RequestHeader String uuid, @RequestParam String password) throws NameNotFoundException {
         scanManager.setResult(uuid, password);
     }
 
-    @PostMapping("/agent/keepAlive")
+    @PostMapping("/keepAlive")
     public void keepAlive(@RequestHeader String uuid) throws NameNotFoundException {
         scanManager.keepAlive(uuid);
     }
