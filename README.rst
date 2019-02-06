@@ -4,7 +4,7 @@
 
 Redistributing WPA hash cracking.
 
-demo: https://capbreaker.herokuapp.com/
+demo: https://capbreaker.herokuapp.com (this is only demo - not prodection)
 
 
 -----
