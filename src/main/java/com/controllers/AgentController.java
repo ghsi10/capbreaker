@@ -4,7 +4,6 @@ import com.models.Chunk;
 import com.services.ScanManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.NameNotFoundException;
@@ -17,8 +16,8 @@ public class AgentController {
     private ScanManager scanManager;
 
     @PostMapping("/getTask")
-    public ResponseEntity<Chunk> getTask() throws NotBoundException {
-        return new ResponseEntity<>(scanManager.getTask(), HttpStatus.OK);
+    public Chunk getTask() throws NotBoundException {
+        return scanManager.getTask();
     }
 
     @PostMapping("/setResult")
@@ -32,13 +31,13 @@ public class AgentController {
     }
 
     @ExceptionHandler(NotBoundException.class)
-    public ResponseEntity<?> handleNotBoundException() {
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void handleNotBoundException() {
     }
 
     @ExceptionHandler(NameNotFoundException.class)
-    public ResponseEntity<?> handleNameNotFoundException() {
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void handleNameNotFoundException() {
     }
 
     @Autowired
