@@ -22,7 +22,7 @@ public class UserService {
     @Value("${spring.login.password}")
     private String MASTER_PASSWORD;
 
-    @Value("user.default.enable")
+    @Value("${user.default.enable}")
     private boolean DEFAULT_ENABLE;
 
     private UserRepository userRepository;
