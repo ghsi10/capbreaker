@@ -9,7 +9,7 @@ Management tool for WPA hash cracking with a distributable software including We
 In order to crack a WPA hash you must upload a valid handshake in *.cap* format to the WebUI.
 The agents software runs the password list in a distributed manner, more agents will result in a faster scan procedure.
 
-For more information on capture handshake, see [here](https://www.kalitutorials.net/2014/06/hack-wpa-2-psk-capturing-handshake.html).
+For more information on capture handshake, see `here <https://www.kalitutorials.net/2014/06/hack-wpa-2-psk-capturing-handshake.html/>`_.
 
 -----
 
