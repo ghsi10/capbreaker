@@ -29,6 +29,7 @@ Prerequisites
 * JDK 1.8.
 * *postgresql* - Should config *datasource* in *application.properties*.
 * Settings can be found in *application.properties* and recommended to be checked before use.
+* Requires python for agent users.
 
 Deployment
 ==========
