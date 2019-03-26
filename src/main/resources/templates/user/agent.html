@@ -11,10 +11,11 @@ from time import sleep
 try:
     import requests
 except ImportError:
-    if hasattr(pip, 'main'):
-        pip.main(['install', 'requests'])
+    if int(pip.__version__.split('.')[0]) > 9:
+        from pip._internal import main
     else:
-        pip._internal.main(['install', 'requests'])
+        from pip import main
+    main(['install', 'requests'])
     import requests
 
 username = '[[${username}]]'
