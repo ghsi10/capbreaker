@@ -22,6 +22,9 @@ public class UserService {
     @Value("${spring.login.password}")
     private String MASTER_PASSWORD;
 
+    @Value("user.default.enable")
+    private boolean DEFAULT_ENABLE;
+
     private UserRepository userRepository;
     private TaskRepository taskRepository;
     private ScanManager scanManager;
@@ -29,7 +32,7 @@ public class UserService {
     public void signup(String username, String password) throws NoSuchFieldException {
         if (userRepository.findOneByUsername(username) != null)
             throw new NoSuchFieldException("Username is not available");
-        User user = new User(username, password, UserRole.ROLE_USER, true);
+        User user = new User(username, password, UserRole.ROLE_USER, DEFAULT_ENABLE);
         userRepository.save(user);
     }
 

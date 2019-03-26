@@ -49,6 +49,11 @@
       "name": "agent.keepalive.timer",
       "type": "java.lang.Integer",
       "description": "timer for keep alive in seconds."
+    },
+    {
+      "name": "user.default.enable",
+      "type": "java.lang.Boolean",
+      "description": "default user enable."
     }
   ]
 }
