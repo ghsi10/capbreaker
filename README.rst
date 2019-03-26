@@ -1,28 +1,38 @@
-**CapBreaker**
+# CapBreaker
 
 -----
 
-Redistributing WPA hash cracking.
+**Redistributing WPA hash cracking.**
 
-demo: https://capbreaker.herokuapp.com
+Management tool for WPA hash cracking with a distributable software including WebUI.
 
+In order to crack a WPA hash you must upload a valid handshake in *.cap* format to the WebUI.
+The agents software runs the password list in a distributed manner, more agents will result in a faster scan procedure.
+
+For more information on capture handshake, see [here](https://www.kalitutorials.net/2014/06/hack-wpa-2-psk-capturing-handshake.html).
 
 -----
 
 .. contents:: :local:
 
+Demo
+========
+https://capbreaker.herokuapp.com
+
 Features
 ========
-*TBD*
+* List of loaded hashes and current state.
+* Managing a list of loaded hashes and users.
 
 Prerequisites
 =============
-* JDK 1.8
-* *postgresql* server - you should config it in *application.properties* file
+* JDK 1.8.
+* *postgresql* - Should config *datasource* in *application.properties*.
+* Settings can be found in *application.properties* and recommended to be checked before use.
 
 Deployment
 ==========
-*TBD*
+* Simply compile and run.
 
 Authors
 =======
@@ -31,5 +41,3 @@ Authors
 * `TamirGit <https://github.com/TamirGit>`_
 
 -----
-
-**Project is under development, may be unstable**
