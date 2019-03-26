@@ -11,7 +11,10 @@ from time import sleep
 try:
     import requests
 except ImportError:
-    pip.main(['install', 'requests'])
+    if hasattr(pip, 'main'):
+        pip.main(['install', 'requests'])
+    else:
+        pip._internal.main(['install', 'requests'])
     import requests
 
 username = '[[${username}]]'

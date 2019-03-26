@@ -27,9 +27,9 @@ public class UserService {
     private ScanManager scanManager;
 
     public void signup(String username, String password) throws NoSuchFieldException {
-        if (MASTER_USERNAME.equals(username) || userRepository.findOneByUsername(username) != null)
+        if (userRepository.findOneByUsername(username) != null)
             throw new NoSuchFieldException("Username is not available");
-        User user = new User(username, password, UserRole.ROLE_USER, false);
+        User user = new User(username, password, UserRole.ROLE_USER, true);
         userRepository.save(user);
     }
 
