@@ -5,7 +5,7 @@
 
     <groupId>com.capbreaker</groupId>
     <artifactId>capbreaker-server</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.1-snapshot</version>
     <packaging>jar</packaging>
 
     <name>Cap breaker</name>
@@ -63,10 +63,10 @@
             <artifactId>thymeleaf-extras-springsecurity4</artifactId>
         </dependency>
 
-        <!-- Databases-->
+        <!-- Embedded database  -->
         <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
         </dependency>
 
     </dependencies>
@@ -76,9 +76,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <executable>true</executable>
-                </configuration>
             </plugin>
         </plugins>
     </build>
