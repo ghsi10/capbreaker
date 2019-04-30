@@ -112,6 +112,10 @@ public class ScanManager {
         tasks.add(scanTask);
     }
 
+    public int agentCounter() {
+        return agents.size();
+    }
+
     @Autowired
     public void setTaskRepository(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
@@ -153,7 +157,6 @@ public class ScanManager {
                     break;
                 }
             }
-
         }
     }
 }
