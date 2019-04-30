@@ -34,8 +34,7 @@ public class ScanManager {
 
     public ScanManager(@Value("#{'${scan.commands}'.split(',')}") String[] commandsFromProperties) {
         commands = new ArrayList<>();
-        for (String command : commandsFromProperties)
-            commands.add(command.split(" "));
+        Arrays.stream(commandsFromProperties).map(c -> c.split(" ")).forEach(commands::add);
         progressEveryScan = 100 / commandsFromProperties.length;
         tasks = new LinkedList<>();
         agents = new HashSet<>();
@@ -43,11 +42,11 @@ public class ScanManager {
 
     @PostConstruct
     private void init() {
-        for (Task task : taskRepository.findAllByStatusOrderByIdAsc(TaskStatus.Working)) {
+        taskRepository.findAllByStatusOrderByIdAsc(TaskStatus.Working).forEach(task -> {
             task.setProgress(0);
             taskRepository.save(task);
             addTaskToScanManager(task);
-        }
+        });
     }
 
     public Chunk getTask() throws NotBoundException {
@@ -83,7 +82,7 @@ public class ScanManager {
     }
 
     public void stopTask(int taskId) {
-        tasks.removeIf(scanTask -> scanTask.getTask().getId() == taskId);
+        tasks.removeIf(s -> s.getTask().getId() == taskId);
         agents.stream().filter(a -> a.task.getId() == taskId).forEach(agent -> {
             agent.interrupt();
             agents.remove(agent);
@@ -94,11 +93,7 @@ public class ScanManager {
         if (!password.equals("") || tasks.stream().noneMatch(s -> s.getTask().equals(task))
                 && agents.stream().noneMatch(a -> a.task.equals(task))) {
             taskRepository.reportTheResult(task.getId(), password);
-            tasks.removeIf(scanTask -> scanTask.getTask().equals(task));
-            agents.stream().filter(a -> a.task.equals(task)).forEach(agent -> {
-                agent.interrupt();
-                agents.remove(agent);
-            });
+            stopTask(task.getId());
         }
     }
 
@@ -114,8 +109,7 @@ public class ScanManager {
 
     private void addTaskToScanManager(Task task) {
         ScanTask scanTask = new ScanTask(task);
-        for (String[] command : commands)
-            scanTask.addCommand(UUID.randomUUID().toString(), command);
+        commands.forEach(c -> scanTask.addCommand(UUID.randomUUID().toString(), c));
         tasks.add(scanTask);
     }
 
