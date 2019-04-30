@@ -15,6 +15,7 @@
             <th>Task id</th>
             <th>ESSID</th>
             <th>Status</th>
+            <th>Progress</th>
             <th>Result</th>
             <th sec:authorize="hasRole('ROLE_ADMIN')">Admin action</th>
         </tr>
@@ -24,6 +25,11 @@
             <td th:text="${task.id}"></td>
             <td th:text="${task.essid}"></td>
             <td th:text="${task.status}"></td>
+            <td th:if="${task.status==T(com.models.TaskStatus).Working}">
+                <div class="progress-bar" role="progressbar" th:style="${'width:' + task.progress + '%'}"
+                     th:text="${task.progress}+'%'"></div>
+            </td>
+            <td th:if="${task.status!=T(com.models.TaskStatus).Working}"></td>
             <td th:if="${task.status!=T(com.models.TaskStatus).Completed}">-</td>
             <td th:if="${task.status==T(com.models.TaskStatus).Completed}">
                 <div th:if="${task.wifiPassword!=''}" class="ok">Found</div>

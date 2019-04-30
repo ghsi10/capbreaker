@@ -13,6 +13,7 @@ public class Task {
     private String bssid;
     private String essid;
     private TaskStatus status;
+    private Integer progress;
     private String wifiPassword;
     private String taskPassword;
     @Lob
@@ -22,6 +23,7 @@ public class Task {
         status = TaskStatus.Queued;
         taskPassword = randomPassword();
         wifiPassword = "";
+        progress = 0;
     }
 
     public Task(Task t) {
@@ -32,6 +34,7 @@ public class Task {
         wifiPassword = t.wifiPassword;
         taskPassword = t.taskPassword;
         handshake = t.handshake;
+        progress = t.progress;
     }
 
     public Task(Handshake hs) {
@@ -41,6 +44,7 @@ public class Task {
         handshake = hs;
         wifiPassword = "";
         taskPassword = randomPassword();
+        progress = 0;
     }
 
     private String randomPassword() {
@@ -101,6 +105,14 @@ public class Task {
 
     public void setHandshake(Handshake handshake) {
         this.handshake = handshake;
+    }
+
+    public Integer getProgress() {
+        return progress;
+    }
+
+    public void setProgress(Integer progress) {
+        this.progress = progress;
     }
 
     @Override

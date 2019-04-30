@@ -28,20 +28,26 @@ public class ScanManager {
     private final List<ScanTask> tasks;
     private final Set<Agent> agents;
 
+    private final int progressEveryScan;
+
     private TaskRepository taskRepository;
 
     public ScanManager(@Value("#{'${scan.commands}'.split(',')}") String[] commandsFromProperties) {
         commands = new ArrayList<>();
         for (String command : commandsFromProperties)
             commands.add(command.split(" "));
+        progressEveryScan = 100 / commandsFromProperties.length;
         tasks = new LinkedList<>();
         agents = new HashSet<>();
     }
 
     @PostConstruct
     private void init() {
-        for (Task task : taskRepository.findAllByStatusOrderByIdAsc(TaskStatus.Working))
+        for (Task task : taskRepository.findAllByStatusOrderByIdAsc(TaskStatus.Working)) {
+            task.setProgress(0);
+            taskRepository.save(task);
             addTaskToScanManager(task);
+        }
     }
 
     public Chunk getTask() throws NotBoundException {
@@ -66,6 +72,7 @@ public class ScanManager {
                     .orElseThrow(NameNotFoundException::new);
             agent.interrupt();
             agents.remove(agent);
+            taskRepository.addProgress(agent.task.getId(), progressEveryScan);
             reportTheResult(agent.task, password);
         }
     }
