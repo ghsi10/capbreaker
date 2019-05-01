@@ -92,7 +92,7 @@ public class ScanManager {
             tasks.removeIf(s -> s.getTask().getId() == taskId);
         }
         synchronized (agents) {
-            agents.stream().filter(a -> a.task.getId() == taskId).collect(Collectors.toList()).forEach(a -> {
+            agents.stream().filter(a -> a.task.getId() == taskId).collect(Collectors.toSet()).forEach(a -> {
                 a.interrupt();
                 agents.remove(a);
             });
