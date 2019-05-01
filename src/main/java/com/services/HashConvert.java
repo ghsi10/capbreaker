@@ -10,7 +10,7 @@ import java.util.List;
 @Component
 public class HashConvert {
 
-    public Handshake convert(byte[] cap, String bssid, String essid) throws UnsupportedDataTypeException {
+    Handshake convert(byte[] cap, String bssid, String essid) throws UnsupportedDataTypeException {
         List<Handshake> handshakes = readCap(cap);
         if (handshakes.size() == 0)
             throw new UnsupportedDataTypeException("No handshake found!");

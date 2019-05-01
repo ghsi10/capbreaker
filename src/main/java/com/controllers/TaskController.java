@@ -14,8 +14,14 @@ import java.io.IOException;
 @Controller
 public class TaskController {
 
-    private TaskService taskService;
-    private ScanManager scanManager;
+    private final TaskService taskService;
+    private final ScanManager scanManager;
+
+    @Autowired
+    public TaskController(TaskService taskService, ScanManager scanManager) {
+        this.taskService = taskService;
+        this.scanManager = scanManager;
+    }
 
     @GetMapping({"/", "/tasks"})
     public String getTable(Model model, @RequestParam(required = false, defaultValue = "0") int page) {
@@ -77,15 +83,4 @@ public class TaskController {
     public void addAttributes(Model model) {
         model.addAttribute("agents", "Online agents: " + scanManager.agentCounter());
     }
-
-    @Autowired
-    public void setTaskService(TaskService taskService) {
-        this.taskService = taskService;
-    }
-
-    @Autowired
-    public void setScanManager(ScanManager scanManager) {
-        this.scanManager = scanManager;
-    }
-
 }

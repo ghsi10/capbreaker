@@ -13,7 +13,12 @@ import java.rmi.NotBoundException;
 @RequestMapping("/agent")
 public class AgentController {
 
-    private ScanManager scanManager;
+    private final ScanManager scanManager;
+
+    @Autowired
+    public AgentController(ScanManager scanManager) {
+        this.scanManager = scanManager;
+    }
 
     @PostMapping("/getTask")
     public Chunk getTask() throws NotBoundException {
@@ -38,10 +43,5 @@ public class AgentController {
     @ExceptionHandler(NameNotFoundException.class)
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void handleNameNotFoundException() {
-    }
-
-    @Autowired
-    public void setScanManager(ScanManager scanManager) {
-        this.scanManager = scanManager;
     }
 }

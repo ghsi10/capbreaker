@@ -9,11 +9,12 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
 
-    User findOneByUsername(String username);
+    Optional<User> findByUsername(String username);
 
     List<User> findAllByOrderByIdDesc();
 

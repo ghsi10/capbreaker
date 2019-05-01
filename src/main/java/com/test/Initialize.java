@@ -15,10 +15,14 @@ import java.util.List;
 
 @Component
 public class Initialize {
+    private final TaskRepository taskRepository;
+    private final UserRepository userRepository;
+
     @Autowired
-    private TaskRepository taskRepository;
-    @Autowired
-    private UserRepository userRepository;
+    public Initialize(TaskRepository taskRepository, UserRepository userRepository) {
+        this.taskRepository = taskRepository;
+        this.userRepository = userRepository;
+    }
 
     @PostConstruct
     private void init() {
@@ -42,7 +46,7 @@ public class Initialize {
         User user1 = new User("uuser", "u123", UserRole.ROLE_USER, true);
         User user2 = new User("uadmin", "a123", UserRole.ROLE_ADMIN, true);
 
-        taskRepository.save(tasks);
+        taskRepository.saveAll(tasks);
         userRepository.save(user1);
         userRepository.save(user2);
     }
