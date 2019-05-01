@@ -90,12 +90,12 @@ public class ScanManager {
     void stopTask(int taskId) {
         synchronized (tasks) {
             tasks.removeIf(s -> s.getTask().getId() == taskId);
-        }
-        synchronized (agents) {
-            agents.stream().filter(a -> a.task.getId() == taskId).collect(Collectors.toSet()).forEach(a -> {
-                a.interrupt();
-                agents.remove(a);
-            });
+            synchronized (agents) {
+                agents.stream().filter(a -> a.task.getId() == taskId).collect(Collectors.toSet()).forEach(a -> {
+                    a.interrupt();
+                    agents.remove(a);
+                });
+            }
         }
     }
 
@@ -110,9 +110,9 @@ public class ScanManager {
         boolean isT, isA;
         synchronized (tasks) {
             isT = tasks.stream().noneMatch(s -> s.getTask().equals(task));
-        }
-        synchronized (tasks) {
-            isA = agents.stream().noneMatch(a -> a.task.equals(task));
+            synchronized (agents) {
+                isA = agents.stream().noneMatch(a -> a.task.equals(task));
+            }
         }
         return isT && isA;
     }
