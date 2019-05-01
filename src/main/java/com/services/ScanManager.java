@@ -27,7 +27,6 @@ public class ScanManager {
     private final List<String[]> commands;
     private final List<ScanTask> tasks;
     private final Set<Agent> agents;
-
     private final int progressEveryScan;
 
     private TaskRepository taskRepository;
@@ -57,7 +56,7 @@ public class ScanManager {
             scanTask = tasks.get(0);
             scanCommand = scanTask.pollCommand();
             if (scanTask.isEmpty())
-                scanTask = tasks.remove(0);
+                tasks.remove(0);
             Agent agent = new Agent(scanCommand.getFirst(), scanTask.getTask(), scanCommand.getSecond());
             agents.add(agent);
             agent.start();
