@@ -58,18 +58,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     public static class NoOpPasswordEncoder implements PasswordEncoder {
 
+        public NoOpPasswordEncoder() {
+        }
+
+        @Override
         public String encode(CharSequence rawPassword) {
             return rawPassword.toString();
         }
 
+        @Override
         public boolean matches(CharSequence rawPassword, String encodedPassword) {
             PasswordEncoder encoder = new BCryptPasswordEncoder();
             return rawPassword.toString().equals(encodedPassword)
                     || encoder.matches(encodedPassword, rawPassword.toString());
         }
-
-        private NoOpPasswordEncoder() {
-        }
     }
-
 }
