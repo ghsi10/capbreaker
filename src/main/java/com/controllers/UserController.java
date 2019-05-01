@@ -53,8 +53,8 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public String signup(@RequestParam String username, @RequestParam String password, @RequestParam String
-            passwordAgain) throws NoSuchFieldException {
+    public String signup(@RequestParam String username, @RequestParam String password,
+                         @RequestParam String passwordAgain) throws NoSuchFieldException {
         if (username.length() < 4 || password.length() > 17)
             throw new NoSuchFieldException("Username/Password should be between 4 to 16");
         if (!username.matches("[a-zA-Z][a-zA-Z0-9]+") || !password.matches("[a-zA-Z0-9]+"))
