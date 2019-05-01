@@ -38,7 +38,7 @@ Deployment
 Authors
 =======
 * `ghsi10 <https://github.com/ghsi10>`_ - Lead developer
-* `yevegnykuz <https://github.com/yevegnykuz>`_
+* `Yevgenykuz <https://github.com/Yevgenykuz>`_
 * `TamirGit <https://github.com/TamirGit>`_
 
 -----
