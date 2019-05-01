@@ -1,5 +1,6 @@
 package com.controllers;
 
+import com.services.ScanManager;
 import com.services.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,7 +14,14 @@ import java.io.IOException;
 @Controller
 public class TaskController {
 
-    private TaskService taskService;
+    private final TaskService taskService;
+    private final ScanManager scanManager;
+
+    @Autowired
+    public TaskController(TaskService taskService, ScanManager scanManager) {
+        this.taskService = taskService;
+        this.scanManager = scanManager;
+    }
 
     @GetMapping({"/", "/tasks"})
     public String getTable(Model model, @RequestParam(required = false, defaultValue = "0") int page) {
@@ -71,8 +79,8 @@ public class TaskController {
         return "result";
     }
 
-    @Autowired
-    public void setTaskService(TaskService taskService) {
-        this.taskService = taskService;
+    @ModelAttribute
+    public void addAttributes(Model model) {
+        model.addAttribute("agents", "Online agents: " + scanManager.agentCounter());
     }
 }

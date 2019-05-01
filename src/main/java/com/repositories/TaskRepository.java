@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Integer> {
@@ -20,11 +21,11 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
 
     List<Task> findAllByStatusOrderByIdAsc(TaskStatus status);
 
-    Task findOneByHandshake(Handshake handshake);
+    Optional<Task> findByHandshake(Handshake handshake);
 
     @Transactional(readOnly = true)
     @Query("select t from Task t WHERE t.id = (select min(t.id) from Task t where t.status = 0)")
-    Task getNextTask();
+    Optional<Task> getNextTask();
 
     @Transactional
     @Modifying
@@ -36,4 +37,8 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
     @Query("update Task t set t.status = 1 where t.id = ?1")
     void updateStatusToWorking(Integer id);
 
+    @Transactional
+    @Modifying
+    @Query("update Task t set t.progress = t.progress+?2 where t.id= ?1")
+    void addProgress(Integer id, Integer progress);
 }

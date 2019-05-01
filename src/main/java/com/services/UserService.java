@@ -7,6 +7,8 @@ import com.repositories.TaskRepository;
 import com.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,31 +27,34 @@ public class UserService {
     @Value("${user.default.enable}")
     private boolean DEFAULT_ENABLE;
 
-    private UserRepository userRepository;
-    private TaskRepository taskRepository;
-    private ScanManager scanManager;
+    private final UserRepository userRepository;
+    private final TaskRepository taskRepository;
+    private final ScanManager scanManager;
+
+    @Autowired
+    public UserService(UserRepository userRepository, TaskRepository taskRepository, ScanManager scanManager) {
+        this.userRepository = userRepository;
+        this.taskRepository = taskRepository;
+        this.scanManager = scanManager;
+    }
 
     public void signup(String username, String password) throws NoSuchFieldException {
-        if (MASTER_USERNAME.equals(username) || userRepository.findOneByUsername(username) != null)
+        if (MASTER_USERNAME.equals(username) || userRepository.findByUsername(username).isPresent())
             throw new NoSuchFieldException("Username is not available");
-        User user = new User(username, password, UserRole.ROLE_USER, DEFAULT_ENABLE);
-        userRepository.save(user);
+        userRepository.save(new User(username, password, UserRole.ROLE_USER, DEFAULT_ENABLE));
     }
 
     public Task taskResult(String taskId) throws NumberFormatException {
-        Task task = taskRepository.findOne(Integer.parseInt(taskId));
-        if (task != null)
-            return task;
-        throw new NumberFormatException();
+        return taskRepository.findById(Integer.parseInt(taskId)).orElseThrow(NumberFormatException::new);
     }
 
     public void deleteTask(int taskId) {
         scanManager.stopTask(taskId);
-        taskRepository.delete(taskId);
+        taskRepository.deleteById(taskId);
     }
 
     public void deleteUser(int userId) {
-        userRepository.delete(userId);
+        userRepository.deleteById(userId);
     }
 
     public List<User> getUsers() {
@@ -68,23 +73,9 @@ public class UserService {
     }
 
     public String getPassword(String username) {
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
         if (username.equals(MASTER_USERNAME))
-            return MASTER_PASSWORD;
-        return userRepository.findOneByUsername(username).getPassword();
-    }
-
-    @Autowired
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    @Autowired
-    public void setTaskRepository(TaskRepository taskRepository) {
-        this.taskRepository = taskRepository;
-    }
-
-    @Autowired
-    public void setScanManager(ScanManager scanManager) {
-        this.scanManager = scanManager;
+            return encoder.encode(MASTER_PASSWORD);
+        return encoder.encode(userRepository.findByUsername(username).orElse(new User()).getPassword());
     }
 }

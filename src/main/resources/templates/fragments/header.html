@@ -9,6 +9,7 @@
 <body th:fragment="header">
 <header>
     <!--/*@thymesVar id="module" type="java.lang.String"*/-->
+    <!--/*@thymesVar id="agents" type="java.lang.String"*/-->
     <h1 class="text-center">
         <a href="/">CAP Breaker</a>
     </h1>
@@ -27,6 +28,9 @@
         </li>
         <li sec:authorize="isAuthenticated()">
             <a th:href="@{/user/download}">Download agent</a>
+        </li>
+        <li>
+            <span class="navbar-text label label-primary" th:text="${agents}">Online agents: 0</span>
         </li>
         <li th:class="${module=='signin'?'pull-right active':'pull-right'}" sec:authorize="isAnonymous()">
             <a th:href="@{/signin}">Sign In</a>

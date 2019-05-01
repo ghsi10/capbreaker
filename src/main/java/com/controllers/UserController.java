@@ -24,7 +24,12 @@ public class UserController {
     @Value("${agent.download.url}")
     private String DOWNLOAD_URL;
 
-    private UserService userService;
+    private final UserService userService;
+
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/signin")
     public String signin(Model model, @RequestParam(required = false) String error, @RequestParam(required = false)
@@ -120,10 +125,5 @@ public class UserController {
         model.addAttribute("module", "signup");
         model.addAttribute("error", e.getMessage());
         return "user/signup";
-    }
-
-    @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
     }
 }
