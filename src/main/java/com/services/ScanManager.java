@@ -21,9 +21,9 @@ import java.util.stream.Collectors;
 public class ScanManager {
 
     @Value("${agent.keepalive.timer}")
-    private int AGENT_TIMER;
+    private int agentTimer;
     @Value("${agent.keepalive.max}")
-    private int MAX_KEEP_ALIVE;
+    private int maxKeepAlive;
 
     private final List<String[]> commands;
     private final List<ScanTask> tasks;
@@ -84,7 +84,7 @@ public class ScanManager {
 
     public void keepAlive(String uuid) throws NameNotFoundException {
         agents.stream().filter(a -> a.uuid.equals(uuid)).findFirst()
-                .orElseThrow(NameNotFoundException::new).keepAlive = MAX_KEEP_ALIVE;
+                .orElseThrow(NameNotFoundException::new).keepAlive = maxKeepAlive;
     }
 
     void stopTask(int taskId) {
@@ -146,14 +146,14 @@ public class ScanManager {
             this.uuid = uuid;
             this.task = task;
             this.command = command;
-            keepAlive = MAX_KEEP_ALIVE;
+            keepAlive = maxKeepAlive;
         }
 
         @Override
         public void run() {
             while (true) {
                 try {
-                    TimeUnit.SECONDS.sleep(AGENT_TIMER);
+                    TimeUnit.SECONDS.sleep(agentTimer);
                 } catch (InterruptedException e) {
                     break;
                 }

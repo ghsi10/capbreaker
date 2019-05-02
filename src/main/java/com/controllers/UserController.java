@@ -20,9 +20,9 @@ import javax.servlet.http.HttpServletResponse;
 public class UserController {
 
     @Value("${agent.server.dns}")
-    private String SERVER_DNS;
+    private String serverDns;
     @Value("${agent.download.url}")
-    private String DOWNLOAD_URL;
+    private String downloadUrl;
 
     private final UserService userService;
 
@@ -70,8 +70,8 @@ public class UserController {
         response.setHeader("Content-Disposition", "attachment; filename=\"CapBreakerAgent.py\"");
         model.addAttribute("username", user.getUsername());
         model.addAttribute("password", userService.getPassword(user.getUsername()));
-        model.addAttribute("server", SERVER_DNS);
-        model.addAttribute("url", DOWNLOAD_URL);
+        model.addAttribute("server", serverDns);
+        model.addAttribute("url", downloadUrl);
         return "user/agent";
     }
 

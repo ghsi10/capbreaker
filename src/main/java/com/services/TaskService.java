@@ -16,7 +16,7 @@ import java.util.Optional;
 public class TaskService {
 
     @Value("${view.page.size}")
-    private int PAGE_SIZE;
+    private int pageSize;
 
     private final TaskRepository taskRepository;
     private final HashConvert hashConvert;
@@ -28,7 +28,7 @@ public class TaskService {
     }
 
     public List<Task> getTable(int page) {
-        return taskRepository.findAllByOrderByIdDesc(PageRequest.of(page, PAGE_SIZE)).getContent();
+        return taskRepository.findAllByOrderByIdDesc(PageRequest.of(page, pageSize)).getContent();
     }
 
     public Task uploadCap(byte[] file, String essid, String bssid) throws UnsupportedDataTypeException {
