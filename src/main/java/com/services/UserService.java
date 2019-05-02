@@ -16,14 +16,10 @@ import java.util.List;
 @Service
 public class UserService {
 
-    @Value("${view.page.size}")
-    private int PAGE_SIZE;
-
     @Value("${spring.login.username}")
     private String MASTER_USERNAME;
     @Value("${spring.login.password}")
     private String MASTER_PASSWORD;
-
     @Value("${user.default.enable}")
     private boolean DEFAULT_ENABLE;
 
