@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <link th:replace="fragments/header :: header-css"/>
+    <link rel="stylesheet" type="text/css" th:href="${'/css/upload.css'}"/>
+    <script type="text/javascript" th:src="${'/scripts/upload-text.js'}"></script>
+</head>
+<body>
+<div class="container">
+    <div th:replace="fragments/header :: header"></div>
+
+    <!--/*@thymesVar id="error" type="java.lang.String"*/-->
+    <form id="add-task-form" class="container" th:action="@{/upload-text}" method="POST">
+        <div class="form-group">
+            <input id="pmkid" class="form-control v-spacing" type="text" name="pmkid" maxlength="500" size="32"
+                   placeholder="Paste your PMKID here, multiple APs not allowed"/>
+        </div>
+        <div class="form-group">
+            <div id="wpa-terms-div" class="alert alert-dismissible alert-info left-justified text-center">
+                <strong>This service is for penetration testing of your own wireless networks only.</strong><br/>
+                Widely known, password brute forcing can also be used for illegal purposes. We request you not to use
+                this service for cracking others passwords and we take no responsibility for that!
+                <div class="checkbox" id="checkbox-terms">
+                    <label><input type="checkbox" id="terms"/>I agree with CAP Breaker terms and conditions</label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <button id="upload-file-btn" class="btn btn-lg btn-primary btn-block" disabled="disabled" type="submit">
+                Upload
+            </button>
+        </div>
+        <div th:if="${error}" class="upload-failed" th:text="${error}">error.</div>
+    </form>
+</div>
+</body>
+</html>

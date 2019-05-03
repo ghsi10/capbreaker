@@ -4,6 +4,9 @@
 <head th:fragment="header-css">
     <link rel="stylesheet" type="text/css" th:href="${'/css/bootstrap.min.css'}"/>
     <link rel="stylesheet" type="text/css" th:href="${'/css/main.css'}"/>
+    <script type="text/javascript" th:src="${'/scripts/jquery.min.js'}"></script>
+    <script type="text/javascript" th:src="${'/scripts/bootstrap.min.js'}"></script>
+
     <title>Cap Breaker</title>
 </head>
 <body th:fragment="header">
@@ -17,8 +20,13 @@
         <li th:class="${module=='tasks'?'active':''}">
             <a th:href="@{/tasks}">Tasks queue</a>
         </li>
-        <li th:class="${module=='upload'?'active':''}">
-            <a th:href="@{/upload}">Add task</a>
+        <li th:class="${module=='upload'?'active dropdown':'dropdown'}">
+            <a class="dropdown-toggle" data-toggle="dropdown">Add task<span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a th:href="@{/upload-file}">Cap file</a></li>
+                <li><a th:href="@{/upload-text}">PMKID</a></li>
+            </ul>
         </li>
         <li th:class="${module=='result'?'active':''}">
             <a th:href="@{/result}">Get result</a>

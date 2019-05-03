@@ -1,16 +1,23 @@
 package com.services;
 
+import com.exceptions.UnsupportedDataTypeException;
 import com.models.Handshake;
 import org.springframework.stereotype.Component;
 
-import javax.activation.UnsupportedDataTypeException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class HashConvert {
 
-    Handshake convert(byte[] cap, String bssid, String essid) throws UnsupportedDataTypeException {
+    Handshake convertTest(String pmkid) throws UnsupportedDataTypeException {
+        //TODO ADD it
+        if (pmkid.isEmpty())
+            throw new UnsupportedDataTypeException("PMKID is missing");
+        throw new UnsupportedDataTypeException("PMKID do not support yet");
+    }
+
+    Handshake convertFile(byte[] cap, String bssid, String essid) throws UnsupportedDataTypeException {
         List<Handshake> handshakes = readCap(cap);
         if (handshakes.size() == 0)
             throw new UnsupportedDataTypeException("No handshake found!");

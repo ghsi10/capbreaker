@@ -1,5 +1,7 @@
 package com.services;
 
+import com.exceptions.NameNotFoundException;
+import com.exceptions.NotBoundException;
 import com.models.Chunk;
 import com.models.ScanTask;
 import com.models.Task;
@@ -11,8 +13,6 @@ import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import javax.naming.NameNotFoundException;
-import java.rmi.NotBoundException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;

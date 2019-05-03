@@ -1,5 +1,6 @@
 package com.services;
 
+import com.exceptions.UnsupportedDataTypeException;
 import com.models.Handshake;
 import com.models.Task;
 import com.repositories.TaskRepository;
@@ -8,7 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import javax.activation.UnsupportedDataTypeException;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,18 +31,34 @@ public class TaskService {
         return taskRepository.findAllByOrderByIdDesc(PageRequest.of(page, pageSize)).getContent();
     }
 
-    public Task uploadCap(byte[] file, String essid, String bssid) throws UnsupportedDataTypeException {
-        Handshake handshake = hashConvert.convert(file, essid, bssid);
+    public Task uploadFile(byte[] file, String essid, String bssid) throws UnsupportedDataTypeException {
+        try {
+            return uploadHandshake(hashConvert.convertFile(file, essid, bssid));
+        } catch (UnsupportedDataTypeException e) {
+            throw new UnsupportedDataTypeException(e, "upload-file");
+        }
+
+    }
+
+    public Task uploadText(String pmkid) throws UnsupportedDataTypeException {
+        try {
+            return uploadHandshake(hashConvert.convertTest(pmkid));
+        } catch (UnsupportedDataTypeException e) {
+            throw new UnsupportedDataTypeException(e, "upload-text");
+        }
+    }
+
+    public Task getResult(String taskId, String taskPassword) throws NumberFormatException {
+        return taskRepository.findById(Integer.parseInt(taskId))
+                .filter(t -> t.getTaskPassword().equals(taskPassword)).orElseThrow(NumberFormatException::new);
+    }
+
+    private Task uploadHandshake(Handshake handshake) throws UnsupportedDataTypeException {
         Optional<Task> optTask = taskRepository.findByHandshake(handshake);
         if (optTask.isPresent())
             throw new UnsupportedDataTypeException("This handshake already exists, task id:" + optTask.get().getId());
         Task task = new Task(handshake);
         taskRepository.save(task);
         return task;
-    }
-
-    public Task getResult(String taskId, String taskPassword) throws NumberFormatException {
-        return taskRepository.findById(Integer.parseInt(taskId))
-                .filter(t -> t.getTaskPassword().equals(taskPassword)).orElseThrow(NumberFormatException::new);
     }
 }

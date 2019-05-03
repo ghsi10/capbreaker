@@ -1,5 +1,6 @@
 package com.services;
 
+import com.exceptions.ValidationException;
 import com.models.Task;
 import com.models.User;
 import com.models.UserRole;
@@ -34,9 +35,9 @@ public class UserService {
         this.scanManager = scanManager;
     }
 
-    public void signup(String username, String password) throws NoSuchFieldException {
+    public void signup(String username, String password) throws ValidationException {
         if (masterUsername.equals(username) || userRepository.findByUsername(username).isPresent())
-            throw new NoSuchFieldException("Username is not available");
+            throw new ValidationException("Username is not available");
         userRepository.save(new User(username, password, UserRole.ROLE_USER, defaultEnable));
     }
 
