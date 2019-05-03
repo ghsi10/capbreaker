@@ -1,8 +1,8 @@
-$(document).ready( function () {
+$(document).ready(function () {
     $('#users-table').DataTable({
-       "bInfo": false,
-       "bLengthChange": false,
-       "bSort": false,
-       "dom": 'ftp'
+        "bInfo": false,
+        "bLengthChange": false,
+        "bSort": false,
+        "dom": 'ftp'
     });
 });
