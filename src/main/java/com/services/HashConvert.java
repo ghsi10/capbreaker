@@ -4,17 +4,28 @@ import com.exceptions.UnsupportedDataTypeException;
 import com.models.Handshake;
 import org.springframework.stereotype.Component;
 
+import javax.xml.bind.DatatypeConverter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Component
 public class HashConvert {
 
     Handshake convertTest(String pmkid) throws UnsupportedDataTypeException {
-        //TODO ADD it
         if (pmkid.isEmpty())
             throw new UnsupportedDataTypeException("PMKID is missing");
-        throw new UnsupportedDataTypeException("PMKID do not support yet");
+        String[] splitedPmkid = pmkid.split("\\*");
+        if (splitedPmkid.length != 4 || splitedPmkid[0].length() != 32
+                || splitedPmkid[1].length() != 12 || splitedPmkid[2].length() != 12
+                || Arrays.stream(splitedPmkid).noneMatch(s -> s.matches("^[0-9a-fA-F]+$")))
+            throw new UnsupportedDataTypeException("Invalid PMKID");
+        Handshake handshake = new Handshake();
+        handshake.setBssid(String.join(":", splitedPmkid[1].split("(?<=\\G..)")));
+        handshake.setStation(String.join(":", splitedPmkid[2].split("(?<=\\G..)")));
+        handshake.setEssid(new String(DatatypeConverter.parseHexBinary(splitedPmkid[3])));
+        handshake.setKeyMic(pmkid);
+        return handshake;
     }
 
     Handshake convertFile(byte[] cap, String bssid, String essid) throws UnsupportedDataTypeException {
