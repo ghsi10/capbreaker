@@ -53,7 +53,7 @@ public class TaskService {
                 .filter(t -> t.getTaskPassword().equals(taskPassword)).orElseThrow(NumberFormatException::new);
     }
 
-    private Task uploadHandshake(Handshake handshake) throws UnsupportedDataTypeException {
+    private synchronized Task uploadHandshake(Handshake handshake) throws UnsupportedDataTypeException {
         Optional<Task> optTask = taskRepository.findByHandshake(handshake);
         if (optTask.isPresent())
             throw new UnsupportedDataTypeException("This handshake already exists, task id:" + optTask.get().getId());
