@@ -27,8 +27,8 @@ public class HashConvert {
         }
         Handshake handshake = new Handshake();
         handshake.setEssid(new String(DatatypeConverter.parseHexBinary(splitedPmkid[3])));
-        handshake.setBssid(String.join(":", splitedPmkid[1].split("(?<=\\G..)")));
-        handshake.setStation(String.join(":", splitedPmkid[2].split("(?<=\\G..)")));
+        handshake.setBssid(String.join(":", splitedPmkid[1].split("(?<=\\G..)")).toUpperCase());
+        handshake.setStation(String.join(":", splitedPmkid[2].split("(?<=\\G..)")).toUpperCase());
         handshake.setKeyMic(pmkid);
         return handshake;
     }
