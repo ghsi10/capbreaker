@@ -98,6 +98,7 @@ class Hashcat:
         for command in chunk['commands']:
             commands += ' ' + command
         process = subprocess.Popen(commands, cwd=self._path, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        sleep(5)
         while True:
             output = process.stdout.readline().decode()
             if not output:
