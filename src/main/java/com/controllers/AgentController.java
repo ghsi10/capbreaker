@@ -1,13 +1,12 @@
 package com.controllers;
 
+import com.exceptions.NameNotFoundException;
+import com.exceptions.NotBoundException;
 import com.models.Chunk;
 import com.services.ScanManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import javax.naming.NameNotFoundException;
-import java.rmi.NotBoundException;
 
 @RestController
 @RequestMapping("/agent")

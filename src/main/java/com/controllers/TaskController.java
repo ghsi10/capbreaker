@@ -1,26 +1,26 @@
 package com.controllers;
 
-import com.services.ScanManager;
+import com.exceptions.UnsupportedDataTypeException;
 import com.services.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.activation.UnsupportedDataTypeException;
 import java.io.IOException;
 
 @Controller
 public class TaskController {
 
     private final TaskService taskService;
-    private final ScanManager scanManager;
 
     @Autowired
-    public TaskController(TaskService taskService, ScanManager scanManager) {
+    public TaskController(TaskService taskService) {
         this.taskService = taskService;
-        this.scanManager = scanManager;
     }
 
     @GetMapping({"/", "/tasks"})
@@ -30,17 +30,30 @@ public class TaskController {
         return "tasks";
     }
 
-    @GetMapping("/upload")
-    public String uploaded(Model model) {
+    @GetMapping("/upload-file")
+    public String uploadFile(Model model) {
         model.addAttribute("module", "upload");
-        return "upload";
+        return "upload-file";
     }
 
-    @PostMapping("/upload")
+    @GetMapping("/upload-text")
+    public String uploadText(Model model) {
+        model.addAttribute("module", "upload");
+        return "upload-text";
+    }
+
+    @PostMapping("/upload-file")
     public String uploaded(Model model, @RequestParam MultipartFile capFile, @RequestParam String essid,
                            @RequestParam String bssid) throws IOException {
         model.addAttribute("module", "upload");
-        model.addAttribute("task", taskService.uploadCap(capFile.getBytes(), essid, bssid));
+        model.addAttribute("task", taskService.uploadFile(capFile.getBytes(), essid, bssid));
+        return "uploaded";
+    }
+
+    @PostMapping("/upload-text")
+    public String uploaded(Model model, @RequestParam String pmkid) throws IOException {
+        model.addAttribute("module", "upload");
+        model.addAttribute("task", taskService.uploadText(pmkid));
         return "uploaded";
     }
 
@@ -62,14 +75,14 @@ public class TaskController {
     public String handleUnsupportedDataTypeException(UnsupportedDataTypeException e, Model model) {
         model.addAttribute("module", "upload");
         model.addAttribute("error", e.getMessage());
-        return "upload";
+        return e.getFrom();
     }
 
     @ExceptionHandler({IOException.class, ArrayIndexOutOfBoundsException.class})
     public String handleIOException(Model model) {
         model.addAttribute("module", "upload");
         model.addAttribute("error", "Unexpected error");
-        return "upload";
+        return "upload-file";
     }
 
     @ExceptionHandler(NumberFormatException.class)
@@ -77,10 +90,5 @@ public class TaskController {
         model.addAttribute("module", "result");
         model.addAttribute("error", "Invalid task id and password.");
         return "result";
-    }
-
-    @ModelAttribute
-    public void addAttributes(Model model) {
-        model.addAttribute("agents", "Online agents: " + scanManager.agentCounter());
     }
 }

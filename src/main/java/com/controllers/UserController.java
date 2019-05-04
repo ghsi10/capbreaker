@@ -1,5 +1,6 @@
 package com.controllers;
 
+import com.exceptions.ValidationException;
 import com.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,9 +21,9 @@ import javax.servlet.http.HttpServletResponse;
 public class UserController {
 
     @Value("${agent.server.dns}")
-    private String SERVER_DNS;
+    private String serverDns;
     @Value("${agent.download.url}")
-    private String DOWNLOAD_URL;
+    private String downloadUrl;
 
     private final UserService userService;
 
@@ -54,13 +55,13 @@ public class UserController {
 
     @PostMapping("/signup")
     public String signup(@RequestParam String username, @RequestParam String password,
-                         @RequestParam String passwordAgain) throws NoSuchFieldException {
+                         @RequestParam String passwordAgain) throws ValidationException {
         if (username.length() < 4 || password.length() > 17)
-            throw new NoSuchFieldException("Username/Password should be between 4 to 16");
+            throw new ValidationException("Username/Password should be between 4 to 16");
         if (!username.matches("[a-zA-Z][a-zA-Z0-9]+") || !password.matches("[a-zA-Z0-9]+"))
-            throw new NoSuchFieldException("Username/Password contains illegal characters");
+            throw new ValidationException("Username/Password contains illegal characters");
         if (!password.equals(passwordAgain))
-            throw new NoSuchFieldException("Password does not match the confirm password");
+            throw new ValidationException("Password does not match the confirm password");
         userService.signup(username, password);
         return "redirect:/tasks";
     }
@@ -70,8 +71,8 @@ public class UserController {
         response.setHeader("Content-Disposition", "attachment; filename=\"CapBreakerAgent.py\"");
         model.addAttribute("username", user.getUsername());
         model.addAttribute("password", userService.getPassword(user.getUsername()));
-        model.addAttribute("server", SERVER_DNS);
-        model.addAttribute("url", DOWNLOAD_URL);
+        model.addAttribute("server", serverDns);
+        model.addAttribute("url", downloadUrl);
         return "user/agent";
     }
 
@@ -120,8 +121,8 @@ public class UserController {
         return "result";
     }
 
-    @ExceptionHandler(NoSuchFieldException.class)
-    public String handleNoSuchFieldException(NoSuchFieldException e, Model model) {
+    @ExceptionHandler(ValidationException.class)
+    public String handleValidationException(ValidationException e, Model model) {
         model.addAttribute("module", "signup");
         model.addAttribute("error", e.getMessage());
         return "user/signup";

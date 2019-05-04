@@ -19,13 +19,13 @@ import javax.sql.DataSource;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Value("${spring.queries.users-query}")
-    private String USERS_QUERY;
+    private String usersQuery;
     @Value("${spring.queries.roles-query}")
-    private String ROLES_QUERY;
+    private String rolesQuery;
     @Value("${spring.login.username}")
-    private String MASTER_USERNAME;
+    private String masterUsername;
     @Value("${spring.login.password}")
-    private String MASTER_PASSWORD;
+    private String masterPassword;
 
     private final DataSource dataSource;
 
@@ -41,8 +41,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication().withUser(MASTER_USERNAME).password(MASTER_PASSWORD).roles("ADMIN");
-        auth.jdbcAuthentication().dataSource(dataSource).usersByUsernameQuery(USERS_QUERY).authoritiesByUsernameQuery(ROLES_QUERY);
+        auth.inMemoryAuthentication().withUser(masterUsername).password(masterPassword).roles("ADMIN");
+        auth.jdbcAuthentication().dataSource(dataSource).usersByUsernameQuery(usersQuery).authoritiesByUsernameQuery(rolesQuery);
     }
 
     @Override

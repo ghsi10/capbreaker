@@ -1,5 +1,6 @@
 package com.services;
 
+import com.exceptions.ValidationException;
 import com.models.Task;
 import com.models.User;
 import com.models.UserRole;
@@ -16,16 +17,12 @@ import java.util.List;
 @Service
 public class UserService {
 
-    @Value("${view.page.size}")
-    private int PAGE_SIZE;
-
     @Value("${spring.login.username}")
-    private String MASTER_USERNAME;
+    private String masterUsername;
     @Value("${spring.login.password}")
-    private String MASTER_PASSWORD;
-
+    private String masterPassword;
     @Value("${user.default.enable}")
-    private boolean DEFAULT_ENABLE;
+    private boolean defaultEnable;
 
     private final UserRepository userRepository;
     private final TaskRepository taskRepository;
@@ -38,10 +35,10 @@ public class UserService {
         this.scanManager = scanManager;
     }
 
-    public void signup(String username, String password) throws NoSuchFieldException {
-        if (MASTER_USERNAME.equals(username) || userRepository.findByUsername(username).isPresent())
-            throw new NoSuchFieldException("Username is not available");
-        userRepository.save(new User(username, password, UserRole.ROLE_USER, DEFAULT_ENABLE));
+    public void signup(String username, String password) throws ValidationException {
+        if (masterUsername.equals(username) || userRepository.findByUsername(username).isPresent())
+            throw new ValidationException("Username is not available");
+        userRepository.save(new User(username, password, UserRole.ROLE_USER, defaultEnable));
     }
 
     public Task taskResult(String taskId) throws NumberFormatException {
@@ -74,8 +71,8 @@ public class UserService {
 
     public String getPassword(String username) {
         PasswordEncoder encoder = new BCryptPasswordEncoder();
-        if (username.equals(MASTER_USERNAME))
-            return encoder.encode(MASTER_PASSWORD);
+        if (username.equals(masterUsername))
+            return encoder.encode(masterPassword);
         return encoder.encode(userRepository.findByUsername(username).orElse(new User()).getPassword());
     }
 }
