@@ -18,16 +18,15 @@ public class HashConvert {
         String[] splitedPmkid = pmkid.split("\\*");
         if (splitedPmkid.length != 4 || splitedPmkid[0].length() != 32
                 || splitedPmkid[1].length() != 12 || splitedPmkid[2].length() != 12
-                || Arrays.stream(splitedPmkid).noneMatch(s -> s.matches("^[0-9a-fA-F]+$")))
+                || splitedPmkid[3].isEmpty() || splitedPmkid[3].length() > 100)
             throw new UnsupportedDataTypeException("Invalid PMKID");
-        String essid;
         try {
-            essid = new String(DatatypeConverter.parseHexBinary(splitedPmkid[3]));
+            Arrays.stream(splitedPmkid).forEach(DatatypeConverter::parseHexBinary);
         } catch (IllegalArgumentException e) {
             throw new UnsupportedDataTypeException("Invalid PMKID");
         }
         Handshake handshake = new Handshake();
-        handshake.setEssid(essid);
+        handshake.setEssid(new String(DatatypeConverter.parseHexBinary(splitedPmkid[3])));
         handshake.setBssid(String.join(":", splitedPmkid[1].split("(?<=\\G..)")));
         handshake.setStation(String.join(":", splitedPmkid[2].split("(?<=\\G..)")));
         handshake.setKeyMic(pmkid);
