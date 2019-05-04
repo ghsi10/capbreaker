@@ -20,10 +20,16 @@ public class HashConvert {
                 || splitedPmkid[1].length() != 12 || splitedPmkid[2].length() != 12
                 || Arrays.stream(splitedPmkid).noneMatch(s -> s.matches("^[0-9a-fA-F]+$")))
             throw new UnsupportedDataTypeException("Invalid PMKID");
+        String essid;
+        try {
+            essid = new String(DatatypeConverter.parseHexBinary(splitedPmkid[3]));
+        } catch (IllegalArgumentException e) {
+            throw new UnsupportedDataTypeException("Invalid PMKID");
+        }
         Handshake handshake = new Handshake();
+        handshake.setEssid(essid);
         handshake.setBssid(String.join(":", splitedPmkid[1].split("(?<=\\G..)")));
         handshake.setStation(String.join(":", splitedPmkid[2].split("(?<=\\G..)")));
-        handshake.setEssid(new String(DatatypeConverter.parseHexBinary(splitedPmkid[3])));
         handshake.setKeyMic(pmkid);
         return handshake;
     }
