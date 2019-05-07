@@ -3,15 +3,10 @@ package com.models;
 import java.util.Arrays;
 
 public class Chunk {
+
     private String uuid;
     private Handshake handshake;
     private String[] commands;
-
-    public Chunk(Chunk chunk) {
-        uuid = chunk.uuid;
-        handshake = chunk.handshake;
-        commands = chunk.commands;
-    }
 
     public Chunk(String uuid, Handshake handshake, String[] commands) {
         this.uuid = uuid;
