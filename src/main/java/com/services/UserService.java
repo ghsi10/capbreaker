@@ -46,7 +46,7 @@ public class UserService {
     }
 
     public void deleteTask(int taskId) {
-        agentService.stopTask(taskId);
+        agentService.stopAgents(taskId);
         taskRepository.deleteById(taskId);
     }
 

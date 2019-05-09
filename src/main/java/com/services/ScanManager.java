@@ -10,63 +10,81 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 @Component
-public class ScanManager {
+public class ScanManager implements Runnable {
+
+    @Value("${scan.buffer.sleep}")
+    private int sleepTime;
 
     private final TaskRepository taskRepository;
     private final List<String[]> commands;
-    private final Object lock;
-    private List<Scan> scans;
-
+    private final BlockingQueue<Scan> scans;
+    private final BlockingQueue<Scan> fallback;
+    private final Thread addScansThread;
 
     @Autowired
-    public ScanManager(@Value("#{'${scan.commands}'.split(',')}") String[] commands, TaskRepository taskRepository) {
+    public ScanManager(@Value("${scan.buffer.size}") int capacity,
+                       @Value("#{'${scan.commands}'.split(',')}") String[] commands, TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
         this.commands = new ArrayList<>();
-        scans = new ArrayList<>();
-        lock = new Object();
+        scans = new ArrayBlockingQueue<>(capacity);
+        fallback = new LinkedBlockingQueue<>();
         Arrays.stream(commands).map(c -> c.split(" ")).forEach(this.commands::add);
+        addScansThread = new Thread(this);
     }
 
     @PostConstruct
     private void init() {
         taskRepository.findAllByStatusOrderByIdAsc(TaskStatus.Working).forEach(task -> {
-            task.setProgress(0);
+            task.setStatus(TaskStatus.Queued);
             taskRepository.save(task);
-            commands.forEach(c -> scans.add(new Scan(task, c)));
+            task.setProgress(0);
         });
+        addScansThread.start();
     }
 
-    public Scan pop() throws NotBoundException {
-        synchronized (lock) {
-            if (scans.isEmpty()) {
-                Task task = taskRepository.getNextTask().orElseThrow(NotBoundException::new);
-                commands.forEach(c -> scans.add(new Scan(task, c)));
-                taskRepository.updateStatusToWorking(task.getId());
+    Scan pop() throws NotBoundException {
+        try {
+            return fallback.remove();
+        } catch (NoSuchElementException ignore1) {
+            try {
+                return scans.remove();
+            } catch (NoSuchElementException ignore2) {
+                throw new NotBoundException();
             }
-            return scans.remove(0);
         }
     }
 
-    public void push(Scan scan) {
-        synchronized (lock) {
-            scans.add(0, scan);
-        }
+    void push(Scan scan) {
+        fallback.add(scan);
     }
 
-    public boolean isDone(Task task) {
-        synchronized (lock) {
-            return scans.stream().noneMatch(s -> s.getTask().equals(task));
-        }
+    int getCommandsSize() {
+        return commands.size();
     }
 
-    public void remove(Task task) {
-        synchronized (lock) {
-            scans.removeIf(s -> s.getTask().equals(task));
+    @Override
+    public void run() {
+        while (true) {
+            try {
+                Optional<Task> optTask = taskRepository.getNextTask();
+                if (!optTask.isPresent()) {
+                    TimeUnit.SECONDS.sleep(sleepTime);
+                    continue;
+                }
+                Task task = optTask.get();
+                taskRepository.markAsPulled(task.getId());
+                for (String[] command : commands)
+                    scans.put(new Scan(task, command));
+            } catch (InterruptedException ignored) {
+                break;
+            }
         }
     }
 }

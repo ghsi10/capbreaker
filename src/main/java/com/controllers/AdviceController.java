@@ -18,6 +18,6 @@ public class AdviceController {
 
     @ModelAttribute
     public void addAttributes(Model model) {
-        model.addAttribute("agents", "Online agents: " + agentService.agentCounter());
+        model.addAttribute("agents", "Scanning agents: " + agentService.agentCounter());
     }
 }
