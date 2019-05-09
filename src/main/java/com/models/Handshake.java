@@ -37,17 +37,6 @@ public class Handshake implements Serializable {
         keyMic = "";
     }
 
-    public Handshake(Handshake hs) {
-        essid = hs.essid;
-        bssid = hs.bssid;
-        station = hs.station;
-        snonce = hs.snonce;
-        anonce = hs.anonce;
-        eapol = hs.eapol;
-        keyVersion = hs.keyVersion;
-        keyMic = hs.keyMic;
-    }
-
     public String getEssid() {
         return essid;
     }

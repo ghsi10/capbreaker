@@ -17,12 +17,14 @@ public class Task {
     private String wifiPassword;
     private String taskPassword;
     private Handshake handshake;
+    private Boolean pulled;
 
     public Task() {
         status = TaskStatus.Queued;
         taskPassword = randomPassword();
         wifiPassword = "";
         progress = 0;
+        pulled = false;
     }
 
     public Task(Task t) {
@@ -34,6 +36,7 @@ public class Task {
         taskPassword = t.taskPassword;
         handshake = t.handshake;
         progress = t.progress;
+        pulled = false;
     }
 
     public Task(Handshake hs) {
@@ -44,6 +47,7 @@ public class Task {
         wifiPassword = "";
         taskPassword = randomPassword();
         progress = 0;
+        pulled = false;
     }
 
     private String randomPassword() {
@@ -112,6 +116,14 @@ public class Task {
 
     public void setProgress(Integer progress) {
         this.progress = progress;
+    }
+
+    public Boolean getPulled() {
+        return pulled;
+    }
+
+    public void setPulled(Boolean pulled) {
+        this.pulled = pulled;
     }
 
     @Override

@@ -1,177 +1,97 @@
 package com.services;
 
-import com.exceptions.NameNotFoundException;
 import com.exceptions.NotBoundException;
-import com.models.Chunk;
-import com.models.ScanTask;
+import com.models.Scan;
 import com.models.Task;
 import com.models.TaskStatus;
 import com.repositories.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.util.Pair;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
-@Service
-public class ScanManager {
+@Component
+public class ScanManager implements Runnable {
 
-    @Value("${agent.keepalive.timer}")
-    private int agentTimer;
-    @Value("${agent.keepalive.max}")
-    private int maxKeepAlive;
-
-    private final List<String[]> commands;
-    private final List<ScanTask> tasks;
-    private final Set<Agent> agents;
-    private final int progressEveryScan;
+    @Value("${scan.buffer.sleep}")
+    private int sleepTime;
 
     private final TaskRepository taskRepository;
+    private final List<String[]> commands;
+    private final BlockingQueue<Scan> scans;
+    private final BlockingQueue<Scan> fallback;
+    private final Thread addScansThread;
 
     @Autowired
-    public ScanManager(@Value("#{'${scan.commands}'.split(',')}") String[] commandsFromProperties, TaskRepository taskRepository) {
+    public ScanManager(@Value("${scan.buffer.size}") int capacity,
+                       @Value("#{'${scan.commands}'.split(',')}") String[] commands, TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
-        commands = new ArrayList<>();
-        Arrays.stream(commandsFromProperties).map(c -> c.split(" ")).forEach(commands::add);
-        progressEveryScan = 100 / commandsFromProperties.length;
-        tasks = new LinkedList<>();
-        agents = new HashSet<>();
+        this.commands = new ArrayList<>();
+        scans = new ArrayBlockingQueue<>(capacity);
+        fallback = new LinkedBlockingQueue<>();
+        Arrays.stream(commands).map(c -> c.split(" ")).forEach(this.commands::add);
+        addScansThread = new Thread(this);
     }
 
     @PostConstruct
     private void init() {
-        taskRepository.findAllByStatusOrderByIdAsc(TaskStatus.Working).forEach(task -> {
-            task.setProgress(0);
-            taskRepository.save(task);
-            addTaskToScanManager(task);
-        });
+        taskRepository.resetTasks();
+        addScansThread.start();
     }
 
-    public Chunk getTask() throws NotBoundException {
-        ScanTask scanTask;
-        Pair<String, String[]> scanCommand;
-        synchronized (tasks) {
-            updateTasks();
-            scanTask = tasks.get(0);
-            scanCommand = scanTask.pollCommand();
-            if (scanTask.isEmpty())
-                tasks.remove(0);
-            synchronized (agents) {
-                Agent agent = new Agent(scanCommand.getFirst(), scanTask.getTask(), scanCommand.getSecond());
-                agents.add(agent);
-                agent.start();
-            }
-        }
-        return new Chunk(scanCommand.getFirst(), scanTask.getTask().getHandshake(), scanCommand.getSecond());
+    Scan pop() throws NotBoundException {
+        Scan scans = getNext();
+        while (!check(scans))
+            scans = getNext();
+        return scans;
     }
 
-    public void setResult(String uuid, String password) throws NameNotFoundException {
-        Agent agent;
-        synchronized (agents) {
-            agent = agents.stream().filter(a -> a.uuid.equals(uuid)).findFirst()
-                    .orElseThrow(NameNotFoundException::new);
-            agent.interrupt();
-            agents.remove(agent);
-        }
-        taskRepository.addProgress(agent.task.getId(), progressEveryScan);
-        reportTheResult(agent.task, password);
-
+    void push(Scan scan) {
+        fallback.add(scan);
     }
 
-    public void keepAlive(String uuid) throws NameNotFoundException {
-        agents.stream().filter(a -> a.uuid.equals(uuid)).findFirst()
-                .orElseThrow(NameNotFoundException::new).keepAlive = maxKeepAlive;
+    int getCommandsSize() {
+        return commands.size();
     }
 
-    void stopTask(int taskId) {
-        synchronized (tasks) {
-            tasks.removeIf(s -> s.getTask().getId() == taskId);
-            synchronized (agents) {
-                agents.stream().filter(a -> a.task.getId() == taskId).collect(Collectors.toSet()).forEach(a -> {
-                    a.interrupt();
-                    agents.remove(a);
-                });
+    private boolean check(Scan scan) {
+        Optional<Task> optTask = taskRepository.findById(scan.getTask().getId());
+        return optTask.isPresent() && !optTask.get().getStatus().equals(TaskStatus.Completed);
+    }
+
+    private Scan getNext() throws NotBoundException {
+        try {
+            return fallback.remove();
+        } catch (NoSuchElementException ignore1) {
+            try {
+                return scans.remove();
+            } catch (NoSuchElementException ignore2) {
+                throw new NotBoundException();
             }
         }
     }
 
-    private void reportTheResult(Task task, String password) {
-        if (!password.equals("") || isTaskDone(task)) {
-            taskRepository.reportTheResult(task.getId(), password);
-            stopTask(task.getId());
-        }
-    }
-
-    private boolean isTaskDone(Task task) {
-        boolean isT, isA;
-        synchronized (tasks) {
-            isT = tasks.stream().noneMatch(s -> s.getTask().equals(task));
-            synchronized (agents) {
-                isA = agents.stream().noneMatch(a -> a.task.equals(task));
-            }
-        }
-        return isT && isA;
-    }
-
-    private void updateTasks() throws NotBoundException {
-        if (!tasks.isEmpty())
-            return;
-        Task task = taskRepository.getNextTask().orElseThrow(NotBoundException::new);
-        addTaskToScanManager(task);
-        taskRepository.updateStatusToWorking(task.getId());
-    }
-
-    private void addTaskToScanManager(Task task) {
-        ScanTask scanTask = new ScanTask(task);
-        commands.forEach(c -> scanTask.addCommand(UUID.randomUUID().toString(), c));
-        tasks.add(scanTask);
-    }
-
-    public int agentCounter() {
-        return agents.size();
-    }
-
-    private class Agent extends Thread {
-
-        private final String uuid;
-        private final Task task;
-        private final String[] command;
-        private int keepAlive;
-
-        private Agent(String uuid, Task task, String[] command) {
-            this.uuid = uuid;
-            this.task = task;
-            this.command = command;
-            keepAlive = maxKeepAlive;
-        }
-
-        @Override
-        public void run() {
-            while (true) {
-                try {
-                    TimeUnit.SECONDS.sleep(agentTimer);
-                } catch (InterruptedException e) {
-                    break;
+    @Override
+    public void run() {
+        while (true) {
+            try {
+                Optional<Task> optTask = taskRepository.getNextTask();
+                if (!optTask.isPresent()) {
+                    TimeUnit.SECONDS.sleep(sleepTime);
+                    continue;
                 }
-                keepAlive--;
-                if (keepAlive < 0) {
-                    synchronized (tasks) {
-                        Optional<ScanTask> optScanTask = tasks.stream()
-                                .filter(s -> s.getTask().equals(task)).findFirst();
-                        if (optScanTask.isPresent())
-                            optScanTask.get().addCommand(uuid, command);
-                        else
-                            tasks.add(0, new ScanTask(task, uuid, command));
-                        synchronized (agents) {
-                            agents.remove(this);
-                        }
-                    }
-                    break;
-                }
+                Task task = optTask.get();
+                taskRepository.markAsPulled(task.getId());
+                for (String[] command : commands)
+                    scans.put(new Scan(task, command));
+            } catch (InterruptedException ignored) {
+                break;
             }
         }
     }

@@ -2,7 +2,6 @@ package com.repositories;
 
 import com.models.Handshake;
 import com.models.Task;
-import com.models.TaskStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,7 +10,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -19,13 +17,21 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
 
     Page<Task> findAllByOrderByIdDesc(Pageable pageable);
 
-    List<Task> findAllByStatusOrderByIdAsc(TaskStatus status);
-
     Optional<Task> findByHandshake(Handshake handshake);
 
     @Transactional(readOnly = true)
-    @Query("select t from Task t WHERE t.id = (select min(t.id) from Task t where t.status = 0)")
+    @Query("select t from Task t WHERE t.id = (select min(t.id) from Task t where t.status = 0 and t.pulled = false)")
     Optional<Task> getNextTask();
+
+    @Transactional
+    @Modifying
+    @Query("update Task t set t.pulled = true where t.id= ?1")
+    void markAsPulled(Integer id);
+
+    @Transactional
+    @Modifying
+    @Query("update Task t set t.status=0, t.progress=0, t.pulled = false where t.status = 0 or t.status = 1")
+    void resetTasks();
 
     @Transactional
     @Modifying

@@ -1,6 +1,6 @@
 package com.controllers;
 
-import com.services.ScanManager;
+import com.services.AgentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -9,15 +9,15 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 @ControllerAdvice
 public class AdviceController {
 
-    private final ScanManager scanManager;
+    private final AgentService agentService;
 
     @Autowired
-    public AdviceController(ScanManager scanManager) {
-        this.scanManager = scanManager;
+    public AdviceController(AgentService agentService) {
+        this.agentService = agentService;
     }
 
     @ModelAttribute
     public void addAttributes(Model model) {
-        model.addAttribute("agents", "Online agents: " + scanManager.agentCounter());
+        model.addAttribute("agents", "Scanning agents: " + agentService.agentCounter());
     }
 }

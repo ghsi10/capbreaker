@@ -41,12 +41,12 @@
       "description": "number of tasks in page."
     },
     {
-      "name": "agent.keepalive.max",
+      "name": "agent.idle.max",
       "type": "java.lang.Integer",
       "description": "number of max keep alive."
     },
     {
-      "name": "agent.keepalive.timer",
+      "name": "agent.idle.timer",
       "type": "java.lang.Integer",
       "description": "timer for keep alive in seconds."
     },
@@ -54,6 +54,16 @@
       "name": "user.default.enable",
       "type": "java.lang.Boolean",
       "description": "default user enable."
+    },
+    {
+      "name": "scan.buffer.sleep",
+      "type": "java.lang.Integer",
+      "description": "scan buffer will sleep for x seconds if he has no job."
+    },
+    {
+      "name": "scan.buffer.size",
+      "type": "java.lang.Integer",
+      "description": "scan buffer size."
     }
   ]
 }

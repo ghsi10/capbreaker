@@ -26,13 +26,13 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final TaskRepository taskRepository;
-    private final ScanManager scanManager;
+    private final AgentService agentService;
 
     @Autowired
-    public UserService(UserRepository userRepository, TaskRepository taskRepository, ScanManager scanManager) {
+    public UserService(UserRepository userRepository, TaskRepository taskRepository, AgentService agentService) {
         this.userRepository = userRepository;
         this.taskRepository = taskRepository;
-        this.scanManager = scanManager;
+        this.agentService = agentService;
     }
 
     public void signup(String username, String password) throws ValidationException {
@@ -46,7 +46,7 @@ public class UserService {
     }
 
     public void deleteTask(int taskId) {
-        scanManager.stopTask(taskId);
+        agentService.stopAgents(taskId);
         taskRepository.deleteById(taskId);
     }
 
