@@ -50,6 +50,26 @@ public class ScanManager implements Runnable {
     }
 
     Scan pop() throws NotBoundException {
+        Scan scans = getNext();
+        while (!check(scans))
+            scans = getNext();
+        return scans;
+    }
+
+    void push(Scan scan) {
+        fallback.add(scan);
+    }
+
+    int getCommandsSize() {
+        return commands.size();
+    }
+
+    private boolean check(Scan scan) {
+        Optional<Task> optTask = taskRepository.findById(scan.getTask().getId());
+        return optTask.isPresent() && !optTask.get().getStatus().equals(TaskStatus.Completed);
+    }
+
+    private Scan getNext() throws NotBoundException {
         try {
             return fallback.remove();
         } catch (NoSuchElementException ignore1) {
@@ -59,14 +79,6 @@ public class ScanManager implements Runnable {
                 throw new NotBoundException();
             }
         }
-    }
-
-    void push(Scan scan) {
-        fallback.add(scan);
-    }
-
-    int getCommandsSize() {
-        return commands.size();
     }
 
     @Override
