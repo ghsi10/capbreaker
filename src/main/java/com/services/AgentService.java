@@ -51,7 +51,8 @@ public class AgentService implements Runnable {
         String uuid = UUID.randomUUID().toString();
         int taskId = scan.getTask().getId();
         agents.put(uuid, new Agent(scan));
-        taskStatus.put(taskId, 0);
+        if (!taskStatus.containsKey(taskId))
+            taskStatus.put(taskId, 0);
         taskRepository.updateStatusToWorking(taskId);
         return new Chunk(uuid, scan.getTask().getHandshake(), scan.getCommands());
     }
