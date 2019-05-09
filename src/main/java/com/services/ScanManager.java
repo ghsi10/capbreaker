@@ -43,6 +43,7 @@ public class ScanManager implements Runnable {
     private void init() {
         taskRepository.findAllByStatusOrderByIdAsc(TaskStatus.Working).forEach(task -> {
             task.setStatus(TaskStatus.Queued);
+            task.setPulled(false);
             taskRepository.save(task);
             task.setProgress(0);
         });
