@@ -40,7 +40,7 @@ public class ScanManager implements Runnable {
     }
 
     @PostConstruct
-    private void init() {
+    public void init() {
         taskRepository.resetTasks();
         addScansThread.start();
     }
