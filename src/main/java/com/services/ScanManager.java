@@ -68,8 +68,8 @@ public class ScanManager implements Runnable {
 
     synchronized void removeTask(int taskId) {
         addScansThread.interrupt();
-        scans.removeIf(s->s.getTask().getId().equals(taskId));
-        fallback.removeIf(s->s.getTask().getId().equals(taskId));
+        scans.removeIf(s -> s.getTask().getId().equals(taskId));
+        fallback.removeIf(s -> s.getTask().getId().equals(taskId));
         addScansThread = new Thread(this);
         addScansThread.start();
     }
