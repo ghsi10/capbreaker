@@ -3,7 +3,6 @@ package com.services;
 import com.exceptions.NotBoundException;
 import com.models.Scan;
 import com.models.Task;
-import com.models.TaskStatus;
 import com.repositories.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,10 +22,12 @@ public class ScanManager implements Runnable {
     private int sleepTime;
 
     private final TaskRepository taskRepository;
+
     private final List<String[]> commands;
     private final BlockingQueue<Scan> scans;
     private final BlockingQueue<Scan> fallback;
-    private final Thread addScansThread;
+
+    private Thread addScansThread;
 
     @Autowired
     public ScanManager(@Value("${scan.buffer.size}") int capacity,
@@ -40,16 +41,21 @@ public class ScanManager implements Runnable {
     }
 
     @PostConstruct
-    private void init() {
+    public void init() {
         taskRepository.resetTasks();
         addScansThread.start();
     }
 
     Scan pop() throws NotBoundException {
-        Scan scans = getNext();
-        while (!check(scans))
-            scans = getNext();
-        return scans;
+        try {
+            return fallback.remove();
+        } catch (NoSuchElementException ignore1) {
+            try {
+                return scans.remove();
+            } catch (NoSuchElementException ignore2) {
+                throw new NotBoundException();
+            }
+        }
     }
 
     void push(Scan scan) {
@@ -60,21 +66,12 @@ public class ScanManager implements Runnable {
         return commands.size();
     }
 
-    private boolean check(Scan scan) {
-        Optional<Task> optTask = taskRepository.findById(scan.getTask().getId());
-        return optTask.isPresent() && !optTask.get().getStatus().equals(TaskStatus.Completed);
-    }
-
-    private Scan getNext() throws NotBoundException {
-        try {
-            return fallback.remove();
-        } catch (NoSuchElementException ignore1) {
-            try {
-                return scans.remove();
-            } catch (NoSuchElementException ignore2) {
-                throw new NotBoundException();
-            }
-        }
+    synchronized void removeTask(int taskId) {
+        addScansThread.interrupt();
+        scans.removeIf(s -> s.getTask().getId().equals(taskId));
+        fallback.removeIf(s -> s.getTask().getId().equals(taskId));
+        addScansThread = new Thread(this);
+        addScansThread.start();
     }
 
     @Override
