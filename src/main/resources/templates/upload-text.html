@@ -10,7 +10,7 @@
     <div th:replace="fragments/header :: header"></div>
 
     <!--/*@thymesVar id="error" type="java.lang.String"*/-->
-    <form id="add-task-form" class="container" th:action="@{/upload-text}" method="POST">
+    <form id="add-task-form" class="container" th:action="@{/upload/text}" method="POST">
         <div class="form-group">
             <input id="pmkid" class="form-control v-spacing" type="text" name="pmkid" maxlength="500" size="32"
                    placeholder="Paste your PMKID here, multiple APs not allowed"/>
