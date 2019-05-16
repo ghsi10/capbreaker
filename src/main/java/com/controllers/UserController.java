@@ -1,7 +1,6 @@
 package com.controllers;
 
 import com.exceptions.ValidationException;
-import com.models.ScanCommand;
 import com.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,7 +9,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -72,84 +74,6 @@ public class UserController {
         model.addAttribute("server", serverDns);
         model.addAttribute("url", downloadUrl);
         return "user/agent";
-    }
-
-    @GetMapping("/admin/scans-management")
-    public String scansManagement(Model model) {
-        model.addAttribute("module", "scansManagement");
-        model.addAttribute("commands", userService.getCommands());
-        return "user/scans-management";
-    }
-
-    @PostMapping("/admin/scans-management")
-    public String resetCommands() {
-        userService.resetCommands();
-        return "redirect:/admin/scans-management";
-    }
-
-    @GetMapping("/admin/deleteCommand")
-    public String deleteCommand(@RequestParam int commandId) {
-        userService.deleteCommand(commandId);
-        return "redirect:/admin/scans-management";
-    }
-
-    @GetMapping("admin/editCommand")
-    public String saveCommandPage(Model model, @RequestParam int commandId) {
-        model.addAttribute("module", "scansManagement");
-        model.addAttribute("command", userService.getCommand(commandId));
-        return "user/command";
-    }
-
-    @PostMapping("/admin/editCommand")
-    public String saveCommand(@RequestParam Integer commandId, @RequestParam int priority, @RequestPart String command) {
-        commandId = commandId == ScanCommand.NO_ID ? null : commandId;
-        userService.saveCommand(new ScanCommand(commandId, priority, command));
-        return "redirect:/admin/scans-management";
-    }
-
-    @GetMapping("/admin/taskResult")
-    public String taskResult(Model model, @RequestParam String taskId) {
-        model.addAttribute("module", "result");
-        model.addAttribute("task", userService.taskResult(taskId));
-        return "resultof";
-    }
-
-    @GetMapping("/admin/deleteTask")
-    public String deleteTask(@RequestParam int taskId) {
-        userService.deleteTask(taskId);
-        return "redirect:/tasks";
-    }
-
-    @GetMapping("admin/users-management")
-    public String usersManagement(Model model) {
-        model.addAttribute("module", "usersManagement");
-        model.addAttribute("users", userService.getUsers());
-        return "user/users-management";
-    }
-
-    @GetMapping("/admin/enabledUser")
-    public String enabledUser(@RequestParam int userId, @RequestParam boolean enabled) {
-        userService.enabledUser(userId, enabled);
-        return "redirect:/admin/users-management";
-    }
-
-    @GetMapping("/admin/deleteUser")
-    public String deleteUser(@RequestParam int userId) {
-        userService.deleteUser(userId);
-        return "redirect:/admin/users-management";
-    }
-
-    @GetMapping("/admin/promoteUser")
-    public String promoteUser(@RequestParam int userId, @RequestParam boolean promote) {
-        userService.promoteUser(userId, promote);
-        return "redirect:/admin/users-management";
-    }
-
-    @ExceptionHandler(NumberFormatException.class)
-    public String handleNumberFormatException(Model model) {
-        model.addAttribute("module", "result");
-        model.addAttribute("error", "Invalid task id.");
-        return "result";
     }
 
     @ExceptionHandler(ValidationException.class)

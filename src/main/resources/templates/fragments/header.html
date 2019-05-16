@@ -31,11 +31,11 @@
         <li th:class="${module=='result'?'active':''}">
             <a th:href="@{/result}">Get result</a>
         </li>
-        <li th:class="${module=='usersManagement'?'active':''}" sec:authorize="hasRole('ROLE_ADMIN')">
-            <a th:href="@{/admin/users-management}">Users</a>
+        <li th:class="${module=='users'?'active':''}" sec:authorize="hasRole('ROLE_ADMIN')">
+            <a th:href="@{/admin/users}">Users</a>
         </li>
-        <li th:class="${module=='scansManagement'?'active':''}" sec:authorize="hasRole('ROLE_ADMIN')">
-            <a th:href="@{/admin/scans-management}">Scans</a>
+        <li th:class="${module=='scans'?'active':''}" sec:authorize="hasRole('ROLE_ADMIN')">
+            <a th:href="@{/admin/scans}">Scans</a>
         </li>
         <li sec:authorize="isAuthenticated()">
             <a th:href="@{/user/download}">Download agent</a>

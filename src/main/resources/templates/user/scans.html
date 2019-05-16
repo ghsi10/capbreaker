@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <link th:replace="fragments/header :: header-css"/>
-    <link rel="stylesheet" type="text/css" th:href="${'/css/scan-management.css'}"/>
+    <link rel="stylesheet" type="text/css" th:href="${'/css/scans.css'}"/>
 </head>
 <body>
 <div class="container">
@@ -15,8 +15,7 @@
             <th>Command</th>
             <th>Priority</th>
             <th>Action</th>
-            <th><a th:href="${'/admin/editCommand?commandId=-1'}" class="btn btn-success btn-xs">Add new scan</a>
-            </th>
+            <th><a th:href="${'/admin/command/edit/-1'}" class="btn btn-success btn-xs">Add new scan</a></th>
         </tr>
         </thead>
         <tbody>
@@ -25,9 +24,9 @@
             <td th:text="${command.command}"></td>
             <td th:text="${command.priority}"></td>
             <td>
-                <a th:href="${'/admin/editCommand?commandId=' + command.id}" class="btn btn-primary btn-xs">Edit</a>
+                <a th:href="${'/admin/command/edit/'+command.id}" class="btn btn-primary btn-xs">Edit</a>
                 <a onclick="return confirm('Are you sure you want to delete this scan?');"
-                   th:href="${'/admin/deleteCommand?commandId=' + command.id}" class="btn btn-danger btn-xs">Delete</a>
+                   th:href="${'/admin/command/delete/'+command.id}" class="btn btn-danger btn-xs">Delete</a>
             </td>
             <td></td>
         </tr>
