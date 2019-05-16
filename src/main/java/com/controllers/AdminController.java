@@ -45,8 +45,9 @@ public class AdminController {
     }
 
     @PostMapping("/command/edit/{id}")
-    public String saveCommand(@PathVariable Integer id, @RequestParam int priority, @RequestPart String command) {
+    public String saveCommand(@PathVariable Integer id, @RequestParam Integer priority, @RequestPart String command) {
         id = id == ScanCommand.NO_ID ? null : id;
+        priority = priority == null ? 0 : priority;
         userService.saveCommand(new ScanCommand(id, priority, command));
         return "redirect:/admin/scans";
     }

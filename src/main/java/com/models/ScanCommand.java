@@ -16,6 +16,7 @@ public class ScanCommand {
 
     public ScanCommand() {
         id = NO_ID;
+        priority = 0;
     }
 
     public ScanCommand(Integer id, Integer priority, String command) {

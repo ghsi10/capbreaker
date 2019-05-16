@@ -1,10 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <link th:replace="fragments/header :: header-css"/>
+    <link rel="stylesheet" type="text/css" th:href="${'/css/scans.css'}"/>
 </head>
 <body>
-
+<div class="container">
+    <div th:replace="fragments/header :: header"></div>
+    <form class="form-horizontal text-center" role="form" th:action="${'/admin/command/edit/' + command.id}"
+          method="POST"
+          enctype='multipart/form-data'>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Command</th>
+                <th>Priority</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    <label for="commandId" class="sr-only"></label>
+                    <input class="form-control input-sm" type="text" id="commandId" th:value="${command.id}" disabled/>
+                </td>
+                <td>
+                    <label for="command" class="sr-only"></label>
+                    <input class="form-control input-sm" type="text" id="command" name="command"
+                           th:value="${command.command}"/>
+                </td>
+                <td>
+                    <label for="priority" class="sr-only"></label>
+                    <input class="form-control input-sm" type="number" min="0" step="1" name="priority" id="priority"
+                           th:value="${command.priority}"/>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="col-md-4 col-md-offset-4">
+            <button type="submit" class="btn btn-primary btn-block">Save</button>
+        </div>
+    </form>
+</div>
 </body>
 </html>
