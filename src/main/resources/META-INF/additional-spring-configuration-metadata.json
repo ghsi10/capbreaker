@@ -1,11 +1,6 @@
 {
   "properties": [
     {
-      "name": "scan.commands",
-      "type": "java.lang.String",
-      "description": "scans list."
-    },
-    {
       "name": "spring.queries.users-query",
       "type": "java.lang.String",
       "description": "query for get username and password."

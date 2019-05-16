@@ -34,8 +34,7 @@ public class ScanManager implements Runnable {
     private Thread addScansThread;
 
     @Autowired
-    public ScanManager(TaskRepository taskRepository, CommandRepository commandRepository,
-                       @Value("${scan.buffer.size}") int capacity) {
+    public ScanManager(TaskRepository taskRepository, CommandRepository commandRepository, @Value("${scan.buffer.size}") int capacity) {
         this.taskRepository = taskRepository;
         this.commandRepository = commandRepository;
         scans = new ArrayBlockingQueue<>(capacity);
