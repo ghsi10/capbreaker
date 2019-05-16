@@ -30,19 +30,19 @@ public class TaskController {
         return "tasks";
     }
 
-    @GetMapping("/upload-file")
+    @GetMapping("/upload/file")
     public String uploadFile(Model model) {
         model.addAttribute("module", "upload");
         return "upload-file";
     }
 
-    @GetMapping("/upload-text")
+    @GetMapping("/upload/text")
     public String uploadText(Model model) {
         model.addAttribute("module", "upload");
         return "upload-text";
     }
 
-    @PostMapping("/upload-file")
+    @PostMapping("/upload/file")
     public String uploaded(Model model, @RequestParam MultipartFile capFile, @RequestParam String essid,
                            @RequestParam String bssid) throws IOException {
         model.addAttribute("module", "upload");
@@ -50,7 +50,7 @@ public class TaskController {
         return "uploaded";
     }
 
-    @PostMapping("/upload-text")
+    @PostMapping("/upload/text")
     public String uploaded(Model model, @RequestParam String pmkid) throws IOException {
         model.addAttribute("module", "upload");
         model.addAttribute("task", taskService.uploadText(pmkid));

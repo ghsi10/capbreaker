@@ -24,15 +24,18 @@
             <a class="dropdown-toggle" data-toggle="dropdown">Add task<span class="caret"></span>
             </a>
             <ul class="dropdown-menu">
-                <li><a th:href="@{/upload-file}">Cap file</a></li>
-                <li><a th:href="@{/upload-text}">PMKID</a></li>
+                <li><a th:href="@{/upload/file}">Cap file</a></li>
+                <li><a th:href="@{/upload/text}">PMKID</a></li>
             </ul>
         </li>
         <li th:class="${module=='result'?'active':''}">
             <a th:href="@{/result}">Get result</a>
         </li>
-        <li th:class="${module=='usersManagement'?'active':''}" sec:authorize="hasRole('ROLE_ADMIN')">
-            <a th:href="@{/admin/users-management}">Users</a>
+        <li th:class="${module=='users'?'active':''}" sec:authorize="hasRole('ROLE_ADMIN')">
+            <a th:href="@{/admin/users}">Users</a>
+        </li>
+        <li th:class="${module=='scans'?'active':''}" sec:authorize="hasRole('ROLE_ADMIN')">
+            <a th:href="@{/admin/scans}">Scans</a>
         </li>
         <li sec:authorize="isAuthenticated()">
             <a th:href="@{/user/download}">Download agent</a>

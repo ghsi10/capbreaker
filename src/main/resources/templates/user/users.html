@@ -2,11 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <link th:replace="fragments/header :: header-css"/>
-    <link rel="stylesheet" type="text/css" th:href="${'/css/users-management.css'}"/>
+    <link rel="stylesheet" type="text/css" th:href="${'/css/users.css'}"/>
     <link rel="stylesheet" type="text/css" th:href="${'/css/dataTables.bootstrap.min.css'}"/>
     <script type="text/javascript" th:src="${'/scripts/jquery.dataTables.min.js'}"></script>
     <script type="text/javascript" th:src="${'/scripts/dataTables.bootstrap.min.js'}"></script>
-    <script type="text/javascript" th:src="${'/scripts/users-management.js'}"></script>
+    <script type="text/javascript" th:src="${'/scripts/users.js'}"></script>
 </head>
 <body>
 <div class="container">
@@ -31,26 +31,17 @@
             <td th:if="${user.enable}==false" class="fail">Disabled</td>
             <td>
                 <a th:if="${user.enable}==true"
-                   th:href="@{/admin/enabledUser(userId=${user.id},enabled='false')}"
-                   class="btn btn-warning btn-xs">Disable
-                </a>
+                   th:href="${'/admin/user/enabled/'+user.id+'?enabled=false'}"
+                   class="btn btn-warning btn-xs">Disable</a>
                 <a th:if="${user.enable}==false"
-                   th:href="@{/admin/enabledUser(userId=${user.id},enabled='true')}"
-                   class="btn btn-success btn-xs">Enable
-                </a>
-
+                   th:href="${'/admin/user/enabled/'+user.id+'?enabled=true'}" class="btn btn-success btn-xs">Enable</a>
                 <a th:if="${user.role==T(com.models.UserRole).ROLE_ADMIN}"
-                   th:href="@{/admin/promoteUser(userId=${user.id},promote='false')}"
-                   class="btn btn-info btn-xs">Demote
-                </a>
+                   th:href="${'/admin/user/promote/'+user.id+'?promote=false'}" class="btn btn-info btn-xs">Demote</a>
                 <a th:if="${user.role==T(com.models.UserRole).ROLE_USER}"
-                   th:href="@{/admin/promoteUser(userId=${user.id},promote='true')}"
-                   class="btn btn-primary btn-xs">Promote
-                </a>
-
-                <a onclick="return confirm('Are you sure you want to DELETE this user?');"
-                   th:href="${'/admin/deleteUser?userId=' + user.id}" class="btn btn-danger btn-xs">Delete
-                </a>
+                   th:href="${'/admin/user/promote/'+user.id+'?promote=true'}"
+                   class="btn btn-primary btn-xs">Promote</a>
+                <a onclick="return confirm('Are you sure you want to delete this user?');"
+                   th:href="${'/admin/user/delete/'+user.id}" class="btn btn-danger btn-xs">Delete</a>
             </td>
         </tr>
         </tbody>

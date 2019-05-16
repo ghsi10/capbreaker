@@ -10,7 +10,7 @@
     <div th:replace="fragments/header :: header"></div>
 
     <!--/*@thymesVar id="error" type="java.lang.String"*/-->
-    <form id="add-task-form" class="container" th:action="@{/upload-file}" method="POST" enctype="multipart/form-data">
+    <form id="add-task-form" class="container" th:action="@{/upload/file}" method="POST" enctype="multipart/form-data">
         <div class="form-group">
             <label class="btn btn-default btn-file file-label" for="cap-file">
                 <span id="fName">Click to browse .cap file</span>
