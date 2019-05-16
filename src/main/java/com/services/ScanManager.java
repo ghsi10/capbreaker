@@ -3,17 +3,21 @@ package com.services;
 import com.exceptions.NotBoundException;
 import com.models.Scan;
 import com.models.Task;
+import com.repositories.CommandRepository;
 import com.repositories.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.*;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Component
 public class ScanManager implements Runnable {
@@ -22,26 +26,28 @@ public class ScanManager implements Runnable {
     private int sleepTime;
 
     private final TaskRepository taskRepository;
-
-    private final List<String[]> commands;
+    private final CommandRepository commandRepository;
     private final BlockingQueue<Scan> scans;
     private final BlockingQueue<Scan> fallback;
 
+    private List<String[]> commands;
     private Thread addScansThread;
 
     @Autowired
-    public ScanManager(@Value("${scan.buffer.size}") int capacity,
-                       @Value("#{'${scan.commands}'.split(',')}") String[] commands, TaskRepository taskRepository) {
+    public ScanManager(TaskRepository taskRepository, CommandRepository commandRepository,
+                       @Value("${scan.buffer.size}") int capacity) {
         this.taskRepository = taskRepository;
-        this.commands = new ArrayList<>();
+        this.commandRepository = commandRepository;
         scans = new ArrayBlockingQueue<>(capacity);
         fallback = new LinkedBlockingQueue<>();
-        Arrays.stream(commands).map(c -> c.split(" ")).forEach(this.commands::add);
         addScansThread = new Thread(this);
     }
 
     @PostConstruct
     public void init() {
+        commands = commandRepository.findAllByOrderByPriorityAsc().stream()
+                .map(c -> c.getCommand().split(" "))
+                .collect(Collectors.toList());
         taskRepository.resetTasks();
         addScansThread.start();
     }
@@ -67,11 +73,27 @@ public class ScanManager implements Runnable {
     }
 
     synchronized void removeTask(int taskId) {
-        addScansThread.interrupt();
+        stop();
         scans.removeIf(s -> s.getTask().getId().equals(taskId));
         fallback.removeIf(s -> s.getTask().getId().equals(taskId));
         addScansThread = new Thread(this);
         addScansThread.start();
+    }
+
+    synchronized void reset() {
+        stop();
+        scans.clear();
+        fallback.clear();
+        addScansThread = new Thread(this);
+        init();
+    }
+
+    private void stop() {
+        addScansThread.interrupt();
+        try {
+            addScansThread.join();
+        } catch (InterruptedException ignore) {
+        }
     }
 
     @Override

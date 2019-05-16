@@ -111,6 +111,18 @@ public class AgentService implements Runnable {
         }
     }
 
+    void reset() {
+        lock.writeLock().lock();
+        try {
+            scanManager.reset();
+            agents.clear();
+            taskStatus.clear();
+            completedTasks.clear();
+        } finally {
+            lock.writeLock().unlock();
+        }
+    }
+
     public int agentCounter() {
         lock.readLock().lock();
         try {
