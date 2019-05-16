@@ -19,7 +19,7 @@ public class AdminController {
     }
 
     @GetMapping("/scans")
-    public String scansManagement(Model model) {
+    public String scans(Model model) {
         model.addAttribute("module", "scans");
         model.addAttribute("commands", userService.getCommands());
         return "user/scans";
@@ -39,7 +39,7 @@ public class AdminController {
 
     @GetMapping("/command/edit/{id}")
     public String saveCommandPage(Model model, @PathVariable int id) {
-        model.addAttribute("module", "scansManagement");
+        model.addAttribute("module", "scans");
         model.addAttribute("command", userService.getCommand(id));
         return "user/command";
     }
