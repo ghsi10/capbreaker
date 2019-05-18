@@ -1,6 +1,7 @@
 package com.models;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.security.SecureRandom;
 
 @Entity
@@ -13,7 +14,7 @@ public class Task {
     private String bssid;
     private String essid;
     private TaskStatus status;
-    private Integer progress;
+    private BigDecimal progress;
     private String wifiPassword;
     private String taskPassword;
     @Lob
@@ -24,7 +25,7 @@ public class Task {
         status = TaskStatus.Queued;
         taskPassword = randomPassword();
         wifiPassword = "";
-        progress = 0;
+        progress = BigDecimal.valueOf(0);
         pulled = false;
     }
 
@@ -47,7 +48,7 @@ public class Task {
         handshake = hs;
         wifiPassword = "";
         taskPassword = randomPassword();
-        progress = 0;
+        progress = BigDecimal.valueOf(0);
         pulled = false;
     }
 
@@ -111,11 +112,11 @@ public class Task {
         this.handshake = handshake;
     }
 
-    public Integer getProgress() {
+    public BigDecimal getProgress() {
         return progress;
     }
 
-    public void setProgress(Integer progress) {
+    public void setProgress(BigDecimal progress) {
         this.progress = progress;
     }
 

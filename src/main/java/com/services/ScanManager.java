@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -69,6 +70,10 @@ public class ScanManager implements Runnable {
 
     int getCommandsSize() {
         return commands.size();
+    }
+
+    BigDecimal getProgress() {
+        return BigDecimal.valueOf(((int) (Math.round(100d / commands.size() * 100))) / 100d);
     }
 
     synchronized void removeTask(int taskId) {
