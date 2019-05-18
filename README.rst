@@ -2,7 +2,7 @@
 CapBreaker 
 ===== 
 
-**Redistributing WPA hash cracking.**
+**Distributing WPA hash cracking.**
 
 Management tool for WPA hash cracking with a distributable software including WebUI.
 
