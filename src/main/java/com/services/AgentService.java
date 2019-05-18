@@ -75,7 +75,7 @@ public class AgentService implements Runnable {
                 throw new NameNotFoundException();
             int taskId = agent.getScan().getTask().getId();
             if (!completedTasks.contains(taskId)) {
-                taskRepository.addProgress(taskId, 100 / scanManager.getCommandsSize());
+                taskRepository.addProgress(taskId, scanManager.getProgress());
                 if (!password.isEmpty()) {
                     completedTasks.add(taskId);
                     taskRepository.reportTheResult(taskId, password);
@@ -135,6 +135,7 @@ public class AgentService implements Runnable {
     private void updateTaskStatus(int taskId) {
         taskStatus.get(taskId).incrementAndGet();
         if (taskStatus.get(taskId).get() == scanManager.getCommandsSize()) {
+            taskRepository.updateStatusToCompleted(taskId);
             completedTasks.remove(taskId);
             taskStatus.remove(taskId);
         }
