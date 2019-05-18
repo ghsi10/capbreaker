@@ -27,13 +27,13 @@ Features
 Prerequisites
 =============
 * JDK 1.8.
-* *postgresql* - Should config *datasource* in *application.properties*.
-* Settings can be found in *application.properties* and recommended to be checked before use.
+* postgresql.
 * Requires python for agent users.
 
 Deployment
 ==========
-* Simply compile and run.
+* Compile and run with arguments:
+* java -jar --spring.login.password={admin-password} --spring.datasource.url={postresql-url} --spring.datasource.username={postresql-username} --spring.datasource.password={postgresql-password} cabreaker-server.jar
 
 Authors
 =======
