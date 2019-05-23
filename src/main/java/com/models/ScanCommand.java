@@ -60,6 +60,6 @@ public class ScanCommand {
 
     @Override
     public String toString() {
-        return "ScanCommand [id=" + id + ", priority=" + priority + ", command='" + command + "]";
+        return "ScanCommand [id=" + id + ", priority=" + priority + ", command=" + command + "]";
     }
 }

@@ -21,7 +21,7 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
     Optional<Task> findByHandshake(Handshake handshake);
 
     @Transactional(readOnly = true)
-    @Query("select t from Task t WHERE t.id = (select min(t.id) from Task t where t.status = 0 and t.pulled = false)")
+    @Query("select t from Task t where t.id = (select min(t.id) from Task t where t.status = 0 and t.pulled = false)")
     Optional<Task> getNextTask();
 
     @Transactional
