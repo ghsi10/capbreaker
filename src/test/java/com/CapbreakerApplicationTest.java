@@ -14,5 +14,4 @@ public class CapbreakerApplicationTest {
     @Test
     public void contextLoads() {
     }
-
 }
