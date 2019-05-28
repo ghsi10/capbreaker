@@ -20,8 +20,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -41,7 +40,7 @@ public class AdminControllerTest {
     AgentService agentService;
 
     @Test
-    public void getScansPass() throws Exception {
+    public void getScansTest() throws Exception {
         List<ScanCommand> commands = Collections.singletonList(new ScanCommand());
         doReturn(commands).when(userService).getCommands();
         mockMvc.perform(get("/admin/scans"))
@@ -52,7 +51,7 @@ public class AdminControllerTest {
     }
 
     @Test
-    public void postScansPass() throws Exception {
+    public void postScansTest() throws Exception {
         doNothing().when(userService).resetCommands();
         mockMvc.perform(post("/admin/scans"))
                 .andExpect(status().is3xxRedirection())
@@ -60,7 +59,7 @@ public class AdminControllerTest {
     }
 
     @Test
-    public void deleteScansPass() throws Exception {
+    public void deleteScansTest() throws Exception {
         doNothing().when(userService).deleteCommand(anyInt());
         mockMvc.perform(get("/admin/command/delete/{id}", 1))
                 .andExpect(status().is3xxRedirection())
@@ -68,7 +67,7 @@ public class AdminControllerTest {
     }
 
     @Test
-    public void getEditScansPass() throws Exception {
+    public void getEditScansTest() throws Exception {
         ScanCommand commands = new ScanCommand();
         doReturn(commands).when(userService).getCommand(anyInt());
         mockMvc.perform(get("/admin/command/edit/{id}", 1))
@@ -79,7 +78,7 @@ public class AdminControllerTest {
     }
 
     @Test
-    public void postEditScansPass() throws Exception {
+    public void postEditScansTest() throws Exception {
         doNothing().when(userService).saveCommand(any());
         mockMvc.perform(post("/admin/command/edit/{id}", 1)
                 .param("priority", "1")
@@ -89,7 +88,7 @@ public class AdminControllerTest {
     }
 
     @Test
-    public void postEditScansWithoutIdPass() throws Exception {
+    public void postEditScansWithoutIdTest() throws Exception {
         doNothing().when(userService).saveCommand(any());
         mockMvc.perform(post("/admin/command/edit/{id}", -1)
                 .param("priority", "1")
@@ -99,7 +98,7 @@ public class AdminControllerTest {
     }
 
     @Test
-    public void getResultScansPass() throws Exception {
+    public void getResultScansTest() throws Exception {
         Task task = new Task();
         doReturn(task).when(userService).taskResult(any());
         mockMvc.perform(get("/admin/task/result").param("taskId", "t"))
@@ -110,7 +109,7 @@ public class AdminControllerTest {
     }
 
     @Test
-    public void getDeleteTaskPass() throws Exception {
+    public void getDeleteTaskTest() throws Exception {
         doNothing().when(userService).deleteTask(anyInt());
         mockMvc.perform(get("/admin/task/delete/{id}", 1))
                 .andExpect(status().is3xxRedirection())
@@ -118,7 +117,7 @@ public class AdminControllerTest {
     }
 
     @Test
-    public void getUsrsPass() throws Exception {
+    public void getUsrsTest() throws Exception {
         List<User> users = Collections.singletonList(new User());
         doReturn(users).when(userService).getUsers();
         mockMvc.perform(get("/admin/users"))
@@ -129,7 +128,7 @@ public class AdminControllerTest {
     }
 
     @Test
-    public void getEnableUserPass() throws Exception {
+    public void getEnableUserTest() throws Exception {
         doNothing().when(userService).enabledUser(anyInt(), any(boolean.class));
         mockMvc.perform(get("/admin/user/enabled/{id}", 1).param("enabled", "true"))
                 .andExpect(status().is3xxRedirection())
@@ -137,7 +136,7 @@ public class AdminControllerTest {
     }
 
     @Test
-    public void getDeleteUserPass() throws Exception {
+    public void getDeleteUserTest() throws Exception {
         doNothing().when(userService).deleteUser(anyInt());
         mockMvc.perform(get("/admin/user/delete/{id}", 1))
                 .andExpect(status().is3xxRedirection())
@@ -145,10 +144,21 @@ public class AdminControllerTest {
     }
 
     @Test
-    public void getPromoteUserPass() throws Exception {
+    public void getPromoteUserTest() throws Exception {
         doNothing().when(userService).promoteUser(anyInt(), any(boolean.class));
         mockMvc.perform(get("/admin/user/promote/{id}", 1).param("promote", "true"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin/users"));
+    }
+
+    @Test
+    public void postResultNumberFormatExceptionTest() throws Exception {
+        doThrow(NumberFormatException.class).when(userService).taskResult(any());
+        mockMvc.perform(get("/admin/task/result")
+                .param("taskId", "1"))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("module", "result"))
+                .andExpect(model().attribute("error", "Invalid task id."))
+                .andExpect(view().name("result"));
     }
 }

@@ -56,7 +56,7 @@ public class UserController {
     @PostMapping("/signup")
     public String signup(@RequestParam String username, @RequestParam String password,
                          @RequestParam String passwordAgain) throws ValidationException {
-        if (username.length() < 4 || password.length() > 17)
+        if (username.length() < 4 || username.length() > 17 || password.length() < 4 || password.length() > 17)
             throw new ValidationException("Username/Password should be between 4 to 16");
         if (!username.matches("[a-zA-Z][a-zA-Z0-9]+") || !password.matches("[a-zA-Z0-9]+"))
             throw new ValidationException("Username/Password contains illegal characters");

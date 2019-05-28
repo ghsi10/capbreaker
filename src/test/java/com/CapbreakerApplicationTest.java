@@ -12,6 +12,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class CapbreakerApplicationTest {
 
     @Test
-    public void contextLoads() {
+    public void contextLoadsTest() {
     }
 }
