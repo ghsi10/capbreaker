@@ -33,7 +33,7 @@ Prerequisites
 Deployment
 ==========
 * Compile and run with arguments:
-* java -jar --spring.login.password={admin-password} --spring.datasource.url={postresql-url} --spring.datasource.username={postresql-username} --spring.datasource.password={postgresql-password} cabreaker-server.jar
+* ``java -jar --spring.login.password={admin-password} --spring.datasource.url={postresql-url} --spring.datasource.username={postresql-username} --spring.datasource.password={postgresql-password} cabreaker-server.jar``
 
 Authors
 =======
