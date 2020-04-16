@@ -16,7 +16,7 @@ For more information on capture handshake, see  [here](https://www.kalitutorials
 
 -   List of loaded hashes and current state.
 -   Managing a list of loaded hashes and users.
-- 
+
 ## Prerequisites
 
 -   JDK 1.8.
