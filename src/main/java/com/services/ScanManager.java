@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @Component
 public class ScanManager implements Runnable {
 
-    @Value("${scan.buffer.sleep}")
+    @Value("${scan.buffer.sleep:10}")
     private int sleepTime;
 
     private final TaskRepository taskRepository;
@@ -35,7 +35,7 @@ public class ScanManager implements Runnable {
     private Thread addScansThread;
 
     @Autowired
-    public ScanManager(TaskRepository taskRepository, CommandRepository commandRepository, @Value("${scan.buffer.size}") int capacity) {
+    public ScanManager(TaskRepository taskRepository, CommandRepository commandRepository, @Value("${scan.buffer.size:10}") int capacity) {
         this.taskRepository = taskRepository;
         this.commandRepository = commandRepository;
         scans = new ArrayBlockingQueue<>(capacity);

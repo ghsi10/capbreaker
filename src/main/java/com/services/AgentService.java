@@ -23,9 +23,9 @@ import java.util.stream.Collectors;
 @Service
 public class AgentService implements Runnable {
 
-    @Value("${agent.idle.timer}")
+    @Value("${agent.idle.timer:60}")
     private int idleTimer;
-    @Value("${agent.idle.max}")
+    @Value("${agent.idle.max:60}")
     private int maxIdle;
 
     private final TaskRepository taskRepository;
