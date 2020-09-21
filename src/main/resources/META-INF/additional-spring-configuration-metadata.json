@@ -1,22 +1,12 @@
 {
   "properties": [
     {
-      "name": "spring.queries.users-query",
-      "type": "java.lang.String",
-      "description": "query for get username and password."
-    },
-    {
-      "name": "spring.queries.roles-query",
-      "type": "java.lang.String",
-      "description": "query for get role of user."
-    },
-    {
-      "name": "spring.login.username",
+      "name": "login.master.username",
       "type": "java.lang.String",
       "description": "master username."
     },
     {
-      "name": "spring.login.password",
+      "name": "login.master.password",
       "type": "java.lang.String",
       "description": "master password."
     },

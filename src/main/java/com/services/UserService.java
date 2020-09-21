@@ -19,11 +19,11 @@ import java.util.List;
 @Service
 public class UserService {
 
-    @Value("${spring.login.username}")
+    @Value("${login.master.username:admin}")
     private String masterUsername;
-    @Value("${spring.login.password}")
+    @Value("${login.master.password:admin}")
     private String masterPassword;
-    @Value("${user.default.enable}")
+    @Value("${user.default.enable:true}")
     private boolean defaultEnable;
 
     private final UserRepository userRepository;

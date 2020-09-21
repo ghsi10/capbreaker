@@ -15,7 +15,7 @@ import java.util.Optional;
 @Service
 public class TaskService {
 
-    @Value("${view.page.size}")
+    @Value("${view.page.size:50}")
     private int pageSize;
 
     private final TaskRepository taskRepository;

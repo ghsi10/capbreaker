@@ -4,11 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -18,20 +19,18 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Value("${spring.queries.users-query}")
-    private String usersQuery;
-    @Value("${spring.queries.roles-query}")
-    private String rolesQuery;
-    @Value("${spring.login.username}")
+    @Value("${login.master.username:admin}")
     private String masterUsername;
-    @Value("${spring.login.password}")
+    @Value("${login.master.password:admin}")
     private String masterPassword;
 
     private final DataSource dataSource;
+    private final UserDetailsService loginUserDetailsService;
 
     @Autowired
-    public SecurityConfig(DataSource dataSource) {
+    public SecurityConfig(DataSource dataSource, UserDetailsService loginUserDetailsService) {
         this.dataSource = dataSource;
+        this.loginUserDetailsService = loginUserDetailsService;
     }
 
     @Bean
@@ -39,10 +38,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new NoOpPasswordEncoder();
     }
 
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(loginUserDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }
+
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication().withUser(masterUsername).password(masterPassword).roles("ADMIN");
-        auth.jdbcAuthentication().dataSource(dataSource).usersByUsernameQuery(usersQuery).authoritiesByUsernameQuery(rolesQuery);
+        auth.authenticationProvider(authenticationProvider());
     }
 
     @Override
