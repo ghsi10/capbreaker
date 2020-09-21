@@ -68,9 +68,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         @Override
         public boolean matches(CharSequence rawPassword, String encodedPassword) {
-            PasswordEncoder encoder = new BCryptPasswordEncoder();
-            return rawPassword.toString().equals(encodedPassword)
-                    || encoder.matches(encodedPassword, rawPassword.toString());
+            return rawPassword.toString().equals(encodedPassword);
         }
     }
 }
