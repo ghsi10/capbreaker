@@ -17,6 +17,7 @@ public class Task {
     private BigDecimal progress;
     private String wifiPassword;
     private String taskPassword;
+    @Lob
     private Handshake handshake;
     private Boolean pulled;
 
