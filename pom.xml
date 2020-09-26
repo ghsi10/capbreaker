@@ -56,11 +56,10 @@
             <artifactId>thymeleaf-extras-springsecurity5</artifactId>
         </dependency>
 
-        <!-- Embedded database  -->
+        <!-- Databases-->
         <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>runtime</scope>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
         </dependency>
 
         <!-- Spring test  -->
@@ -77,8 +76,12 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <executable>true</executable>
+                </configuration>
             </plugin>
         </plugins>
     </build>
 
 </project>
+
