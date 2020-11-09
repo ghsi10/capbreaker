@@ -2,6 +2,7 @@ package com.services;
 
 import com.models.LoginUserDetails;
 import com.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,6 +13,7 @@ public class LoginUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
+    @Autowired
     public LoginUserDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
