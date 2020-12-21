@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -75,7 +76,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         @Override
         public boolean matches(CharSequence rawPassword, String encodedPassword) {
-            return rawPassword.toString().equals(encodedPassword);
+            PasswordEncoder encoder = new BCryptPasswordEncoder();
+            return rawPassword.toString().equals(encodedPassword)
+                    || encoder.matches(encodedPassword, rawPassword.toString());
         }
     }
 }
