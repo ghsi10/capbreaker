@@ -27,7 +27,7 @@ For more information on capture handshake, see  [here](https://www.kalitutorials
 
 Compile and run with arguments:
 - replace the {*parameter*} in the command below with the relevant paramerts.
--     java -jar --login.master.password={admin-password} --spring.datasource.url={postresql-url} --spring.datasource.username={postresql-username} --spring.datasource.password={postgresql-password} cabreaker-server.jar`
+-     java -jar --login.master.password={admin-password} --spring.datasource.url={postresql-url} --spring.datasource.username={postresql-username} --spring.datasource.password={postgresql-password} cabreaker-server.jar
 
 ## Authors
 
