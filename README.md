@@ -34,4 +34,3 @@ Compile and run with arguments:
 -   [ghsi10](https://github.com/ghsi10)  - Lead developer
 -   [Yevgenykuz](https://github.com/Yevgenykuz)
 -   [TamirGit](https://github.com/TamirGit)
-
